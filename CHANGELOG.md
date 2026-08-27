@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.18.0 - 2026-08-28
+
+- Promoted JSON export to a reloadable Wireless Sensor measurement-session format: `browser-kitty-wireless-sensor-v8`.
+- Added **Open past recording** on the home/receiver flows so saved sessions can be analyzed without reconnecting phones.
+- Added backwards loading support for Wireless Sensor session formats v4 through v8.
+- Restored recorded samples, impacts, markers, sensor metadata/positions, experiment preset, measurement mode, and timing metadata from loaded sessions.
+- Rebuild post-recording analysis and standalone HTML reports locally from an imported session.
+
+## 0.17.0 - 2026-08-28
+
+- Added receiver-side sensor names and XYZ positions in centimeters for each sensor slot.
+- Persisted sensor layout metadata locally on the receiver and included it in recordings, CSV/session export, analysis, and reports. JSON recording format is now `browser-kitty-wireless-sensor-v7`.
+- Added straight-line sensor distance to impact details when both sensor positions are available.
+- Added apparent propagation-speed estimates from known sensor distance and synchronized impact arrival-time differences.
+
+## 0.16.0 - 2026-08-28
+
+- Added timestamped manual markers/notes during recording, such as Motor ON, Brake, or Tapped desk.
+- Added markers to post-recording analysis and standalone reports.
+- Added markers to session JSON and attached each marker to the nearest sample row in CSV export. JSON recording format is now `browser-kitty-wireless-sensor-v6`.
+- Kept markers on the receiver's shared synchronized timeline so they can be compared with every connected phone.
+
+## 0.15.0 - 2026-08-28
+
+- Added a self-contained HTML measurement report generated entirely in the browser.
+- Added recording overview, per-sensor vibration/RMS/frequency summaries, impact timing, and compact vibration plots to reports.
+- Kept reports standalone with inline CSS/SVG and no runtime network dependencies.
+
 ## 0.14.0 - 2026-08-28
 
 - Added eight experiment presets: Impact propagation, Vibration comparison, Tilt comparison, Rotation comparison, Car / bicycle, Elevator, Washer / motor, and Free measurement.

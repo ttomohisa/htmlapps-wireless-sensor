@@ -150,7 +150,7 @@ The CSS 3D phone is a visual orientation aid, not a calibrated 3D reference mode
 
 ## Recording and synchronization
 
-Recording is receiver-only and memory-only.
+Recording is receiver-only and memory-resident until the user explicitly saves an artifact. Saved session JSON can later be loaded back into receiver memory for offline re-analysis.
 
 Each reliable control channel also carries an NTP-like timestamp exchange. A ping stores receiver time `t1`; the phone returns its receive/send times `t2` / `t3`; the receiver captures return time `t4`. The receiver derives an RTT sample and a correspondence between phone `performance.now()` and receiver `performance.now()`.
 
@@ -171,7 +171,7 @@ A recording session stores both timelines:
 - `synchronized_elapsed_ms`: sensor timestamp mapped onto receiver time, then measured from the recording start
 - `receive_elapsed_ms`: receiver packet-arrival time from the recording start, retained for diagnostics/fallback
 
-CSV also records synchronization uncertainty, offset, drift, measurement mode, vibration value, and raw sensor fields. JSON format `browser-kitty-wireless-sensor-v5` stores the final clock model for each sensor so corrected timestamps remain auditable.
+CSV also records synchronization uncertainty, offset, drift, measurement mode, vibration value, and raw sensor fields. Session JSON format `browser-kitty-wireless-sensor-v8` stores the final clock model, sensor names/XYZ positions, experiment preset, markers, impacts, and samples so corrected timestamps remain auditable and the session can be reopened. Loaders accept v4-v8.
 
 This is a practical browser-level synchronization scheme, not a guarantee of scientific PTP/GNSS-grade time alignment. Asymmetric network delay and browser/OS scheduling can still bias the estimate.
 
@@ -209,7 +209,7 @@ The receiver derives a gravity-free acceleration magnitude from `event.accelerat
 
 Each impact is timestamped on the peer's corrected receiver-time mapping. Impacts from different sensor IDs within a short synchronized window are grouped as the same physical event. The UI sorts the grouped events by corrected time and reports deltas from the earliest sensor together with each peer's synchronization uncertainty. The marker time is the threshold crossing; the displayed peak may continue updating for a short window after the crossing.
 
-When recording is active, detected impacts are included in JSON v5 alongside samples and the active experiment preset.
+When recording is active, detected impacts are included in session JSON alongside samples, the active experiment preset, markers, and sensor layout metadata.
 
 ## FFT analysis
 
@@ -233,4 +233,23 @@ The analysis pipeline:
 4. Draws event-centered vibration windows from -250 ms to +750 ms around the first device arrival, using a shared amplitude scale across participating sensors.
 5. Searches each sensor recording for the strongest roughly four-second vibration window and sends that window through the existing irregular-sample resampling, Hann-window, and radix-2 FFT implementation.
 
-The UI is intentionally derived rather than stored. Starting a new recording replaces the in-memory recording and hides the previous analysis view. CSV/JSON export keeps the same raw sensor/timing fields while JSON v5 adds the active experiment preset to the recording metadata.
+The analysis UI is derived from the recording/session model rather than serialized as UI state. Starting a new recording replaces the in-memory recording and hides the previous analysis view. Loading a saved v4-v8 session repopulates the same model and runs the same analysis pipeline without reconnecting sensors.
+
+
+## Reports and manual markers
+
+Markers are receiver-side events on the same shared timeline used by synchronized sensor samples. A marker contains an ID, elapsed time, optional note, and wall-clock timestamp. Session JSON preserves markers directly; CSV places marker fields on the nearest sample row to keep spreadsheet export flat.
+
+The HTML report generator consumes the current analysis/session model and emits a single self-contained document with inline CSS and SVG. It includes overview metrics, experiment/preset information, sensor names and positions, vibration/RMS/frequency summaries, impact timing, markers, and compact waveform plots. No external script, image, stylesheet, fetch, or API is required by the saved report.
+
+## Sensor layout and propagation estimates
+
+The receiver can assign a custom name and XYZ position in centimeters to each sensor slot. Layout values are stored locally by slot for convenience and are copied into recording metadata so saved sessions remain self-describing.
+
+When two sensors participating in the same grouped impact both have positions, the app calculates Euclidean straight-line distance. If their synchronized arrival delta is positive, it also shows `distance / delta` as an apparent propagation speed. This value is explicitly informational: sensor placement, material paths, threshold crossing, synchronization uncertainty, and browser scheduling all affect it.
+
+## Reloadable measurement sessions
+
+`browser-kitty-wireless-sensor-v8` is the current session schema. The loader also accepts v4, v5, v6, and v7 so recordings from recent pre-v1 releases remain useful. Imported session data stays local, is normalized into the same `recordSamples`, `recordEvents`, `recordMarkers`, and sensor metadata structures used by live recordings, and then feeds the ordinary post-recording analysis/report code paths.
+
+Session loading does not recreate WebRTC peers and does not contact a server. Starting a new live recording replaces the imported in-memory session.

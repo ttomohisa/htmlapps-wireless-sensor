@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 0.14.0
+- **Version:** 0.18.0
 
 ## 2. Product principles
 
@@ -116,9 +116,9 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Each receiver peer maintains a bounded linear clock model `receiverTime = slope * sensorTime + intercept`, plus offset, drift (ppm), minimum RTT, uncertainty, and quality.
 - Once a clock model is ready, shared timestamps and charts use the corrected sensor-side `performance.now()` value. Packet receive time remains available as a diagnostic/fallback.
 - Each sensor also records its own `sensor_elapsed_ms` relative to the first packet from that sensor during the session.
-- Samples stay in browser memory; v0.12 does not persist measurement history to localStorage or IndexedDB.
+- Live recordings stay in browser memory until the user explicitly saves CSV, a reloadable session JSON, or an HTML report. Measurement history is not silently persisted to IndexedDB or cloud storage.
 - CSV fields include sensor ID/name/device label, measurement mode, synchronized elapsed time, receive elapsed time, per-sensor elapsed time, sensor timestamp, synchronized/receive epoch time, sync uncertainty, clock offset/drift, sequence, acceleration, vibration value, gravity-included acceleration, rotation rate/magnitude, orientation, absolute flag, and browser-reported interval.
-- JSON format `browser-kitty-wireless-sensor-v5` contains sensor metadata (including per-sensor zero offsets and final clock model), connection/privacy metadata, synchronization method metadata, and raw/corrected samples.
+- Session JSON format `browser-kitty-wireless-sensor-v8` contains sensor metadata (including names, XYZ positions, per-sensor zero offsets and final clock model), connection/privacy metadata, synchronization method metadata, experiment preset, manual markers, impact events, and raw/corrected samples. The app can reopen formats v4 through v8.
 - When a recording stops, a receiver-only post-analysis view is derived from the in-memory samples and events. It does not change raw samples or require a network request.
 - Post-analysis shows recording-level KPIs, per-sensor vibration peak/RMS and FFT summary, grouped impact-event timing, and event-centered zoomed waveforms.
 - Whole-recording FFT searches for the strongest approximately four-second vibration window per sensor before reusing the existing resampling/Hann/radix-2 FFT pipeline.
@@ -164,9 +164,17 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - CSP includes `connect-src 'none'`.
 - WebRTC peer traffic is the only runtime inter-device transport.
 - Measurements are not uploaded to Browser Kitty.
-- Saved CSV/JSON files are created only after an explicit user action.
+- Saved CSV/session JSON/HTML report files are created only after an explicit user action.
 
-## 13. Non-goals for v0.14.0
+## 13. Reports, markers, sensor layout, and saved sessions
+
+- HTML reports are fully self-contained and generated from current/inported recording data. They include overview metrics, sensor layout, vibration/FFT summaries, impacts, timing differences, markers, and compact inline SVG plots.
+- Manual markers are timestamped on the receiver shared timeline and are preserved in session JSON; CSV associates a marker with the nearest sample row for spreadsheet use.
+- Each receiver sensor slot can store a custom name and XYZ position in centimeters. These values are copied into recording/session metadata.
+- When both sensor positions are known, impact analysis may show straight-line distance and apparent propagation speed. This is a derived estimate, not a calibrated material-wave-speed measurement.
+- Session loading is local file input only. v4-v8 session files can restore samples/events/markers/sensor metadata and rebuild post-analysis without WebRTC reconnection.
+
+## 14. Non-goals for v0.18.0
 
 - Cross-internet/NAT traversal.
 - TURN fallback.
@@ -175,7 +183,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Scientific calibration certification.
 - Background operation while the browser/OS suspends the page.
 
-## 14. UX and accessibility
+## 15. UX and accessibility
 
 - Mobile-first from 320px upward.
 - Role selection must be understandable without WebRTC terminology.
@@ -188,7 +196,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - The help dialog is bilingual and synchronized with behavior.
 - Do not add a dark-mode switch.
 
-## 14. Browser target
+## 16. Browser target
 
 Current stable Chromium, Firefox, and Safari are the intended baseline, but sensor and QR-scanning API availability differs by browser and platform.
 
@@ -196,10 +204,10 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Phone sensor permission generally works best from a secure HTTP(S) context.
 - QR scanning is the primary signaling UX; manual copy/paste remains available when camera access or decoding is unavailable.
 
-## 15. Acceptance criteria
+## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `0.14.0`.
+- `app.config.json` version is `0.18.0`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
@@ -222,8 +230,12 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Impact detection groups synchronized events from different phones and reports relative arrival time without requiring a server.
 - FFT identifies a known synthetic dominant frequency within one FFT bin/resolution under regular mock sampling.
 - Stacked comparison keeps one vertically arranged chart per connected phone and does not remove the existing per-sensor selection UI.
+- Standalone HTML reports can be generated after recording or from a reloaded session without a network request.
+- Manual markers are recorded on the common receiver timeline and survive session save/reload.
+- Sensor names/XYZ positions survive a recording and are included in analysis/session/report output.
+- Session JSON format v8 can be reloaded; formats v4-v8 remain accepted for backwards compatibility.
 - Japanese and English fit at 360px width.
 
-## 16. Known v0.13 limitations
+## 18. Known v0.18 limitations
 
 The most important limitation is deliberate: **a fully serverless WebRTC connection cannot rely on signaling, STUN, or TURN infrastructure.** Wireless Sensor therefore prioritizes same-LAN use and transparent failure over universal connectivity.
