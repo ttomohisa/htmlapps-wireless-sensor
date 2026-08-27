@@ -210,3 +210,17 @@ Choosing a signed axis instead of acceleration magnitude avoids the common frequ
 ## Stacked comparison
 
 The existing connected-sensor roster remains the way to select one peer for detailed values and FFT. A separate display-mode switch can replace the single dashboard with one time-series chart per connected phone, stacked vertically. Every stacked chart uses the same measurement/chart type and time-window setting, so acceleration, vibration, tilt, or rotation can be compared without overlapping lines. Impact markers use the same corrected time base in each chart.
+
+## Post-recording analysis
+
+The receiver derives post-recording analysis entirely from `recordSamples`, `recordEvents`, and `recordSessionSensors` after recording stops. No new network path or persistence layer is introduced.
+
+The analysis pipeline:
+
+1. Recomputes each sample's corrected elapsed time using the final per-sensor clock model.
+2. Builds recording-level KPIs and per-sensor vibration peak/RMS summaries.
+3. Groups recorded impacts by `groupId` and sorts each group on the synchronized elapsed clock.
+4. Draws event-centered vibration windows from -250 ms to +750 ms around the first device arrival, using a shared amplitude scale across participating sensors.
+5. Searches each sensor recording for the strongest roughly four-second vibration window and sends that window through the existing irregular-sample resampling, Hann-window, and radix-2 FFT implementation.
+
+The UI is intentionally derived rather than stored. Starting a new recording replaces the in-memory recording and hides the previous analysis view. CSV/JSON export remains compatible with the v0.12.0 recording format (`browser-kitty-wireless-sensor-v4`).

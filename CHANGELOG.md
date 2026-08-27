@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.13.0 - 2026-08-28
+
+- Added a post-recording analysis view that opens automatically when a recording stops.
+- Added recording-level summary metrics for duration, sensor count, sample count, impact groups, maximum impact, and synchronization uncertainty.
+- Added per-sensor result cards with vibration peak, vibration RMS, dominant frequency, sample count, and final sync uncertainty.
+- Added a recorded impact-event browser with grouped cross-device arrival timing, per-device peak/sync details, and selectable events.
+- Added synchronized zoomed vibration waveforms around each selected impact using a shared time origin and shared vertical scale across participating sensors.
+- Added whole-recording FFT analysis that searches each sensor recording for its strongest roughly four-second vibration window before calculating dominant and secondary frequency peaks.
+- Kept CSV/JSON export format compatible with v0.12.0; the analysis view is derived locally from the in-memory recording without introducing runtime network access or a new dependency.
+
 ## 0.12.0 - 2026-08-28
 
 - Added automatic impact-event detection from gravity-free acceleration with a configurable threshold and hysteresis to avoid repeated triggers.
