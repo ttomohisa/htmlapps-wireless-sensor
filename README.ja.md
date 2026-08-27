@@ -1,0 +1,176 @@
+# Wireless Sensor
+
+[![GitHub Pages](https://github.com/ttomohisa/htmlapps-wireless-sensor/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ttomohisa/htmlapps-wireless-sensor/actions/workflows/deploy-pages.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Single HTML](https://img.shields.io/badge/distribution-single%20HTML-0ea5e9)](https://ttomohisa.github.io/htmlapps-wireless-sensor/)
+
+[English README](README.md)
+
+スマートフォンの加速度・回転・傾きを、別のブラウザーへWebRTCで直接送信して可視化・記録する、プライバシー重視の Browser Kitty 単一HTMLツールです。
+
+## 🚀 デモ
+
+### [GitHub PagesでWireless Sensorを開く](https://ttomohisa.github.io/htmlapps-wireless-sensor/)
+
+PC / タブレットとスマートフォンの両方で同じページを開いて使います。GitHub Pagesが配信するのは最初のHTMLだけです。WebRTCの接続情報はQRまたはコピー＆ペーストで端末間を直接受け渡しし、センサー値もP2Pで送信します。シグナリング、STUN、TURNサーバーは使いません。
+
+[![Wireless Sensorの画面](assets/screenshot-ja.png)](https://ttomohisa.github.io/htmlapps-wireless-sensor/)
+
+## 主な機能
+
+- **スマホをワイヤレスな動きセンサーに** — 加速度、重力込み加速度、回転速度、端末の向きをブラウザーから取得します。
+- **シグナリングサーバーなしで接続** — WebRTCは `iceServers: []` で作成し、Offer / Answerを端末間で直接受け渡します。
+- **両方向ともカメラQRが基本** — PCの分割Offer QRをスマホで読み、続いてスマホの分割Answer QRをPCカメラで読み取ります。
+- **普通のカメラで読みやすいQR** — 接続情報を低密度な複数QRへ分割。スマホは背面カメラを優先し、PCではネイティブQR読み取りが使えない場合に内包済み `jsQR` へ自動フォールバックします。
+- **動きをリアルタイム表示** — 現在値、CSS 3Dスマホ、ローリンググラフ、実測サンプルレート、WebRTC RTTを確認できます。
+- **端末内で記録** — 現在の姿勢を0°に設定し、受信側メモリへ記録して、必要なときだけCSV / JSONとして保存します。
+- **単一HTML・日英UI** — QR関連ライブラリはビルド時にHTMLへ内包し、日本語 / 英語を同じHTMLで切り替えられます。
+
+## すぐに使う
+
+### Webで使う
+
+1. 両方の端末で [Wireless Sensor](https://ttomohisa.github.io/htmlapps-wireless-sensor/) を開きます。
+2. PCとスマホを同じWi-Fi / LANへ接続します。
+3. PC / タブレットで **この端末で測定を見る** → **接続情報を作る** を押します。
+4. スマホで **このスマホをセンサーにする** → **PCのQRをカメラで読む** を押し、PCに表示されたQRを読み取ります。
+5. スマホに返答QRが表示されたら、PC側の **スマホの返答QRをカメラで読む** を押し、スマホ画面をPCカメラへ向けます。
+6. WebRTC接続後、スマホで **センサーを開始** を押し、必要なセンサー権限を許可します。
+
+インストールやアカウント登録は不要です。スマホのカメラ・モーションセンサー権限のため、HTTPSで公開したページからの利用を推奨します。
+
+### 単一HTMLをビルドして使う
+
+1. このリポジトリをダウンロードまたはクローンします。
+2. Windows 10 / 11で `build-standalone.bat` をダブルクリックします。
+3. 初回のみ、`dependencies.json` で固定された依存パッケージを取得します。
+4. 生成された `dist/index.html` を開くか、任意の場所へコピーします。
+
+Python、Node.js、ローカルWebサーバーは不要です。Windows標準のPowerShellと `tar.exe` を使用します。
+
+## 使い方
+
+### 受信側: PC / タブレット
+
+1. **この端末で測定を見る** を選びます。
+2. **接続情報を作る** を押します。分割QRが表示され、自動で切り替わります。
+3. スマホ側でOffer QRをすべて読み取ります。読み取り順は問いません。
+4. **スマホの返答QRをカメラで読む** を押し、スマホ画面をPCカメラへ向けます。
+5. 返答QRがすべて揃うとAnswerを自動で復元し、接続完了を待ちます。
+6. 現在値、3D表示、グラフ、5 / 10 / 30 / 60秒の表示範囲、**現在の姿勢を0にする** を必要に応じて使います。
+7. 記録を開始 / 停止し、指定したファイル名でCSVまたはJSONを保存します。
+
+### 送信側: スマホ
+
+1. **このスマホをセンサーにする** を選びます。
+2. **PCのQRをカメラで読む** を押します。利用できる場合は背面カメラを優先します。
+3. ガイド枠いっぱいにQRを映します。複数ページは順不同で自動収集します。
+4. 全ページが揃うとOfferを復元し、端末内だけで返答QRを生成します。
+5. 返答QRをPCカメラへ見せます。
+6. 接続後、**センサーを開始** を押して権限を許可します。
+7. 送信頻度は **省電力 / 標準 / 高頻度** から選べます。これは送信の間引き設定であり、端末のセンサー取得頻度を保証するものではありません。
+
+どちらかのカメラでQRを読めない場合のため、接続コードのコピー＆ペーストもフォールバックとして残しています。
+
+## センサーデータ
+
+Wireless Sensorはブラウザーの `devicemotion` / `deviceorientation` を利用します。主な記録項目は以下です。
+
+- acceleration x / y / z
+- 加速度の大きさ `√(x² + y² + z²)`
+- acceleration including gravity x / y / z
+- rotation rate alpha / beta / gamma
+- orientation alpha / beta / gamma
+- orientation absolute
+- `DeviceMotionEvent.interval`
+- シーケンス番号、センサー側経過時間、受信時刻
+
+ブラウザーや端末が提供しない値はCSVでは空欄、JSONでは `null` として保存します。
+
+## GitHub Pagesで公開する
+
+このリポジトリには、依存ライブラリを内包した単一HTMLをビルドし、`dist/` をGitHub Pagesへ自動公開するワークフローが含まれています。
+
+1. リポジトリ名を `htmlapps-wireless-sensor` としてGitHubへプッシュします。
+2. **Settings → Pages → Build and deployment → Source** で **GitHub Actions** を選択します。
+3. `main` へプッシュするか、Actions画面から **Deploy standalone app to GitHub Pages** を手動実行します。
+4. ビルド成功後、`https://ttomohisa.github.io/htmlapps-wireless-sensor/` で公開されます。
+
+`main` へのプッシュ時には、固定バージョンの依存パッケージからアプリを再生成し、単一HTMLを検証してから公開します。GitHub Pagesがまだ有効でない場合は、ビルドだけ成功させたうえで設定手順をWorkflow Summaryへ表示します。
+
+## 開発とビルド
+
+```text
+.
+├─ src/index.template.html       # アプリ本体テンプレート
+├─ app.config.json               # アプリ情報・バージョン
+├─ dependencies.json             # 内包依存と固定バージョン
+├─ build-standalone.bat          # Windows用ビルド入口
+├─ build-standalone.ps1          # 単一HTMLビルダー
+├─ scripts/                      # リポジトリ / 生成物の検証
+├─ assets/                       # favicon・README用スクリーンショット
+├─ dist/                         # ビルド生成物
+└─ .github/workflows/
+   ├─ build-standalone.yml       # Pull Request時のビルド検証
+   └─ deploy-pages.yml           # mainからPagesへ自動公開
+```
+
+### ビルドと確認
+
+```powershell
+.\build-standalone.bat
+pwsh -File .\scripts\check-repository.ps1
+```
+
+ビルド処理では以下を自動で行います。
+
+- `dependencies.json` で固定したnpmパッケージを取得
+- `qrcode-generator` とgzip圧縮した `jsQR` をHTMLへ内包
+- 依存ファイルのハッシュとビルド情報を記録
+- 未置換プレースホルダーを検査
+- 実行時ネットワーク遮断方針を検証
+- 読みやすい単一HTMLと自己展開版HTMLを生成
+
+`dist/` の生成ファイルは直接編集しません。
+
+## プライバシーと通信
+
+Wireless Sensorは、シグナリング、STUN、TURNのインフラを意図的に使いません。
+
+- WebRTCは `RTCPeerConnection({ iceServers: [] })` で作成します。
+- Offer / AnswerはQRまたはコピー＆ペーストで端末間を直接受け渡します。
+- センサー値はWebRTC DataChannelで接続相手へ直接送信します。
+- 記録値は受信側ブラウザーのメモリに保持し、ユーザーが明示的に保存したときだけCSV / JSONになります。
+- 生成HTMLは通常の実行時ネットワークAPIを抑止するため、`connect-src 'none'` を含むContent Security Policyを維持します。
+- QR生成 / 読み取りライブラリはHTMLへ内包し、実行時CDNはありません。
+
+GitHub Pages版では最初のHTML配信は発生します。ネットワークを完全に切って使う場合は `dist/index.html` をローカルで開けますが、`file://` ではブラウザーによってカメラやセンサー権限がより厳しくなるため、接続コードの手動受け渡しが必要になる場合があります。
+
+## 制限事項
+
+- **基本的に同じWi-Fi / LANでの利用を想定**しています。STUN / TURNを使わないため、異なるネットワークやNAT越しの汎用的な接続は対象外です。
+- 会社・学校・ゲストWi-Fi、VPN、ファイアウォール、Client Isolation / AP Isolationなどにより、同じWi-Fi表示でも端末間通信が遮断される場合があります。
+- ブラウザーのセンサー値は校正済みの専用計測器の代替ではありません。精度、利用できる値、取得頻度は端末・OS・ブラウザーで異なります。
+- iPhone / iPadなどでは、モーションセンサー利用時にユーザー操作から明示的な権限許可が必要です。
+- スマホをバックグラウンド化したり画面ロックしたりすると、ブラウザーのセンサーイベントが止まる場合があります。
+- 長時間の記録は保存するまで受信側メモリに保持します。必要に応じて区切って保存してください。
+- v0.9.0では複数スマホ同時計測、GPS、磁気、マイク計測、QR接続以外のカメラ計測は対象外です。
+
+## 使用ライブラリ
+
+| ライブラリ | バージョン | ライセンス | 用途 |
+| --- | ---: | --- | --- |
+| qrcode-generator | 1.4.4 | MIT | Offer / Answerの分割QR生成 |
+| jsQR | 1.4.0 | Apache-2.0 | PCなどで使うオフラインQR読み取りフォールバック |
+
+詳細は [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) を確認してください。
+
+## コントリビューション
+
+バグ報告や機能提案はGitHub Issuesからお願いします。開発への参加方法は [CONTRIBUTING.md](CONTRIBUTING.md) を確認してください。
+
+## ライセンス
+
+Copyright © 2026 ttomohisa
+
+このプロジェクトは [MIT License](LICENSE) で公開されています。

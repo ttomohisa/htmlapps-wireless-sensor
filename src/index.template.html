@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="ja" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="google" content="notranslate">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f2">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Wireless Sensor</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2316624F'/%3E%3Crect x='19' y='11' width='26' height='42' rx='7' fill='none' stroke='white' stroke-width='4'/%3E%3Ccircle cx='32' cy='45' r='2' fill='white'/%3E%3Cpath d='M12 25c-4 4-4 10 0 14M52 25c4 4 4 10 0 14M7 20c-7 7-7 17 0 24M57 20c7 7 7 17 0 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f2;
+      --surface: #fff;
+      --surface-muted: #f0f0ed;
+      --surface-hover: #e9e9e5;
+      --text: #20211f;
+      --muted: #666963;
+      --line: #dadbd6;
+      --line-strong: #bfc1ba;
+      --accent: #16624f;
+      --accent-hover: #0e503f;
+      --accent-soft: #e1f0ea;
+      --danger: #b3261e;
+      --warning: #9a6300;
+      --warning-soft: #fff4d6;
+      --focus: #4d8bc7;
+      --axis-x: #16624f;
+      --axis-y: #3e6d9c;
+      --axis-z: #9b6435;
+      --shadow-sm: 0 1px 2px rgba(25,28,24,.08),0 1px 6px rgba(25,28,24,.04);
+      --shadow-md: 0 12px 34px rgba(25,28,24,.10);
+      --radius: 12px;
+      --header-height: 66px;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI","Hiragino Kaku Gothic ProN",Meiryo,sans-serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button, textarea, input, select { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, textarea:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid color-mix(in srgb,var(--focus) 55%,transparent); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+    .sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+    .app-header { position: sticky; z-index: 30; top: 0; min-height: var(--header-height); border-bottom: 1px solid color-mix(in srgb,var(--line) 82%,transparent); background: color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter: blur(16px) saturate(1.2); }
+    .header-inner { width:min(1180px,100%); min-height:var(--header-height); margin:0 auto; padding:10px clamp(14px,2.8vw,30px); display:flex; align-items:center; gap:14px; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:0; }
+    .brand-mark { display:grid; place-items:center; width:38px; height:38px; flex:0 0 auto; border-radius:11px; background:var(--accent); color:#fff; box-shadow:var(--shadow-sm); }
+    .brand-mark svg { width:27px; height:27px; display:block; }
+    .brand-copy { min-width:0; }
+    .brand-copy h1 { margin:0; font-size:15px; line-height:1.2; letter-spacing:-.015em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand-meta { margin:3px 0 0; color:var(--muted); font-size:10px; white-space:nowrap; }
+    .version-badge { margin-left:5px; color:var(--muted); font-size:10px; font-weight:650; }
+    .header-actions { margin-left:auto; display:flex; align-items:center; gap:13px; }
+    .language-button,.header-icon-button { min-width:0; padding:5px 1px; border:0; background:transparent; color:var(--muted); font-size:12px; font-weight:750; cursor:pointer; transition:color .16s ease,opacity .16s ease; }
+    .language-button:hover,.header-icon-button:hover { color:var(--text); }
+    .header-icon-button { display:inline-grid; place-items:center; }
+    .header-icon-button svg { width:20px; height:20px; display:block; }
+    .main { width:min(1180px,100%); margin:0 auto; padding:22px clamp(14px,2.8vw,30px) 54px; }
+    .page-intro { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding:0 2px 18px; }
+    .page-intro h2 { margin:0; font-size:clamp(22px,3vw,28px); line-height:1.3; letter-spacing:-.028em; }
+    .page-intro p { margin:6px 0 0; max-width:760px; color:var(--muted); font-size:13px; }
+    .local-badge { display:inline-flex; align-items:center; gap:7px; flex:0 0 auto; margin-top:3px; padding:7px 10px; border:1px solid color-mix(in srgb,var(--accent) 24%,var(--line)); border-radius:999px; color:var(--accent); background:var(--accent-soft); font-size:12px; font-weight:750; white-space:nowrap; }
+    .local-badge svg { width:15px; height:15px; }
+    .panel { margin:0 0 16px; padding:20px; border:1px solid var(--line); border-radius:16px; background:var(--surface); box-shadow:var(--shadow-sm); }
+    .panel-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:16px; }
+    .panel-head h2,.panel-head h3 { margin:0; letter-spacing:-.02em; }
+    .panel-head h2 { font-size:19px; }
+    .panel-head h3 { font-size:16px; }
+    .panel-head p { margin:4px 0 0; color:var(--muted); font-size:12px; }
+    .role-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .role-card { padding:20px; border:1px solid var(--line); border-radius:14px; background:var(--surface); text-align:left; cursor:pointer; transition:border-color .16s ease,transform .16s ease,box-shadow .16s ease; }
+    .role-card:hover { border-color:color-mix(in srgb,var(--accent) 55%,var(--line)); box-shadow:var(--shadow-sm); transform:translateY(-1px); }
+    .role-icon { display:grid; place-items:center; width:46px; height:46px; border-radius:13px; background:var(--accent-soft); color:var(--accent); }
+    .role-icon svg { width:27px; height:27px; }
+    .role-card h3 { margin:15px 0 5px; font-size:16px; }
+    .role-card p { margin:0; color:var(--muted); font-size:12px; }
+    .steps { display:flex; gap:8px; margin-bottom:16px; }
+    .step-pill { display:inline-flex; align-items:center; gap:7px; padding:7px 10px; border:1px solid var(--line); border-radius:999px; color:var(--muted); background:var(--surface); font-size:11px; font-weight:750; }
+    .step-pill.active { border-color:color-mix(in srgb,var(--accent) 38%,var(--line)); background:var(--accent-soft); color:var(--accent); }
+    .step-pill.done { color:var(--accent); }
+    .step-num { display:grid; place-items:center; width:19px; height:19px; border-radius:50%; background:var(--surface-muted); font-size:10px; }
+    .step-pill.active .step-num,.step-pill.done .step-num { background:var(--accent); color:#fff; }
+    .button { min-height:40px; padding:8px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface); font-weight:700; cursor:pointer; transition:border-color .16s ease,background .16s ease,transform .16s ease; }
+    .button:hover:not(:disabled) { border-color:var(--line-strong); background:var(--surface-hover); }
+    .button:active:not(:disabled) { transform:translateY(1px); }
+    .button.primary { border-color:var(--accent); color:#fff; background:var(--accent); }
+    .button.primary:hover:not(:disabled) { border-color:var(--accent-hover); background:var(--accent-hover); }
+    .button.danger { color:var(--danger); }
+    .button.small { min-height:34px; padding:6px 10px; font-size:12px; }
+    .button:disabled { opacity:.48; cursor:not-allowed; }
+    .button-row { display:flex; flex-wrap:wrap; gap:8px; }
+    .field { display:grid; gap:6px; }
+    .field label,.field-label { color:var(--muted); font-size:11px; font-weight:750; }
+    textarea,input,select { width:100%; border:1px solid var(--line); border-radius:10px; background:#fbfbf9; color:var(--text); }
+    textarea { min-height:118px; resize:vertical; padding:11px 12px; font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; font-size:11px; line-height:1.5; word-break:break-all; }
+    input,select { min-height:40px; padding:8px 10px; }
+    textarea:hover,input:hover,select:hover { border-color:var(--line-strong); }
+    .helper { margin:5px 0 0; color:var(--muted); font-size:11px; }
+    .warning-note { padding:11px 12px; border:1px solid #e5c675; border-radius:10px; background:var(--warning-soft); color:#6f4a00; font-size:12px; }
+    .success-note { padding:11px 12px; border:1px solid color-mix(in srgb,var(--accent) 26%,var(--line)); border-radius:10px; background:var(--accent-soft); color:var(--accent); font-size:12px; }
+    .connection-grid { display:grid; grid-template-columns:minmax(250px,.8fr) minmax(0,1.2fr); gap:16px; align-items:start; }
+    .qr-wrap { display:grid; justify-items:center; gap:9px; min-height:300px; padding:14px; border:1px dashed var(--line-strong); border-radius:14px; background:#fbfbf9; }
+    .qr-box { width:min(100%,320px); aspect-ratio:1; display:grid; place-items:center; overflow:hidden; border-radius:10px; background:#fff; }
+    .qr-transfer-meta { display:flex; align-items:center; justify-content:center; gap:8px; min-height:24px; color:var(--muted); font-size:11px; }
+    .qr-transfer-meta strong { color:var(--text); font-variant-numeric:tabular-nums; }
+    .qr-page-nav { display:flex; flex-wrap:wrap; justify-content:center; gap:7px; }
+    .qr-fullscreen { position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:16px; background:rgba(10,12,11,.92); }
+    .qr-fullscreen[hidden] { display:none; }
+    .qr-fullscreen-card { width:min(96vw,560px); display:grid; justify-items:center; gap:12px; padding:16px; border-radius:18px; background:#fff; color:#151815; box-shadow:0 24px 80px rgba(0,0,0,.38); }
+    .qr-fullscreen-card .qr-box { width:min(88vw,500px); }
+    .scan-stage { position:relative; overflow:hidden; min-height:280px; border-radius:14px; background:#111; }
+    .scan-video { width:100%; min-height:280px; max-height:54vh; object-fit:cover; display:block; background:#111; }
+    .scan-guide { pointer-events:none; position:absolute; inset:12% 16%; border:3px solid rgba(255,255,255,.9); border-radius:18px; box-shadow:0 0 0 999px rgba(0,0,0,.18); }
+    .scan-guide::after { content:''; position:absolute; inset:12px; border:1px dashed rgba(255,255,255,.5); border-radius:10px; }
+    .scan-meta { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; color:var(--muted); font-size:11px; }
+    .scan-progress { font-weight:800; color:var(--accent); }
+    .diagnostic-note { margin-top:8px; padding:9px 10px; border-radius:9px; background:var(--surface-muted); color:var(--muted); font-size:11px; }
+    .diagnostic-note.warn { background:var(--warning-soft); color:#6f4a00; }
+    .qr-box svg { width:100%; height:100%; display:block; }
+    .qr-placeholder { max-width:220px; color:var(--muted); text-align:center; font-size:12px; }
+    .stack { display:grid; gap:12px; }
+    .status-line { display:flex; align-items:center; gap:8px; min-height:28px; color:var(--muted); font-size:12px; }
+    .status-dot { width:9px; height:9px; border-radius:50%; background:var(--line-strong); box-shadow:0 0 0 3px var(--surface-muted); }
+    .status-dot.active { background:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+    .status-dot.warn { background:#c4861a; box-shadow:0 0 0 3px var(--warning-soft); }
+    .live-head { display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-bottom:14px; }
+    .live-head .button-row { margin-left:auto; }
+    .connection-meta { display:flex; flex-wrap:wrap; gap:7px; }
+    .meta-chip { padding:6px 9px; border-radius:999px; background:var(--surface-muted); color:var(--muted); font-size:11px; }
+    .dashboard-grid { display:grid; grid-template-columns:320px minmax(0,1fr); gap:16px; align-items:start; }
+    .phone-card { display:grid; gap:12px; }
+    .phone-stage { min-height:260px; display:grid; place-items:center; perspective:700px; border:1px solid var(--line); border-radius:14px; background:radial-gradient(circle at 50% 38%,#fff 0,#f6f6f2 58%,#eeeeea 100%); overflow:hidden; }
+    .phone-3d { width:112px; height:204px; position:relative; border:8px solid #252623; border-radius:26px; background:linear-gradient(145deg,#e8f4f0,#c9ded7); box-shadow:0 22px 34px rgba(20,24,21,.20); transform-style:preserve-3d; transition:transform 45ms linear; }
+    .phone-3d::before { content:""; position:absolute; top:7px; left:50%; width:38px; height:6px; transform:translateX(-50%); border-radius:6px; background:#252623; }
+    .phone-3d::after { content:""; position:absolute; left:50%; bottom:8px; width:28px; height:4px; transform:translateX(-50%); border-radius:4px; background:rgba(37,38,35,.45); }
+    .phone-screen-mark { position:absolute; inset:44px 18px auto; text-align:center; color:var(--accent); font-weight:850; font-size:11px; letter-spacing:.08em; }
+    .angle-grid,.value-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    .value-tile { min-width:0; padding:11px; border-radius:11px; background:var(--surface-muted); }
+    .value-tile span { display:block; color:var(--muted); font-size:10px; }
+    .value-tile strong { display:block; margin-top:3px; font-variant-numeric:tabular-nums; font-size:16px; white-space:nowrap; }
+    .sensor-groups { display:grid; gap:10px; }
+    .sensor-group { padding:13px; border:1px solid var(--line); border-radius:12px; }
+    .sensor-group h3 { margin:0 0 9px; font-size:13px; }
+    .axis-x { color:var(--axis-x)!important; }.axis-y { color:var(--axis-y)!important; }.axis-z { color:var(--axis-z)!important; }
+    .chart-card { padding:14px; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    .chart-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .tab-row { display:flex; flex-wrap:wrap; gap:5px; }
+    .tab-button { min-height:34px; padding:6px 10px; border:1px solid transparent; border-radius:9px; background:transparent; color:var(--muted); font-size:12px; font-weight:750; cursor:pointer; }
+    .tab-button.active { border-color:color-mix(in srgb,var(--accent) 25%,var(--line)); background:var(--accent-soft); color:var(--accent); }
+    .chart-canvas-wrap { position:relative; height:310px; }
+    #sensorChart { width:100%; height:100%; display:block; }
+    .legend { display:flex; gap:14px; margin-top:8px; color:var(--muted); font-size:10px; }
+    .legend span::before { content:""; display:inline-block; width:12px; height:2px; margin-right:5px; vertical-align:middle; background:currentColor; }
+    .record-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .record-stat { padding:13px; border-radius:11px; background:var(--surface-muted); }
+    .record-stat span { display:block; color:var(--muted); font-size:10px; }
+    .record-stat strong { display:block; margin-top:3px; font-size:17px; font-variant-numeric:tabular-nums; }
+    .export-row { display:flex; align-items:end; gap:10px; margin-top:13px; }
+    .export-field { display:grid; gap:5px; min-width:min(100%,320px); }
+    .filename-control { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; overflow:hidden; border:1px solid var(--line); border-radius:10px; background:var(--surface); }
+    .filename-control:focus-within { border-color:var(--focus); box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 20%,transparent); }
+    .filename-input { min-height:40px; border:0; outline:0; background:transparent; }
+    .filename-extension { padding:0 10px; color:var(--muted); font-size:12px; user-select:none; }
+    .sensor-phone-layout { display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:16px; align-items:start; }
+    .sensor-preview { padding:16px; border:1px solid var(--line); border-radius:14px; background:var(--surface-muted); }
+    .big-status { text-align:center; padding:17px; }
+    .big-status svg { width:54px; height:54px; color:var(--accent); }
+    .big-status h3 { margin:8px 0 4px; font-size:17px; }
+    .big-status p { margin:0; color:var(--muted); font-size:12px; }
+    .rate-options { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+    .rate-option { position:relative; }
+    .rate-option input { position:absolute; opacity:0; pointer-events:none; }
+    .rate-option label { display:block; height:100%; padding:10px 8px; border:1px solid var(--line); border-radius:10px; background:var(--surface); cursor:pointer; text-align:center; }
+    .rate-option label strong { display:block; font-size:12px; }
+    .rate-option label span { display:block; margin-top:2px; color:var(--muted); font-size:9px; }
+    .rate-option input:checked + label { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+    .scan-panel { margin-top:12px; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--surface-muted); }
+    .scan-video { width:100%; max-height:310px; border-radius:10px; background:#111; object-fit:cover; }
+    details { border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden; box-shadow:var(--shadow-sm); }
+    summary { cursor:pointer; padding:13px 15px; font-weight:720; }
+    .details-body { padding:0 15px 15px; color:var(--muted); font-size:12px; }
+    .build-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .build-item { padding:11px; border-radius:10px; background:var(--surface-muted); }
+    .build-item span { display:block; color:var(--muted); font-size:10px; }
+    .build-item strong { display:block; overflow-wrap:anywhere; font-size:12px; }
+    footer { width:min(1180px,100%); margin:0 auto; padding:0 clamp(14px,2.8vw,30px) 34px; color:var(--muted); font-size:12px; }
+    .app-toast { position:fixed; right:18px; bottom:calc(18px + env(safe-area-inset-bottom)); z-index:60; display:flex; align-items:center; gap:12px; max-width:min(420px,calc(100vw - 36px)); padding:10px 12px 10px 14px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--text); box-shadow:var(--shadow-md); opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity .18s ease,transform .18s ease; }
+    .app-toast.show { opacity:1; transform:translateY(0); pointer-events:auto; }
+    .app-toast[data-tone="success"] { border-color:color-mix(in srgb,var(--accent) 34%,var(--line)); }
+    .app-toast[data-tone="warning"] { border-color:#c58a24; }
+    .app-toast-message { min-width:0; flex:1 1 auto; font-size:13px; line-height:1.45; overflow-wrap:anywhere; }
+    .app-toast-action { flex:0 0 auto; min-height:34px; padding:5px 8px; border:0; border-radius:8px; background:transparent; color:var(--accent); font:inherit; font-size:12px; font-weight:800; cursor:pointer; }
+    .app-toast-action[hidden] { display:none; }
+    dialog { width:min(680px,calc(100% - 28px)); max-height:min(760px,calc(100dvh - 28px)); padding:0; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:var(--surface); color:var(--text); box-shadow:var(--shadow-md); }
+    dialog::backdrop { background:rgba(15,17,14,.52); backdrop-filter:blur(4px); }
+    .dialog-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-bottom:1px solid var(--line); }
+    .dialog-header h2 { margin:0; font-size:17px; }
+    .dialog-close { display:grid; place-items:center; width:38px; height:38px; padding:0; border:1px solid var(--line); border-radius:10px; background:var(--surface); cursor:pointer; }
+    .dialog-close svg { width:18px; height:18px; }
+    .dialog-body { padding:20px 20px 28px; overflow:auto; max-height:calc(100dvh - 102px); }
+    .dialog-body h3 { margin:25px 0 8px; padding-top:19px; border-top:1px solid color-mix(in srgb,var(--line) 78%,transparent); font-size:14px; }
+    .dialog-body h3:first-child { margin-top:0; padding-top:0; border-top:0; }
+    .dialog-body p,.dialog-body li { color:var(--muted); font-size:13px; line-height:1.7; }
+    .dialog-body ul,.dialog-body ol { margin:8px 0 0; padding-left:22px; }
+    .dialog-note { margin-top:12px; padding:11px 12px; border:1px solid color-mix(in srgb,var(--accent) 22%,var(--line)); border-radius:10px; background:var(--accent-soft); color:var(--text)!important; }
+    @media (max-width:860px) {
+      .dashboard-grid,.sensor-phone-layout { grid-template-columns:1fr; }
+      .connection-grid { grid-template-columns:1fr; }
+      .qr-wrap { min-height:0; }
+      .phone-card { grid-template-columns:220px minmax(0,1fr); align-items:center; }
+      .phone-stage { min-height:230px; }
+    }
+    @media (max-width:640px) {
+      .brand-meta { display:none; }
+      .main { padding-top:16px; padding-bottom:42px; }
+      .page-intro { flex-direction:column; gap:10px; padding-bottom:14px; }
+      .panel { padding:14px; border-radius:14px; }
+      .panel-head { flex-direction:column; gap:8px; }
+      .role-grid,.record-grid { grid-template-columns:1fr; }
+      .role-card { padding:16px; }
+      .steps { overflow:auto; padding-bottom:2px; }
+      .step-pill { flex:0 0 auto; }
+      .phone-card { grid-template-columns:1fr; }
+      .angle-grid,.value-grid { gap:6px; }
+      .value-tile { padding:9px; }
+      .value-tile strong { font-size:14px; }
+      .chart-canvas-wrap { height:250px; }
+      .export-row { align-items:stretch; flex-direction:column; }
+      .export-field { width:100%; }
+      .rate-options { grid-template-columns:1fr; }
+      .rate-option label { display:flex; justify-content:space-between; align-items:center; gap:8px; text-align:left; }
+      .rate-option label span { margin:0; }
+      .build-grid { grid-template-columns:1fr; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none"><rect x="19" y="8" width="26" height="48" rx="8" stroke="currentColor" stroke-width="5"/><circle cx="32" cy="48" r="2.5" fill="currentColor"/><path d="M12 23c-5 5-5 13 0 18M52 23c5 5 5 13 0 18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="brand-copy">
+          <h1><span id="brandName">Wireless Sensor</span><span class="version-badge" id="versionBadge"></span></h1>
+          <p class="brand-meta" data-i18n="brandMeta">単一HTML · サーバー不要 · P2P</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="language-button" id="languageButton" type="button">EN</button>
+        <button class="header-icon-button" id="helpButton" type="button" data-i18n-title="helpTitle" data-i18n-aria-label="helpTitle" title="使い方と注意事項" aria-label="使い方と注意事項">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.3 2.3 0 1 1 3.5 2c-.9.55-1.3 1.05-1.3 2M12 17h.01"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="page-intro" aria-labelledby="heroTitle">
+      <div>
+        <h2 id="heroTitle" data-i18n="introTitle">スマホをワイヤレスな動きセンサーに</h2>
+        <p data-i18n="lead">加速度・回転・傾きをWebRTCで別のブラウザーへ直接送り、リアルタイム表示とCSV記録ができます。</p>
+      </div>
+      <div class="local-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2"/><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M12 14v2"/></svg>
+        <span data-i18n="localBadge">シグナリング / STUN / TURN 不使用</span>
+      </div>
+    </section>
+
+    <!-- APP:BEGIN -->
+    <section class="panel" id="rolePanel" aria-labelledby="roleTitle">
+      <div class="panel-head">
+        <div><h2 id="roleTitle" data-i18n="roleTitle">この端末の役割を選ぶ</h2><p data-i18n="roleBody">PCやタブレットは受信側、センサーを持つスマホは送信側にします。</p></div>
+      </div>
+      <div class="role-grid">
+        <button class="role-card" id="chooseReceiver" type="button">
+          <span class="role-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M7 10h2l1.4-3 3 6 1.6-3H18"/></svg></span>
+          <h3 data-i18n="receiverRoleTitle">この端末で測定を見る</h3>
+          <p data-i18n="receiverRoleBody">PC / タブレット向け。スマホのセンサー値を受け取り、グラフ表示・記録します。</p>
+        </button>
+        <button class="role-card" id="chooseSensor" type="button">
+          <span class="role-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M10 18h4M3 8c-1.3 1.7-1.3 6.3 0 8M21 8c1.3 1.7 1.3 6.3 0 8"/></svg></span>
+          <h3 data-i18n="sensorRoleTitle">このスマホをセンサーにする</h3>
+          <p data-i18n="sensorRoleBody">加速度・回転・傾きを取得して、接続した受信側へ直接送ります。</p>
+        </button>
+      </div>
+    </section>
+
+    <section id="receiverView" hidden>
+      <div class="steps" aria-label="Connection steps">
+        <div class="step-pill active" id="receiverStep1"><span class="step-num">1</span><span data-i18n="stepOffer">スマホへ接続情報を渡す</span></div>
+        <div class="step-pill" id="receiverStep2"><span class="step-num">2</span><span data-i18n="stepAnswer">スマホから返答を受け取る</span></div>
+        <div class="step-pill" id="receiverStep3"><span class="step-num">3</span><span data-i18n="stepMeasure">測定</span></div>
+      </div>
+
+      <section class="panel" id="receiverConnectPanel" aria-labelledby="receiverConnectTitle">
+        <div class="panel-head">
+          <div><h2 id="receiverConnectTitle" data-i18n="receiverConnectTitle">スマホと接続</h2><p data-i18n="receiverConnectBody">接続情報もBrowser Kittyのサーバーを経由しません。端末間で直接受け渡します。</p></div>
+          <button class="button small" id="backFromReceiver" type="button" data-i18n="changeRole">役割を変更</button>
+        </div>
+        <div class="warning-note" data-i18n="sameNetworkNote">サーバーを一切使わないため、基本的に同じWi-Fi / LAN上の端末同士で使用してください。会社・学校・ゲストWi-Fiなど、端末間通信を遮断するネットワークでは接続できません。</div>
+        <div class="connection-grid" style="margin-top:14px">
+          <div class="qr-wrap">
+            <div class="qr-box" id="offerQr"><div class="qr-placeholder" data-i18n="offerQrPlaceholder">「接続情報を作る」を押すと、スマホで読み取るQRコードを表示します。</div></div>
+            <div class="qr-transfer-meta"><strong id="offerQrProgress">—</strong><span data-i18n="offerQrAuto">QRは自動で切り替わります</span></div>
+            <div class="qr-page-nav">
+              <button class="button small" id="prevOfferQr" type="button" disabled data-i18n="previousQr">前へ</button>
+              <button class="button small" id="nextOfferQr" type="button" disabled data-i18n="nextQr">次へ</button>
+              <button class="button small" id="fullscreenOfferQr" type="button" disabled data-i18n="fullscreenQr">全画面表示</button>
+            </div>
+            <div class="helper" id="offerQrHint" data-i18n="offerQrHint">スマホ側で「PCのQRをカメラで読む」を押し、このQRを読み取ってください。</div>
+          </div>
+          <div class="stack">
+            <div class="status-line"><span class="status-dot" id="receiverStatusDot"></span><strong id="receiverStatusText" data-i18n="statusNotStarted">まだ接続していません</strong></div>
+            <div class="button-row"><button class="button primary" id="createOfferButton" type="button" data-i18n="createOffer">接続情報を作る</button><button class="button" id="copyOfferButton" type="button" disabled data-i18n="copyOffer">接続コードをコピー</button></div>
+            <details id="offerDetails"><summary data-i18n="manualOfferTitle">QRを使わず手動で渡す</summary><div class="details-body"><div class="field"><label for="offerCode" data-i18n="offerCodeLabel">接続コード</label><textarea id="offerCode" readonly spellcheck="false"></textarea></div></div></details>
+            <div class="button-row">
+              <button class="button primary" id="scanAnswerButton" type="button" disabled data-i18n="scanAnswer">スマホの返答QRをカメラで読む</button>
+            </div>
+            <div class="helper" data-i18n="scanAnswerHint">スマホ画面をPCカメラへ向けます。低解像度カメラ向けに返答QRは複数の読みやすいQRへ自動分割されます。</div>
+            <div class="scan-panel" id="scanPanel" hidden>
+              <div class="scan-stage"><video class="scan-video" id="scanVideo" playsinline muted></video><div class="scan-guide" aria-hidden="true"></div></div>
+              <div class="scan-meta"><span id="scanResolution">—</span><span class="scan-progress" id="scanProgress" data-i18n="scanProgressStart">QRを枠いっぱいに映してください</span></div>
+              <div class="field" id="cameraSelectField" hidden style="margin-top:8px"><label for="cameraSelect" data-i18n="cameraSelectLabel">カメラ</label><select id="cameraSelect"></select></div>
+              <div class="button-row" style="margin-top:8px"><button class="button small" id="stopScanButton" type="button" data-i18n="stopScan">読み取りをやめる</button></div>
+              <canvas id="scanCanvas" hidden></canvas>
+            </div>
+            <details id="answerManualDetails"><summary data-i18n="manualAnswerTitle">QRを使えない場合は返答コードを貼り付ける</summary><div class="details-body">
+              <div class="field"><label for="answerInput" data-i18n="answerInputLabel">スマホに表示された返答コード</label><textarea id="answerInput" spellcheck="false" data-i18n-placeholder="answerPlaceholder" placeholder="ここに返答コードを貼り付け"></textarea></div>
+              <div class="button-row" style="margin-top:8px"><button class="button" id="applyAnswerButton" type="button" disabled data-i18n="applyAnswer">返答を読み込む</button></div>
+            </div></details>
+            <div class="diagnostic-note" id="receiverCandidateHint" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="receiverLivePanel" hidden aria-labelledby="liveTitle">
+        <div class="live-head">
+          <div class="status-line"><span class="status-dot active"></span><strong id="liveTitle" data-i18n="connected">接続中</strong></div>
+          <div class="connection-meta">
+            <span class="meta-chip"><span data-i18n="rateLabel">実測</span> <strong id="sampleRate">—</strong> Hz</span>
+            <span class="meta-chip">RTT <strong id="rttValue">—</strong> ms</span>
+            <span class="meta-chip" id="deviceLabel">Sensor device</span>
+          </div>
+          <div class="button-row">
+            <button class="button primary" id="recordButton" type="button" data-i18n="startRecording">記録開始</button>
+            <button class="button" id="zeroButton" type="button" data-i18n="zeroCurrent">現在の姿勢を0にする</button>
+            <button class="button danger" id="disconnectButton" type="button" data-i18n="disconnect">接続終了</button>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="phone-card">
+            <div class="phone-stage"><div class="phone-3d" id="phone3d"><div class="phone-screen-mark">SENSOR</div></div></div>
+            <div class="sensor-groups">
+              <div class="sensor-group"><h3 data-i18n="orientationTitle">傾き</h3><div class="angle-grid">
+                <div class="value-tile"><span data-i18n="pitch">前後</span><strong id="pitchValue">—</strong></div>
+                <div class="value-tile"><span data-i18n="roll">左右</span><strong id="rollValue">—</strong></div>
+                <div class="value-tile"><span data-i18n="yaw">方位</span><strong id="yawValue">—</strong></div>
+              </div></div>
+              <div class="sensor-group"><h3 data-i18n="accelTitle">加速度</h3><div class="value-grid">
+                <div class="value-tile"><span class="axis-x">X</span><strong id="axValue">—</strong></div>
+                <div class="value-tile"><span class="axis-y">Y</span><strong id="ayValue">—</strong></div>
+                <div class="value-tile"><span class="axis-z">Z</span><strong id="azValue">—</strong></div>
+                <div class="value-tile"><span data-i18n="magnitude">大きさ</span><strong id="amValue">—</strong></div>
+              </div></div>
+              <div class="sensor-group"><h3 data-i18n="rotationTitle">回転速度</h3><div class="value-grid">
+                <div class="value-tile"><span class="axis-x">α</span><strong id="raValue">—</strong></div>
+                <div class="value-tile"><span class="axis-y">β</span><strong id="rbValue">—</strong></div>
+                <div class="value-tile"><span class="axis-z">γ</span><strong id="rgValue">—</strong></div>
+              </div></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-toolbar">
+              <div class="tab-row">
+                <button class="tab-button active" type="button" data-chart="accel" data-i18n="accelTab">加速度</button>
+                <button class="tab-button" type="button" data-chart="rotation" data-i18n="rotationTab">回転</button>
+                <button class="tab-button" type="button" data-chart="orientation" data-i18n="orientationTab">傾き</button>
+              </div>
+              <select id="chartWindow" style="width:auto;min-height:34px;padding:5px 8px" aria-label="Chart window"><option value="5">5 s</option><option value="10" selected>10 s</option><option value="30">30 s</option><option value="60">60 s</option></select>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="sensorChart"></canvas></div>
+            <div class="legend"><span class="axis-x">X / α</span><span class="axis-y">Y / β</span><span class="axis-z">Z / γ</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="recordPanel" hidden aria-labelledby="recordTitle">
+        <div class="panel-head"><div><h2 id="recordTitle" data-i18n="recordTitle">測定記録</h2><p id="recordStatusText" data-i18n="recordReady">記録を開始すると、受信したサンプルをこの端末のメモリに保持します。</p></div></div>
+        <div class="record-grid">
+          <div class="record-stat"><span data-i18n="recordDuration">時間</span><strong id="recordDuration">00:00</strong></div>
+          <div class="record-stat"><span data-i18n="recordSamples">サンプル数</span><strong id="recordSamples">0</strong></div>
+        </div>
+        <div class="export-row">
+          <div class="export-field">
+            <span class="field-label" data-i18n="outputFilename">出力ファイル名</span>
+            <div class="filename-control"><input class="filename-input" id="outputFilename" value="wireless-sensor" maxlength="120" aria-describedby="outputFilenameHint"><span class="filename-extension">.csv / .json</span></div>
+            <span class="sr-only" id="outputFilenameHint" data-i18n="outputFilenameHint">保存時に形式に応じた拡張子が付きます</span>
+          </div>
+          <div class="button-row"><button class="button" id="saveCsvButton" type="button" disabled data-i18n="saveCsv">CSVを保存</button><button class="button" id="saveJsonButton" type="button" disabled data-i18n="saveJson">JSONを保存</button></div>
+        </div>
+        <details style="margin-top:12px"><summary data-i18n="csvFieldsTitle">記録される項目</summary><div class="details-body" data-i18n="csvFieldsBody">経過時間、加速度、加速度の大きさ、重力込み加速度、回転速度、端末の向き、ブラウザーが報告した取得間隔、受信時刻を保存します。</div></details>
+      </section>
+    </section>
+
+    <section id="sensorView" hidden>
+      <div class="steps" aria-label="Connection steps">
+        <div class="step-pill active" id="sensorStep1"><span class="step-num">1</span><span data-i18n="sensorStepOffer">PCのQRを読み取る</span></div>
+        <div class="step-pill" id="sensorStep2"><span class="step-num">2</span><span data-i18n="sensorStepAnswer">返答をPCへ戻す</span></div>
+        <div class="step-pill" id="sensorStep3"><span class="step-num">3</span><span data-i18n="sensorStepSend">センサー送信</span></div>
+      </div>
+      <section class="panel" id="sensorConnectPanel">
+        <div class="panel-head">
+          <div><h2 data-i18n="sensorConnectTitle">受信側へ接続</h2><p data-i18n="sensorConnectBody">スマホのカメラでPC画面のQRを読み取ります。接続情報はサーバーを経由しません。</p></div>
+          <button class="button small" id="backFromSensor" type="button" data-i18n="changeRole">役割を変更</button>
+        </div>
+        <div class="button-row" style="margin-top:10px"><button class="button primary" id="scanOfferButton" type="button" data-i18n="scanOffer">PCのQRをカメラで読む</button></div>
+        <div class="helper" style="margin-top:8px" data-i18n="scanOfferHint">PC画面のQRを枠いっぱいに映してください。複数QRの場合は自動で集めて接続情報を復元します。</div>
+        <div class="scan-panel" id="sensorScanPanel" hidden style="margin-top:10px">
+          <div class="scan-stage"><video class="scan-video" id="sensorScanVideo" playsinline muted></video><div class="scan-guide" aria-hidden="true"></div></div>
+          <div class="scan-meta"><span id="sensorScanResolution">—</span><span class="scan-progress" id="sensorScanProgress" data-i18n="scanProgressStart">QRを枠いっぱいに映してください</span></div>
+          <div class="field" id="sensorCameraSelectField" hidden style="margin-top:8px"><label for="sensorCameraSelect" data-i18n="cameraSelectLabel">カメラ</label><select id="sensorCameraSelect"></select></div>
+          <div class="button-row" style="margin-top:8px"><button class="button small" id="stopSensorScanButton" type="button" data-i18n="stopScan">読み取りをやめる</button></div>
+          <canvas id="sensorScanCanvas" hidden></canvas>
+        </div>
+        <details id="sensorOfferManualDetails" style="margin-top:10px"><summary data-i18n="manualOfferReceiveTitle">QRを使えない場合は接続コードを貼り付ける</summary><div class="details-body">
+          <div class="field"><label for="sensorOfferInput" data-i18n="sensorOfferLabel">PCの接続コード</label><textarea id="sensorOfferInput" spellcheck="false" data-i18n-placeholder="sensorOfferPlaceholder" placeholder="PC側の接続コードを貼り付け"></textarea></div>
+          <div class="button-row" style="margin-top:8px"><button class="button" id="useOfferButton" type="button" data-i18n="useOffer">この接続コードを使う</button></div>
+        </div></details>
+        <div id="answerArea" hidden style="margin-top:16px">
+          <div class="success-note" data-i18n="answerReadyNote">返答を作成しました。PC側へ戻してください。サーバーへの送信はありません。</div>
+          <div class="connection-grid" style="margin-top:12px">
+            <div class="qr-wrap" id="answerQrWrap"><div class="qr-box" id="answerQr"><div class="qr-placeholder" data-i18n="answerQrPlaceholder">返答QRを作成中…</div></div><div class="qr-transfer-meta"><strong id="answerQrProgress">1 / 1</strong><span data-i18n="answerQrAuto">QRは自動で切り替わります</span></div><div class="qr-page-nav"><button class="button small" id="prevAnswerQr" type="button" data-i18n="previousQr">前へ</button><button class="button small" id="nextAnswerQr" type="button" data-i18n="nextQr">次へ</button><button class="button small" id="fullscreenAnswerQr" type="button" data-i18n="fullscreenQr">全画面表示</button></div><div class="helper" data-i18n="answerQrHint">PC側で「返答QRをカメラで読む」を押し、スマホ画面をカメラへ向けてください。</div></div>
+            <div class="stack">
+              <div class="field"><label for="answerCode" data-i18n="answerCodeLabel">返答コード</label><textarea id="answerCode" readonly spellcheck="false"></textarea></div>
+              <div class="button-row"><button class="button primary" id="copyAnswerButton" type="button" data-i18n="copyAnswer">返答コードをコピー</button><button class="button" id="shareAnswerButton" type="button" hidden data-i18n="shareAnswer">共有</button></div>
+              <div class="status-line"><span class="status-dot warn" id="sensorStatusDot"></span><strong id="sensorStatusText" data-i18n="waitingPc">PC側の読み込み待ち…</strong></div><div class="diagnostic-note" id="sensorCandidateHint" hidden></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="sensorLivePanel" hidden>
+        <div class="sensor-phone-layout">
+          <div class="stack">
+            <div class="big-status">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="20" y="8" width="24" height="48" rx="7"/><path d="M12 22c-5 5-5 15 0 20M52 22c5 5 5 15 0 20"/><path d="M27 25h10M27 32h10M27 39h10"/></svg>
+              <h3 id="sensorLiveTitle" data-i18n="sensorConnectedTitle">PCと接続しました</h3>
+              <p data-i18n="sensorPermissionBody">「センサーを開始」を押すと、この端末のモーションセンサーへのアクセスを求めます。</p>
+            </div>
+            <div class="button-row" style="justify-content:center"><button class="button primary" id="startSensorButton" type="button" data-i18n="startSensor">センサーを開始</button><button class="button danger" id="stopSensorButton" type="button" hidden data-i18n="stopSensor">送信を停止</button></div>
+            <div class="status-line" style="justify-content:center"><span class="status-dot" id="sendingDot"></span><strong id="sendingStatus" data-i18n="sensorIdle">センサー停止中</strong></div>
+          </div>
+          <div class="sensor-preview">
+            <div class="field-label" data-i18n="sendRateTitle">送信頻度</div>
+            <div class="rate-options" style="margin-top:7px">
+              <div class="rate-option"><input type="radio" name="rate" id="rateLow" value="10"><label for="rateLow"><strong data-i18n="rateLow">省電力</strong><span data-i18n="rateLowSub">約10回/秒</span></label></div>
+              <div class="rate-option"><input type="radio" name="rate" id="rateStandard" value="30" checked><label for="rateStandard"><strong data-i18n="rateStandard">標準</strong><span data-i18n="rateStandardSub">約30回/秒</span></label></div>
+              <div class="rate-option"><input type="radio" name="rate" id="rateHigh" value="0"><label for="rateHigh"><strong data-i18n="rateHigh">高頻度</strong><span data-i18n="rateHighSub">端末が送れるだけ</span></label></div>
+            </div>
+            <div class="value-grid" style="margin-top:12px"><div class="value-tile"><span>X</span><strong id="sensorAx">—</strong></div><div class="value-tile"><span>Y</span><strong id="sensorAy">—</strong></div><div class="value-tile"><span>Z</span><strong id="sensorAz">—</strong></div></div>
+            <p class="helper" data-i18n="wakeLockNote">送信中は、対応ブラウザーでは画面が消えないようにします。</p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section style="margin-top:22px">
+      <details>
+        <summary data-i18n="privacyDetailsTitle">接続方式とプライバシー</summary>
+        <div class="details-body">
+          <p data-i18n="privacyDetailsBody">このアプリはシグナリングサーバー、STUN、TURN、WebSocket、APIを使いません。WebRTCの接続情報はQRまたはコピーで端末間を手渡しし、センサーデータは確立したDataChannelで直接送ります。測定データは受信側ブラウザーのメモリにだけ保持され、保存操作をしたときだけファイルになります。</p>
+        </div>
+      </details>
+      <details style="margin-top:10px">
+        <summary data-i18n="buildInfo">Build information</summary>
+        <div class="details-body"><div class="build-grid"><div class="build-item"><span data-i18n="appVersion">App version</span><strong id="buildVersion">—</strong></div><div class="build-item"><span data-i18n="builtAt">Built at</span><strong id="builtAt">—</strong></div><div class="build-item"><span data-i18n="dependencies">Embedded dependencies</span><strong id="dependencyCount">0</strong></div></div></div>
+      </details>
+    </section>
+    <!-- APP:END -->
+  </main>
+
+  <div class="qr-fullscreen" id="offerQrFullscreen" hidden>
+    <div class="qr-fullscreen-card">
+      <div class="qr-box" id="offerQrFullscreenBox"></div>
+      <div class="qr-transfer-meta"><strong id="offerQrFullscreenProgress">1 / 1</strong><span data-i18n="offerQrAuto">QRは自動で切り替わります</span></div>
+      <button class="button primary" id="closeOfferQrFullscreen" type="button" data-i18n="closeFullscreenQr">閉じる</button>
+    </div>
+  </div>
+
+  <div class="qr-fullscreen" id="answerQrFullscreen" hidden>
+    <div class="qr-fullscreen-card">
+      <div class="qr-box" id="answerQrFullscreenBox"></div>
+      <div class="qr-transfer-meta"><strong id="answerQrFullscreenProgress">1 / 1</strong><span data-i18n="answerQrAuto">QRは自動で切り替わります</span></div>
+      <button class="button primary" id="closeAnswerQrFullscreen" type="button" data-i18n="closeFullscreenQr">閉じる</button>
+    </div>
+  </div>
+
+  <footer><span id="footerName">Wireless Sensor</span> · MIT License · <span data-i18n="footer">Browser-only P2P sensor streaming</span></footer>
+
+  <div class="app-toast" id="appToast" role="status" aria-live="polite" data-tone="default"><div class="app-toast-message" id="appToastMessage"></div><button class="app-toast-action" id="appToastAction" type="button" hidden></button></div>
+  <div class="sr-only" id="liveRegion" aria-live="polite"></div>
+
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-header"><h2 id="helpTitle" data-i18n="helpTitle">使い方と注意事項</h2><button class="dialog-close" id="closeHelpButton" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+    <div class="dialog-body">
+      <!-- APP:HELP:BEGIN -->
+      <h3 data-i18n="helpBasicsTitle">基本操作</h3>
+      <ol><li data-i18n="helpStep1">PC側で接続情報を作り、スマホのカメラでPC画面の分割QRを読み取ります。</li><li data-i18n="helpStep2">スマホが返答QRを作成したら、PC側のカメラで読み取ります。コピー＆ペーストも利用できます。</li><li data-i18n="helpStep3">接続後にスマホで「センサーを開始」を押し、PC側でグラフ表示やCSV/JSON記録を行います。</li></ol>
+      <h3 data-i18n="helpPrivacyTitle">完全サーバーレス</h3>
+      <p data-i18n="helpPrivacyBody">シグナリングサーバー、STUN、TURNは使いません。接続情報もQR/コピーで直接受け渡します。センサー値はWebRTC DataChannelで接続相手へ直接送られます。</p>
+      <h3 data-i18n="helpNotesTitle">注意事項</h3>
+      <ul><li data-i18n="helpNoteNetwork">サーバーを使わない代わりに、同じWi-Fi/LANでも端末間通信を禁止しているネットワークでは接続できません。異なるネットワーク越しの接続は対象外です。</li><li data-i18n="helpNotePermission">iPhone/iPadなどでは、モーションセンサー利用時に明示的な許可操作が必要です。HTTPSで公開したページの利用を推奨します。</li><li data-i18n="helpNoteAccuracy">ブラウザーのセンサー値は専用計測器ではありません。端末やブラウザーごとに取得頻度・精度・利用できる項目が異なります。</li><li data-i18n="helpNoteMemory">記録中のデータは受信側のメモリに保持します。長時間記録ではメモリ使用量が増えるため、区切って保存してください。</li></ul>
+      <p class="dialog-note" data-i18n="helpOffline">配布用HTMLにはQR生成コードとQR読み取り用jsQRも内包されます。実行中の外部API通信はCSPでも禁止しています。</p>
+      <!-- APP:HELP:END -->
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const APP_CONFIG = __APP_CONFIG_JSON__;
+      const BUILD_MANIFEST = __BUILD_MANIFEST_JSON__;
+      const assetBundle = __EMBEDDED_ASSET_BUNDLE_JSON__;
+      const blobUrls = new Set();
+      const assetByteCache = new Map();
+
+      function decodeBase64Bytes(base64) { const binary=atob(base64); const bytes=new Uint8Array(binary.length); for(let i=0;i<binary.length;i+=1) bytes[i]=binary.charCodeAt(i); return bytes; }
+      function getAsset(dependencyId,assetKey){ const asset=assetBundle.dependencies?.[dependencyId]?.assets?.[assetKey]; if(!asset) throw new Error(`Embedded asset not found: ${dependencyId}/${assetKey}`); return asset; }
+      async function inflateAsset(asset){ const stored=decodeBase64Bytes(asset.base64); if(!asset.compression||asset.compression==='none') return stored; if(asset.compression!=='gzip') throw new Error(`Unsupported embedded asset compression: ${asset.compression}`); if(typeof DecompressionStream!=='function') throw new Error('This browser cannot expand gzip-compressed embedded assets.'); const stream=new Blob([stored]).stream().pipeThrough(new DecompressionStream('gzip')); const expanded=new Uint8Array(await new Response(stream).arrayBuffer()); if(Number.isFinite(asset.originalBytes)&&expanded.byteLength!==asset.originalBytes) throw new Error(`Embedded gzip asset size mismatch: expected ${asset.originalBytes}, got ${expanded.byteLength}`); return expanded; }
+      window.StandaloneAssets=Object.freeze({
+        manifest:BUILD_MANIFEST,
+        list(){ return Object.entries(assetBundle.dependencies||{}).flatMap(([dependencyId,dependency])=>Object.keys(dependency.assets||{}).map(assetKey=>`${dependencyId}/${assetKey}`)); },
+        has(dependencyId,assetKey){ return Boolean(assetBundle.dependencies?.[dependencyId]?.assets?.[assetKey]); },
+        bytes(dependencyId,assetKey){ const asset=getAsset(dependencyId,assetKey); if(asset.compression&&asset.compression!=='none') throw new Error(`Embedded asset ${dependencyId}/${assetKey} is gzip-compressed; use await StandaloneAssets.bytesAsync().`); return decodeBase64Bytes(asset.base64); },
+        async bytesAsync(dependencyId,assetKey){ const cacheKey=`${dependencyId}/${assetKey}`; if(!assetByteCache.has(cacheKey)) assetByteCache.set(cacheKey,inflateAsset(getAsset(dependencyId,assetKey))); return new Uint8Array(await assetByteCache.get(cacheKey)); },
+        text(dependencyId,assetKey){ return new TextDecoder().decode(this.bytes(dependencyId,assetKey)); },
+        async textAsync(dependencyId,assetKey){ return new TextDecoder().decode(await this.bytesAsync(dependencyId,assetKey)); },
+        blobUrl(dependencyId,assetKey){ const asset=getAsset(dependencyId,assetKey); const url=URL.createObjectURL(new Blob([this.bytes(dependencyId,assetKey)],{type:asset.mime||'application/octet-stream'})); blobUrls.add(url); return url; },
+        async blobUrlAsync(dependencyId,assetKey){ const asset=getAsset(dependencyId,assetKey); const url=URL.createObjectURL(new Blob([await this.bytesAsync(dependencyId,assetKey)],{type:asset.mime||'application/octet-stream'})); blobUrls.add(url); return url; },
+        async loadClassicScript(dependencyId,assetKey,globalName=''){ const sourceUrl=await this.blobUrlAsync(dependencyId,assetKey); try { await new Promise((resolve,reject)=>{ const script=document.createElement('script'); script.src=sourceUrl; script.onload=resolve; script.onerror=()=>reject(new Error(`Failed to load embedded script: ${dependencyId}/${assetKey}`)); document.head.append(script); }); return globalName?window[globalName]:true; } finally { URL.revokeObjectURL(sourceUrl); blobUrls.delete(sourceUrl); } },
+        async importModule(dependencyId,assetKey){ const sourceUrl=await this.blobUrlAsync(dependencyId,assetKey); try { return await import(sourceUrl); } finally { URL.revokeObjectURL(sourceUrl); blobUrls.delete(sourceUrl); } }
+      });
+      window.addEventListener('pagehide',()=>{ blobUrls.forEach(url=>URL.revokeObjectURL(url)); blobUrls.clear(); });
+
+      const translations={
+        ja:{
+          brandMeta:'単一HTML · サーバー不要 · P2P',helpTitle:'使い方と注意事項',close:'閉じる',introTitle:'スマホをワイヤレスな動きセンサーに',lead:'加速度・回転・傾きをWebRTCで別のブラウザーへ直接送り、リアルタイム表示とCSV記録ができます。',localBadge:'シグナリング / STUN / TURN 不使用',
+          roleTitle:'この端末の役割を選ぶ',roleBody:'PCやタブレットは受信側、センサーを持つスマホは送信側にします。',receiverRoleTitle:'この端末で測定を見る',receiverRoleBody:'PC / タブレット向け。スマホのセンサー値を受け取り、グラフ表示・記録します。',sensorRoleTitle:'このスマホをセンサーにする',sensorRoleBody:'加速度・回転・傾きを取得して、接続した受信側へ直接送ります。',
+          stepOffer:'スマホへ接続情報を渡す',stepAnswer:'スマホから返答を受け取る',stepMeasure:'測定',receiverConnectTitle:'スマホと接続',receiverConnectBody:'接続情報もBrowser Kittyのサーバーを経由しません。端末間で直接受け渡します。',changeRole:'役割を変更',sameNetworkNote:'サーバーを一切使わないため、基本的に同じWi-Fi / LAN上の端末同士で使用してください。会社・学校・ゲストWi-Fiなど、端末間通信を遮断するネットワークでは接続できません。',offerQrPlaceholder:'「接続情報を作る」を押すと、スマホで読み取るQRコードを表示します。',offerQrHint:'スマホ側で「PCのQRをカメラで読む」を押し、このQRを読み取ってください。',offerQrAuto:'QRは自動で切り替わります',statusNotStarted:'まだ接続していません',createOffer:'接続情報を作る',copyOffer:'接続コードをコピー',manualOfferTitle:'QRを使わず手動で渡す',offerCodeLabel:'接続コード',answerInputLabel:'スマホに表示された返答コード',answerPlaceholder:'ここに返答コードを貼り付け',applyAnswer:'返答を読み込む',scanAnswer:'スマホの返答QRをカメラで読む',scanAnswerHint:'スマホ画面をPCカメラへ向けます。低解像度カメラ向けに返答QRは複数の読みやすいQRへ自動分割されます。',scanProgressStart:'QRを枠いっぱいに映してください',cameraSelectLabel:'カメラ',manualAnswerTitle:'QRを使えない場合は返答コードを貼り付ける',stopScan:'読み取りをやめる',
+          connected:'接続中',rateLabel:'実測',startRecording:'記録開始',stopRecording:'記録停止',zeroCurrent:'現在の姿勢を0にする',disconnect:'接続終了',orientationTitle:'傾き',pitch:'前後',roll:'左右',yaw:'方位',accelTitle:'加速度',magnitude:'大きさ',rotationTitle:'回転速度',accelTab:'加速度',rotationTab:'回転',orientationTab:'傾き',recordTitle:'測定記録',recordReady:'記録を開始すると、受信したサンプルをこの端末のメモリに保持します。',recording:'記録中です。停止するとCSV / JSONとして保存できます。',recordStopped:'記録を停止しました。必要な形式で保存してください。',recordDuration:'時間',recordSamples:'サンプル数',outputFilename:'出力ファイル名',outputFilenameHint:'保存時に形式に応じた拡張子が付きます',saveCsv:'CSVを保存',saveJson:'JSONを保存',csvFieldsTitle:'記録される項目',csvFieldsBody:'経過時間、加速度、加速度の大きさ、重力込み加速度、回転速度、端末の向き、ブラウザーが報告した取得間隔、受信時刻を保存します。',
+          sensorStepOffer:'PCのQRを読み取る',sensorStepAnswer:'返答をPCへ戻す',sensorStepSend:'センサー送信',sensorConnectTitle:'受信側へ接続',sensorConnectBody:'スマホのカメラでPC画面のQRを読み取ります。接続情報はサーバーを経由しません。',scanOffer:'PCのQRをカメラで読む',scanOfferHint:'PC画面のQRを枠いっぱいに映してください。複数QRの場合は自動で集めて接続情報を復元します。',manualOfferReceiveTitle:'QRを使えない場合は接続コードを貼り付ける',sensorOfferLabel:'PCの接続コード',sensorOfferPlaceholder:'PC側の接続コードを貼り付け',useOffer:'この接続コードを使う',answerReadyNote:'返答を作成しました。PC側へ戻してください。サーバーへの送信はありません。',answerQrPlaceholder:'返答QRを作成中…',answerQrHint:'PC側で「返答QRをカメラで読む」を押し、スマホ画面をカメラへ向けてください。',answerQrAuto:'QRは自動で切り替わります',previousQr:'前へ',nextQr:'次へ',fullscreenQr:'全画面表示',closeFullscreenQr:'閉じる',answerCodeLabel:'返答コード',copyAnswer:'返答コードをコピー',shareAnswer:'共有',waitingPc:'PC側の読み込み待ち…',sensorConnectedTitle:'PCと接続しました',sensorPermissionBody:'「センサーを開始」を押すと、この端末のモーションセンサーへのアクセスを求めます。',startSensor:'センサーを開始',stopSensor:'送信を停止',sensorIdle:'センサー停止中',sensorSending:'センサー送信中',sendRateTitle:'送信頻度',rateLow:'省電力',rateLowSub:'約10回/秒',rateStandard:'標準',rateStandardSub:'約30回/秒',rateHigh:'高頻度',rateHighSub:'端末が送れるだけ',wakeLockNote:'送信中は、対応ブラウザーでは画面が消えないようにします。',
+          privacyDetailsTitle:'接続方式とプライバシー',privacyDetailsBody:'このアプリはシグナリングサーバー、STUN、TURN、WebSocket、APIを使いません。WebRTCの接続情報はQRまたはコピーで端末間を手渡しし、センサーデータは確立したDataChannelで直接送ります。測定データは受信側ブラウザーのメモリにだけ保持され、保存操作をしたときだけファイルになります。',buildInfo:'ビルド情報',appVersion:'アプリバージョン',builtAt:'ビルド日時',dependencies:'内包依存',footer:'ブラウザーだけでP2Pセンサー送信',
+          helpBasicsTitle:'基本操作',helpStep1:'PC側で「この端末で測定を見る」を選び、接続情報を作ります。スマホ側で「PCのQRをカメラで読む」を押してPC画面の分割QRを読み取ります。',helpStep2:'スマホが返答QRを作成したら、PC側のカメラで読み取ります。どちらの方向もコピー＆ペーストを予備として利用できます。',helpStep3:'接続後にスマホで「センサーを開始」を押し、PC側でグラフ表示やCSV/JSON記録を行います。',helpPrivacyTitle:'完全サーバーレス',helpPrivacyBody:'シグナリングサーバー、STUN、TURNは使いません。接続情報もQR/コピーで直接受け渡します。センサー値はWebRTC DataChannelで接続相手へ直接送られます。',helpNotesTitle:'注意事項',helpNoteNetwork:'サーバーを使わない代わりに、同じWi-Fi/LANでも端末間通信を禁止しているネットワークでは接続できません。異なるネットワーク越しの接続は対象外です。',helpNotePermission:'iPhone/iPadなどでは、モーションセンサー利用時に明示的な許可操作が必要です。HTTPSで公開したページの利用を推奨します。',helpNoteAccuracy:'ブラウザーのセンサー値は専用計測器ではありません。端末やブラウザーごとに取得頻度・精度・利用できる項目が異なります。',helpNoteMemory:'記録中のデータは受信側のメモリに保持します。長時間記録ではメモリ使用量が増えるため、区切って保存してください。',helpOffline:'配布用HTMLにはQR生成コードとQR読み取り用jsQRも内包されます。実行中の外部API通信はCSPでも禁止しています。',
+          creatingOffer:'接続情報を作成中…',offerReady:'スマホへ接続情報を渡してください',creatingAnswer:'返答を作成中…',answerApplied:'返答を読み込みました。接続を待っています…',connectionFailed:'接続できませんでした',connectionClosed:'接続が終了しました',copied:'コピーしました',copyFailed:'コピーできませんでした',qrUnavailableFile:'この環境でカメラQRを使えない場合は、接続コードを手動で渡してください。',qrFailed:'QRコードを作れませんでした。接続コードを使用してください。',invalidSignal:'接続コードを読み込めません。コード全体をコピーしているか確認してください。',sensorUnsupported:'このブラウザーではモーションセンサーを取得できません。',sensorPermissionDenied:'センサーの利用が許可されませんでした。',saved:'保存しました',zeroed:'現在の姿勢を0にしました',scanUnsupported:'このブラウザーではQRカメラ読み取りを利用できません。',scanCameraFailed:'カメラを開始できませんでした',scanFound:'返答QRを読み取りました',scanOfferFound:'PCの接続QRを読み取りました',scanChunkProgress:'返答QR {read}/{total} を読み取りました',scanOfferChunkProgress:'PCのQR {read}/{total} を読み取りました',scanResolutionLabel:'カメラ {width}×{height}',candidateNone:'LAN接続に必要なICE候補が0件です。この端末・ブラウザーでは完全サーバーレス接続ができない可能性があります。',candidateReady:'LAN接続候補 {count}件を取得しました。返答の受け渡し中にタイムアウトすることはありません。',candidateRemoteNone:'相手側のLAN接続候補が0件です。接続できない可能性があります。',candidateRemoteReady:'相手側のLAN接続候補 {count}件を確認しました。',connectionTrouble:'同じWi-Fiであること、VPNを切っていること、ゲストWi-Fi/端末分離が有効でないこと、Windowsファイアウォール等でブラウザー通信が遮断されていないことを確認してください。',shareFailed:'共有できなかったため、返答コードをコピーしました'
+        },
+        en:{
+          brandMeta:'Single HTML · No server · P2P',helpTitle:'How to use & notes',close:'Close',introTitle:'Turn your phone into a wireless motion sensor',lead:'Stream acceleration, rotation, and orientation directly to another browser with WebRTC, then visualize and record it.',localBadge:'No signaling / STUN / TURN servers',
+          roleTitle:'Choose this device’s role',roleBody:'Use a PC or tablet as the receiver and a sensor-equipped phone as the sender.',receiverRoleTitle:'View measurements on this device',receiverRoleBody:'For PC / tablet. Receive sensor values, show live charts, and record measurements.',sensorRoleTitle:'Use this phone as the sensor',sensorRoleBody:'Read acceleration, rotation, and orientation and send them directly to the connected receiver.',
+          stepOffer:'Send connection info to phone',stepAnswer:'Receive reply from phone',stepMeasure:'Measure',receiverConnectTitle:'Connect a phone',receiverConnectBody:'Connection metadata never passes through a Browser Kitty server. You hand it directly between devices.',changeRole:'Change role',sameNetworkNote:'Because this app uses no servers at all, use devices on the same Wi-Fi / LAN. Networks that isolate clients, including many company, school, and guest Wi-Fi networks, will prevent the connection.',offerQrPlaceholder:'Press “Create connection info” to show QR codes for the phone.',offerQrHint:'On the phone, press “Scan PC QR with camera” and point it at this QR.',offerQrAuto:'QR pages advance automatically',statusNotStarted:'Not connected yet',createOffer:'Create connection info',copyOffer:'Copy connection code',manualOfferTitle:'Send manually without QR',offerCodeLabel:'Connection code',answerInputLabel:'Reply code shown on the phone',answerPlaceholder:'Paste the reply code here',applyAnswer:'Load reply',scanAnswer:'Scan phone reply QR with camera',scanAnswerHint:'Point the phone screen at the PC camera. The reply is split into several easier-to-read QR codes for low-resolution webcams.',scanProgressStart:'Fill the guide with the QR code',cameraSelectLabel:'Camera',manualAnswerTitle:'Paste the reply code if QR scanning is unavailable',stopScan:'Stop scanning',
+          connected:'Connected',rateLabel:'Actual',startRecording:'Start recording',stopRecording:'Stop recording',zeroCurrent:'Set current pose to zero',disconnect:'Disconnect',orientationTitle:'Orientation',pitch:'Pitch',roll:'Roll',yaw:'Yaw',accelTitle:'Acceleration',magnitude:'Magnitude',rotationTitle:'Rotation rate',accelTab:'Acceleration',rotationTab:'Rotation',orientationTab:'Orientation',recordTitle:'Measurement record',recordReady:'Start recording to keep received samples in this device’s memory.',recording:'Recording. Stop to save CSV / JSON.',recordStopped:'Recording stopped. Save the data in the format you need.',recordDuration:'Duration',recordSamples:'Samples',outputFilename:'Output filename',outputFilenameHint:'The correct extension is added when saving',saveCsv:'Save CSV',saveJson:'Save JSON',csvFieldsTitle:'Recorded fields',csvFieldsBody:'Elapsed time, acceleration, acceleration magnitude, acceleration including gravity, rotation rate, device orientation, browser-reported interval, and receive time are stored.',
+          sensorStepOffer:'Scan the PC QR',sensorStepAnswer:'Return reply to PC',sensorStepSend:'Stream sensors',sensorConnectTitle:'Connect to receiver',sensorConnectBody:'Use the phone camera to scan the QR pages shown on the PC. Connection metadata never passes through a server.',scanOffer:'Scan PC QR with camera',scanOfferHint:'Fill the frame with the PC QR. If there are several pages, they are collected automatically in any order.',manualOfferReceiveTitle:'Paste the connection code if QR scanning is unavailable',sensorOfferLabel:'Connection code from PC',sensorOfferPlaceholder:'Paste the PC connection code',useOffer:'Use this connection code',answerReadyNote:'Reply created. Return it to the PC. Nothing is sent to a server.',answerQrPlaceholder:'Creating reply QR…',answerQrHint:'If the PC cannot scan QR codes, copy the reply code instead.',answerQrAuto:'QR pages advance automatically',previousQr:'Previous',nextQr:'Next',fullscreenQr:'Fullscreen',closeFullscreenQr:'Close',answerCodeLabel:'Reply code',copyAnswer:'Copy reply code',shareAnswer:'Share',waitingPc:'Waiting for the PC to load the reply…',sensorConnectedTitle:'Connected to the PC',sensorPermissionBody:'Press “Start sensor” to request access to this device’s motion sensors.',startSensor:'Start sensor',stopSensor:'Stop sending',sensorIdle:'Sensor stopped',sensorSending:'Streaming sensor data',sendRateTitle:'Send rate',rateLow:'Power saving',rateLowSub:'About 10 samples/s',rateStandard:'Standard',rateStandardSub:'About 30 samples/s',rateHigh:'High frequency',rateHighSub:'As fast as the device provides',wakeLockNote:'While sending, supported browsers keep the screen awake.',
+          privacyDetailsTitle:'Connection & privacy',privacyDetailsBody:'This app uses no signaling server, STUN, TURN, WebSocket, or API. WebRTC connection metadata is handed directly between devices by QR or copy/paste, and sensor data travels directly over the established DataChannel. Measurements stay in receiver memory until you explicitly save a file.',buildInfo:'Build information',appVersion:'App version',builtAt:'Built at',dependencies:'Embedded dependencies',footer:'Browser-only P2P sensor streaming',
+          helpBasicsTitle:'Basic workflow',helpStep1:'On the PC, choose “View measurements on this device” and create connection info. On the phone, press “Scan PC QR with camera” and scan the segmented QR pages on the PC.',helpStep2:'When the phone creates its reply QR pages, scan them with the PC camera. Copy/paste remains available in both directions as a fallback.',helpStep3:'After connecting, press “Start sensor” on the phone and view or record the data on the PC.',helpPrivacyTitle:'Fully serverless',helpPrivacyBody:'No signaling server, STUN, or TURN is used. Connection metadata is transferred directly by QR/copy. Sensor values are sent directly to the peer over WebRTC DataChannel.',helpNotesTitle:'Notes',helpNoteNetwork:'The tradeoff for using no servers is connectivity: networks that block device-to-device traffic will not work, even on the same Wi-Fi. Connections across different networks are out of scope.',helpNotePermission:'iPhone/iPad and some other browsers require an explicit permission gesture for motion sensors. Using the HTTPS-hosted page is recommended.',helpNoteAccuracy:'Browser sensor values are not a substitute for dedicated measurement instruments. Sampling rate, accuracy, and available fields vary by device and browser.',helpNoteMemory:'Recorded samples are kept in receiver memory. For long sessions, save in segments to avoid excessive memory use.',helpOffline:'The release HTML embeds both the QR generator and the jsQR decoder. Runtime external API connections are also blocked by CSP.',
+          creatingOffer:'Creating connection info…',offerReady:'Send the connection info to the phone',creatingAnswer:'Creating reply…',answerApplied:'Reply loaded. Waiting for connection…',connectionFailed:'Could not connect',connectionClosed:'Connection closed',copied:'Copied',copyFailed:'Could not copy',qrUnavailableFile:'If camera QR handoff is unavailable in this environment, transfer the connection code manually.',qrFailed:'Could not create the QR code. Use the connection code instead.',invalidSignal:'Could not read the connection code. Make sure the complete code was copied.',sensorUnsupported:'Motion sensors are not available in this browser.',sensorPermissionDenied:'Sensor access was not allowed.',saved:'Saved',zeroed:'Current pose set to zero',scanUnsupported:'QR camera scanning is not available in this browser.',scanCameraFailed:'Could not start the camera',scanFound:'Reply QR scanned',scanOfferFound:'PC connection QR scanned',scanChunkProgress:'Scanned reply QR {read}/{total}',scanOfferChunkProgress:'Scanned PC QR {read}/{total}',scanResolutionLabel:'Camera {width}×{height}',candidateNone:'No LAN ICE candidate was found. Fully serverless connection may not work in this browser/device.',candidateReady:'Found {count} LAN connection candidate(s). There is no timeout while you transfer the reply.',candidateRemoteNone:'The other device provided no LAN connection candidate. The connection may fail.',candidateRemoteReady:'Confirmed {count} LAN connection candidate(s) from the other device.',connectionTrouble:'Check that both devices are on the same Wi-Fi, VPN is off, guest/client isolation is disabled, and the browser is not blocked by the firewall.',shareFailed:'Sharing failed, so the reply code was copied instead'
+        }
+      };
+
+      const $=selector=>document.querySelector(selector);
+      const $$=selector=>Array.from(document.querySelectorAll(selector));
+      const storageKeys={language:`${APP_CONFIG.slug}:language`};
+      let language=readStorage(storageKeys.language)||detectLanguage();
+      let role='';
+      let pc=null;
+      let sensorChannel=null;
+      let controlChannel=null;
+      let offerCode='';
+      let answerCode='';
+      let offerQrPages=[];
+      let offerQrIndex=0;
+      let offerQrTimer=0;
+      let answerQrPages=[];
+      let answerQrIndex=0;
+      let answerQrTimer=0;
+      let scannerDecoder=null;
+      let scannerCanvasCtx=null;
+      let scannerMode='';
+      let scanChunkSession='';
+      let scanChunkTotal=0;
+      let scanChunkParts=new Map();
+      let scannerLastDecode=0;
+      let qrReadyPromise=null;
+      let scannerStream=null;
+      let scannerFrame=0;
+      let pingTimer=0;
+      let pingId=0;
+      const pingSent=new Map();
+      let latestRtt=null;
+      let lastSample=null;
+      let zeroOffset={alpha:0,beta:0,gamma:0,active:false};
+      let chartType='accel';
+      let chartHistory=[];
+      let recording=false;
+      let recordingStartedAt=0;
+      let recordingFirstSensorTs=null;
+      let recordSamples=[];
+      let recordingTimer=0;
+      let wakeLock=null;
+      let sensorRunning=false;
+      let lastSensorSendAt=0;
+      let sensorSeq=0;
+      let latestOrientation={alpha:null,beta:null,gamma:null,absolute:false};
+      const sampleIntervals=[];
+
+      function readStorage(key){ try{return localStorage.getItem(key);}catch{return null;} }
+      function writeStorage(key,value){ try{localStorage.setItem(key,value);}catch{} }
+      function detectLanguage(){ if(APP_CONFIG.defaultLanguage==='ja'||APP_CONFIG.defaultLanguage==='en') return APP_CONFIG.defaultLanguage; return (navigator.language||'').toLowerCase().startsWith('ja')?'ja':'en'; }
+      function t(key){ return translations[language]?.[key]??translations.en[key]??key; }
+      function announce(text){ $('#liveRegion').textContent=text; }
+
+      const AppToast=(()=>{ const root=$('#appToast'),message=$('#appToastMessage'),action=$('#appToastAction'); let timer=0,handler=null; function dismiss(){ clearTimeout(timer); root.classList.remove('show'); handler=null; } function show({message:text='',actionLabel='',onAction=null,duration=3200,tone='default'}={}){ clearTimeout(timer); message.textContent=String(text); root.dataset.tone=tone; handler=typeof onAction==='function'?onAction:null; action.textContent=actionLabel||''; action.hidden=!handler||!actionLabel; root.classList.add('show'); if(duration>0) timer=setTimeout(dismiss,duration); return Object.freeze({dismiss}); } action.addEventListener('click',()=>{const h=handler;dismiss();if(h)h();}); return Object.freeze({show,dismiss}); })();
+      window.AppToast=AppToast;
+      function toast(message,options={}){ AppToast.show({message,...options}); }
+
+      function applyLanguage(){
+        document.documentElement.lang=language;
+        $$('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
+        $$('[data-i18n-title]').forEach(el=>{el.title=t(el.dataset.i18nTitle);});
+        $$('[data-i18n-aria-label]').forEach(el=>{el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel));});
+        $$('[data-i18n-placeholder]').forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder);});
+        $('#languageButton').textContent=language==='ja'?'EN':'日本語';
+        $('#languageButton').setAttribute('aria-label',language==='ja'?'英語に切り替え':'Switch to Japanese');
+        document.title=language==='ja'?APP_CONFIG.nameJa:APP_CONFIG.name;
+        $('#brandName').textContent=language==='ja'?APP_CONFIG.nameJa:APP_CONFIG.name;
+        $('#footerName').textContent=language==='ja'?APP_CONFIG.nameJa:APP_CONFIG.name;
+        if(recording) $('#recordButton').textContent=t('stopRecording'); else $('#recordButton').textContent=t('startRecording');
+      }
+
+      function setRole(nextRole){
+        role=nextRole;
+        $('#rolePanel').hidden=Boolean(role);
+        $('#receiverView').hidden=role!=='receiver';
+        $('#sensorView').hidden=role!=='sensor';
+        if(role==='sensor') window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      function resetConnection(){
+        stopScanner(); stopSensorStream(); stopOfferQrCycle(); stopAnswerQrCycle(); clearInterval(pingTimer); pingTimer=0; pingSent.clear(); latestRtt=null;
+        if(pc){ try{pc.close();}catch{} }
+        pc=null; sensorChannel=null; controlChannel=null; offerCode=''; answerCode='';
+      }
+
+      function base64Url(bytes){ let binary=''; const chunk=0x8000; for(let i=0;i<bytes.length;i+=chunk) binary+=String.fromCharCode(...bytes.subarray(i,i+chunk)); return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+      function fromBase64Url(value){ const base=value.replace(/-/g,'+').replace(/_/g,'/'); const padded=base+'='.repeat((4-base.length%4)%4); return decodeBase64Bytes(padded); }
+      async function compressBytes(bytes){ if(typeof CompressionStream!=='function') return null; const stream=new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip')); return new Uint8Array(await new Response(stream).arrayBuffer()); }
+      async function decompressBytes(bytes){ if(typeof DecompressionStream!=='function') throw new Error('gzip unsupported'); const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip')); return new Uint8Array(await new Response(stream).arrayBuffer()); }
+      async function encodeSignal(description){ const raw=new TextEncoder().encode(JSON.stringify({v:1,type:description.type,sdp:description.sdp})); const zipped=await compressBytes(raw); if(zipped&&zipped.length+8<raw.length) return `ws1.g.${base64Url(zipped)}`; return `ws1.j.${base64Url(raw)}`; }
+      async function decodeSignal(code){ const clean=String(code||'').trim(); const parts=clean.split('.'); if(parts.length!==3||parts[0]!=='ws1') throw new Error('bad signal'); let bytes=fromBase64Url(parts[2]); if(parts[1]==='g') bytes=await decompressBytes(bytes); else if(parts[1]!=='j') throw new Error('bad signal encoding'); const data=JSON.parse(new TextDecoder().decode(bytes)); if(data.v!==1||!data.type||!data.sdp) throw new Error('bad signal payload'); return {type:data.type,sdp:data.sdp}; }
+
+      function formatText(key,values={}){ let out=t(key); for(const [name,value] of Object.entries(values)) out=out.replaceAll(`{${name}}`,String(value)); return out; }
+      function countIceCandidates(sdp){ return (String(sdp||'').match(/^a=candidate:/gm)||[]).length; }
+      function showCandidateHint(element,description,remote=false){ const count=countIceCandidates(description?.sdp); element.hidden=false; element.classList.toggle('warn',count===0); element.textContent=count===0?t(remote?'candidateRemoteNone':'candidateNone'):formatText(remote?'candidateRemoteReady':'candidateReady',{count}); return count; }
+      function makeTransferPages(code,chunkSize=175){ const session=Math.random().toString(36).slice(2,8); const chunks=[]; for(let i=0;i<code.length;i+=chunkSize) chunks.push(code.slice(i,i+chunkSize)); return chunks.map((chunk,index)=>`wsq1.${session}.${index+1}.${chunks.length}.${chunk}`); }
+
+      function waitForIceGatheringComplete(connection,timeoutMs=6500){
+        if(connection.iceGatheringState==='complete') return Promise.resolve();
+        return new Promise(resolve=>{ let done=false; const finish=()=>{ if(done)return; done=true; clearTimeout(timer); connection.removeEventListener('icegatheringstatechange',check); resolve(); }; const check=()=>{ if(connection.iceGatheringState==='complete') finish(); }; const timer=setTimeout(finish,timeoutMs); connection.addEventListener('icegatheringstatechange',check); });
+      }
+
+      function createPeer(side){
+        const connection=new RTCPeerConnection({iceServers:[]});
+        connection.addEventListener('connectionstatechange',()=>handleConnectionState(side,connection.connectionState));
+        connection.addEventListener('iceconnectionstatechange',()=>{ if(connection.iceConnectionState==='failed') handleConnectionState(side,'failed'); });
+        return connection;
+      }
+
+      function setupChannel(channel,side){
+        if(channel.label==='sensor'){
+          sensorChannel=channel;
+          channel.addEventListener('message',event=>{ if(side==='receiver') handleSensorMessage(event.data); });
+        } else if(channel.label==='control'){
+          controlChannel=channel;
+          channel.addEventListener('open',()=>{ if(side==='sensor') sendHello(); else startPingLoop(); });
+          channel.addEventListener('message',event=>handleControlMessage(side,event.data));
+        }
+      }
+
+      function handleConnectionState(side,state){
+        if(state==='connected'){
+          if(side==='receiver'){
+            $('#receiverConnectPanel').hidden=true; $('#receiverLivePanel').hidden=false; $('#recordPanel').hidden=false;
+            $('#receiverStep1').classList.add('done'); $('#receiverStep1').classList.remove('active'); $('#receiverStep2').classList.add('done'); $('#receiverStep2').classList.remove('active'); $('#receiverStep3').classList.add('active');
+            announce(t('connected')); startPingLoop(); requestAnimationFrame(drawChart);
+          } else {
+            $('#sensorConnectPanel').hidden=true; $('#sensorLivePanel').hidden=false;
+            $('#sensorStep1').classList.add('done'); $('#sensorStep1').classList.remove('active'); $('#sensorStep2').classList.add('done'); $('#sensorStep2').classList.remove('active'); $('#sensorStep3').classList.add('active');
+            $('#sensorStatusDot').classList.remove('warn'); $('#sensorStatusDot').classList.add('active'); $('#sensorStatusText').textContent=t('connected');
+            sendHello(); announce(t('connected'));
+          }
+        } else if(state==='failed'){
+          toast(`${t('connectionFailed')} — ${t('connectionTrouble')}`,{tone:'warning',duration:9000});
+          if(side==='receiver'){ $('#receiverStatusDot').className='status-dot warn'; $('#receiverStatusText').textContent=t('connectionFailed'); }
+          else { $('#sensorStatusDot').className='status-dot warn'; $('#sensorStatusText').textContent=t('connectionFailed'); }
+        } else if(state==='closed'||state==='disconnected'){
+          if(side==='receiver'&&!$('#receiverLivePanel').hidden) toast(t('connectionClosed'),{tone:'warning'});
+        }
+      }
+
+      async function createReceiverOffer(){
+        resetConnection(); setRole('receiver');
+        $('#receiverStatusDot').className='status-dot warn'; $('#receiverStatusText').textContent=t('creatingOffer'); $('#createOfferButton').disabled=true;
+        $('#offerCode').value=''; $('#answerInput').value=''; $('#applyAnswerButton').disabled=true; $('#copyOfferButton').disabled=true; $('#prevOfferQr').disabled=true; $('#nextOfferQr').disabled=true; $('#fullscreenOfferQr').disabled=true; $('#offerQrProgress').textContent='—'; $('#offerQr').innerHTML=`<div class="qr-placeholder">${escapeHtml(t('creatingOffer'))}</div>`;
+        try{
+          pc=createPeer('receiver');
+          setupChannel(pc.createDataChannel('sensor',{ordered:false,maxRetransmits:0}),'receiver');
+          setupChannel(pc.createDataChannel('control',{ordered:true}),'receiver');
+          await pc.setLocalDescription(await pc.createOffer());
+          await waitForIceGatheringComplete(pc);
+          offerCode=await encodeSignal(pc.localDescription);
+          $('#offerCode').value=offerCode; $('#copyOfferButton').disabled=false; $('#applyAnswerButton').disabled=!$('#answerInput').value.trim(); $('#scanAnswerButton').disabled=false; showCandidateHint($('#receiverCandidateHint'),pc.localDescription,false);
+          $('#receiverStatusDot').className='status-dot active'; $('#receiverStatusText').textContent=t('offerReady');
+          $('#receiverStep1').classList.add('done'); $('#receiverStep1').classList.remove('active'); $('#receiverStep2').classList.add('active');
+          await renderOfferQr();
+        }catch(error){ console.error(error); toast(t('connectionFailed'),{tone:'warning',duration:5000}); $('#receiverStatusDot').className='status-dot warn'; $('#receiverStatusText').textContent=t('connectionFailed'); }
+        finally{ $('#createOfferButton').disabled=false; }
+      }
+
+      async function renderOfferQr(){
+        const el=$('#offerQr');
+        try{
+          offerQrPages=makeTransferPages(offerCode);
+          offerQrIndex=0;
+          await showOfferQrPage();
+          startOfferQrCycle();
+          $('#prevOfferQr').disabled=false;
+          $('#nextOfferQr').disabled=false;
+          $('#fullscreenOfferQr').disabled=false;
+          $('#offerQrHint').textContent=t('offerQrHint');
+        }catch(error){
+          console.warn(error);
+          offerQrPages=[];
+          el.innerHTML=`<div class="qr-placeholder">${escapeHtml(t('qrFailed'))}</div>`;
+          $('#offerQrProgress').textContent='—';
+        }
+      }
+
+      async function useSensorOffer(){
+        const code=$('#sensorOfferInput').value.trim(); if(!code) return;
+        resetConnection(); setRole('sensor'); $('#useOfferButton').disabled=true;
+        try{
+          const remote=await decodeSignal(code);
+          if(remote.type!=='offer') throw new Error('not offer');
+          pc=createPeer('sensor');
+          pc.addEventListener('datachannel',event=>setupChannel(event.channel,'sensor'));
+          await pc.setRemoteDescription(remote);
+          await pc.setLocalDescription(await pc.createAnswer());
+          await waitForIceGatheringComplete(pc);
+          answerCode=await encodeSignal(pc.localDescription);
+          $('#answerCode').value=answerCode; $('#answerArea').hidden=false;
+          $('#sensorStep1').classList.add('done'); $('#sensorStep1').classList.remove('active'); $('#sensorStep2').classList.add('active');
+          $('#sensorStatusText').textContent=t('waitingPc');
+          showCandidateHint($('#sensorCandidateHint')||document.createElement('div'),pc.localDescription,false);
+          try{ answerQrPages=makeTransferPages(answerCode); answerQrIndex=0; await showAnswerQrPage(); startAnswerQrCycle(); }catch(error){ console.warn(error); $('#answerQr').innerHTML=`<div class="qr-placeholder">${escapeHtml(t('qrFailed'))}</div>`; }
+          if(navigator.share) $('#shareAnswerButton').hidden=false;
+        }catch(error){ console.error(error); toast(t('invalidSignal'),{tone:'warning',duration:5000}); }
+        finally{ $('#useOfferButton').disabled=false; }
+      }
+
+      async function applyReceiverAnswer(){
+        if(!pc) return;
+        try{
+          const remote=await decodeSignal($('#answerInput').value);
+          if(remote.type!=='answer') throw new Error('not answer');
+          showCandidateHint($('#receiverCandidateHint'),remote,true);
+          await pc.setRemoteDescription(remote);
+          $('#receiverStatusDot').className='status-dot warn'; $('#receiverStatusText').textContent=t('answerApplied'); $('#applyAnswerButton').disabled=true;
+        }catch(error){ console.error(error); toast(t('invalidSignal'),{tone:'warning',duration:5000}); }
+      }
+
+      async function ensureQrLibrary(){
+        if(typeof window.qrcode==='function') return window.qrcode;
+        if(!qrReadyPromise) qrReadyPromise=window.StandaloneAssets.loadClassicScript('qrcode-generator','qrcode','qrcode');
+        await qrReadyPromise;
+        if(typeof window.qrcode!=='function') throw new Error('qrcode global unavailable');
+        return window.qrcode;
+      }
+      async function renderQr(element,text){
+        const qrFactory=await ensureQrLibrary();
+        const qr=qrFactory(0,'L'); qr.addData(text,'Byte'); qr.make();
+        element.innerHTML=qr.createSvgTag({cellSize:3,margin:12,scalable:true,alt:language==='ja'?'接続用QRコード':'Connection QR code'});
+      }
+
+      async function showOfferQrPage(index=offerQrIndex){
+        if(!offerQrPages.length) return; offerQrIndex=(index+offerQrPages.length)%offerQrPages.length;
+        await renderQr($('#offerQr'),offerQrPages[offerQrIndex]);
+        $('#offerQrProgress').textContent=`${offerQrIndex+1} / ${offerQrPages.length}`;
+        if(!$('#offerQrFullscreen').hidden){ await renderQr($('#offerQrFullscreenBox'),offerQrPages[offerQrIndex]); $('#offerQrFullscreenProgress').textContent=`${offerQrIndex+1} / ${offerQrPages.length}`; }
+      }
+      function stopOfferQrCycle(){ if(offerQrTimer)clearInterval(offerQrTimer); offerQrTimer=0; }
+      function startOfferQrCycle(){ stopOfferQrCycle(); if(offerQrPages.length>1)offerQrTimer=setInterval(()=>showOfferQrPage(offerQrIndex+1).catch(()=>{}),1450); }
+      function stepOfferQr(delta){ stopOfferQrCycle(); showOfferQrPage(offerQrIndex+delta).finally(()=>startOfferQrCycle()); }
+
+      async function showAnswerQrPage(index=answerQrIndex){
+        if(!answerQrPages.length) return; answerQrIndex=(index+answerQrPages.length)%answerQrPages.length;
+        await renderQr($('#answerQr'),answerQrPages[answerQrIndex]);
+        $('#answerQrProgress').textContent=`${answerQrIndex+1} / ${answerQrPages.length}`;
+        if(!$('#answerQrFullscreen').hidden){ await renderQr($('#answerQrFullscreenBox'),answerQrPages[answerQrIndex]); $('#answerQrFullscreenProgress').textContent=`${answerQrIndex+1} / ${answerQrPages.length}`; }
+      }
+      function stopAnswerQrCycle(){ if(answerQrTimer)clearInterval(answerQrTimer); answerQrTimer=0; }
+      function startAnswerQrCycle(){ stopAnswerQrCycle(); if(answerQrPages.length>1)answerQrTimer=setInterval(()=>showAnswerQrPage(answerQrIndex+1).catch(()=>{}),1450); }
+      function stepAnswerQr(delta){ stopAnswerQrCycle(); showAnswerQrPage(answerQrIndex+delta).finally(()=>startAnswerQrCycle()); }
+
+      async function copyText(text){
+        try{ await navigator.clipboard.writeText(text); toast(t('copied'),{tone:'success'}); return true; }catch{}
+        const area=document.createElement('textarea'); area.value=text; area.style.position='fixed'; area.style.opacity='0'; document.body.append(area); area.select(); let ok=false; try{ok=document.execCommand('copy');}catch{} area.remove(); toast(t(ok?'copied':'copyFailed'),{tone:ok?'success':'warning'}); return ok;
+      }
+
+      function sendControl(message){ if(controlChannel?.readyState==='open') controlChannel.send(JSON.stringify(message)); }
+      function sendHello(){ sendControl({type:'hello',platform:navigator.userAgentData?.platform||navigator.platform||'Sensor device',screen:`${screen.width}×${screen.height}`}); }
+      function startPingLoop(){ clearInterval(pingTimer); const ping=()=>{ if(controlChannel?.readyState!=='open') return; const id=++pingId; pingSent.set(id,performance.now()); sendControl({type:'ping',id}); for(const [key,time] of pingSent){ if(performance.now()-time>10000) pingSent.delete(key); } }; ping(); pingTimer=setInterval(ping,2000); }
+      function handleControlMessage(side,raw){
+        let message; try{message=JSON.parse(raw);}catch{return;}
+        if(message.type==='ping'&&side==='sensor') sendControl({type:'pong',id:message.id});
+        else if(message.type==='pong'&&side==='receiver'){ const started=pingSent.get(message.id); if(started!=null){ latestRtt=performance.now()-started; pingSent.delete(message.id); $('#rttValue').textContent=latestRtt.toFixed(0); } }
+        else if(message.type==='hello'&&side==='receiver'){ $('#deviceLabel').textContent=message.platform||'Sensor device'; }
+      }
+
+      async function requestSensorPermissions(){
+        if(!('DeviceMotionEvent'in window)) throw new Error('unsupported');
+        if(typeof window.DeviceMotionEvent?.requestPermission==='function'){ const result=await window.DeviceMotionEvent.requestPermission(); if(result!=='granted') throw new Error('denied'); }
+        if(typeof window.DeviceOrientationEvent?.requestPermission==='function'){ const result=await window.DeviceOrientationEvent.requestPermission(); if(result!=='granted') throw new Error('denied'); }
+      }
+
+      async function startSensorStream(){
+        try{ await requestSensorPermissions(); }
+        catch(error){ toast(error.message==='unsupported'?t('sensorUnsupported'):t('sensorPermissionDenied'),{tone:'warning',duration:5000}); return; }
+        if(sensorRunning) return;
+        sensorRunning=true; sensorSeq=0; lastSensorSendAt=0;
+        window.addEventListener('deviceorientation',onOrientation,true); window.addEventListener('devicemotion',onMotion,true);
+        $('#startSensorButton').hidden=true; $('#stopSensorButton').hidden=false; $('#sendingDot').className='status-dot active'; $('#sendingStatus').textContent=t('sensorSending');
+        try{ if('wakeLock'in navigator) wakeLock=await navigator.wakeLock.request('screen'); }catch{}
+      }
+      function stopSensorStream(){
+        if(!sensorRunning) return;
+        sensorRunning=false; window.removeEventListener('deviceorientation',onOrientation,true); window.removeEventListener('devicemotion',onMotion,true);
+        if(wakeLock){ try{wakeLock.release();}catch{} wakeLock=null; }
+        const start=$('#startSensorButton'),stop=$('#stopSensorButton'),dot=$('#sendingDot'),status=$('#sendingStatus');
+        if(start){start.hidden=false;} if(stop){stop.hidden=true;} if(dot){dot.className='status-dot';} if(status){status.textContent=t('sensorIdle');}
+      }
+      function selectedRate(){ return Number(document.querySelector('input[name="rate"]:checked')?.value||30); }
+      function onOrientation(event){ latestOrientation={alpha:numberOrNull(event.alpha),beta:numberOrNull(event.beta),gamma:numberOrNull(event.gamma),absolute:Boolean(event.absolute)}; }
+      function onMotion(event){
+        if(!sensorRunning||sensorChannel?.readyState!=='open') return;
+        const now=performance.now(),rate=selectedRate(),minInterval=rate>0?1000/rate:0;
+        if(now-lastSensorSendAt<minInterval) return; lastSensorSendAt=now;
+        const a=event.acceleration||{},g=event.accelerationIncludingGravity||{},r=event.rotationRate||{};
+        const sample={v:1,seq:++sensorSeq,t:now,interval:numberOrNull(event.interval),a:{x:numberOrNull(a.x),y:numberOrNull(a.y),z:numberOrNull(a.z)},g:{x:numberOrNull(g.x),y:numberOrNull(g.y),z:numberOrNull(g.z)},r:{a:numberOrNull(r.alpha),b:numberOrNull(r.beta),g:numberOrNull(r.gamma)},o:latestOrientation};
+        try{ sensorChannel.send(JSON.stringify(sample)); }catch{}
+        $('#sensorAx').textContent=formatValue(sample.a.x,2); $('#sensorAy').textContent=formatValue(sample.a.y,2); $('#sensorAz').textContent=formatValue(sample.a.z,2);
+      }
+      function numberOrNull(value){ return Number.isFinite(value)?Number(value):null; }
+
+      function handleSensorMessage(raw){
+        let sample; try{sample=JSON.parse(raw);}catch{return;} if(sample.v!==1) return;
+        const received=performance.now(); sample.received=received; lastSample=sample;
+        updateLiveValues(sample); updateSampleRate(sample);
+        chartHistory.push(sample); const maxAge=65000; while(chartHistory.length>2&&received-chartHistory[0].received>maxAge) chartHistory.shift();
+        if(recording){ if(recordingFirstSensorTs==null) recordingFirstSensorTs=sample.t; recordSamples.push({...sample,recordElapsedMs:sample.t-recordingFirstSensorTs,receivedEpochMs:Date.now()}); $('#recordSamples').textContent=String(recordSamples.length); }
+      }
+
+      function adjustedOrientation(o={}){
+        const raw={alpha:numberOrNull(o.alpha),beta:numberOrNull(o.beta),gamma:numberOrNull(o.gamma)};
+        if(!zeroOffset.active) return raw;
+        return {alpha:raw.alpha==null?null:normalizeAngle(raw.alpha-zeroOffset.alpha),beta:raw.beta==null?null:raw.beta-zeroOffset.beta,gamma:raw.gamma==null?null:raw.gamma-zeroOffset.gamma};
+      }
+      function normalizeAngle(value){ let v=value%360; if(v>180)v-=360; if(v<-180)v+=360; return v; }
+      function updateLiveValues(sample){
+        const o=adjustedOrientation(sample.o); $('#pitchValue').textContent=formatAngle(o.beta); $('#rollValue').textContent=formatAngle(o.gamma); $('#yawValue').textContent=formatAngle(o.alpha);
+        $('#axValue').textContent=formatUnit(sample.a?.x,'m/s²'); $('#ayValue').textContent=formatUnit(sample.a?.y,'m/s²'); $('#azValue').textContent=formatUnit(sample.a?.z,'m/s²'); $('#amValue').textContent=formatUnit(vectorMagnitude(sample.a),'m/s²');
+        $('#raValue').textContent=formatUnit(sample.r?.a,'°/s'); $('#rbValue').textContent=formatUnit(sample.r?.b,'°/s'); $('#rgValue').textContent=formatUnit(sample.r?.g,'°/s');
+        const pitch=o.beta||0,roll=o.gamma||0,yaw=o.alpha||0; $('#phone3d').style.transform=`rotateX(${clamp(-pitch,-70,70)}deg) rotateY(${clamp(roll,-70,70)}deg) rotateZ(${clamp(-yaw,-35,35)}deg)`;
+      }
+      function updateSampleRate(sample){
+        if(chartHistory.length){ const previous=chartHistory[chartHistory.length-1]; if(previous&&Number.isFinite(previous.t)&&Number.isFinite(sample.t)){ const delta=sample.t-previous.t; if(delta>0&&delta<1000){sampleIntervals.push(delta);if(sampleIntervals.length>30)sampleIntervals.shift();} } }
+        if(sampleIntervals.length){ const avg=sampleIntervals.reduce((a,b)=>a+b,0)/sampleIntervals.length; $('#sampleRate').textContent=(1000/avg).toFixed(1); }
+      }
+      function vectorMagnitude(v={}){ const values=[v?.x,v?.y,v?.z]; return values.every(Number.isFinite)?Math.hypot(...values):null; }
+      function formatValue(value,digits=2){ return Number.isFinite(value)?Number(value).toFixed(digits):'—'; }
+      function formatUnit(value,unit){ return Number.isFinite(value)?`${Number(value).toFixed(2)} ${unit}`:'—'; }
+      function formatAngle(value){ return Number.isFinite(value)?`${Number(value).toFixed(1)}°`:'—'; }
+      function clamp(value,min,max){ return Math.max(min,Math.min(max,value)); }
+
+      function drawChart(){
+        if($('#receiverLivePanel').hidden) return;
+        const canvas=$('#sensorChart'),rect=canvas.getBoundingClientRect(),dpr=Math.max(1,Math.min(2,devicePixelRatio||1)); const width=Math.max(300,Math.floor(rect.width*dpr)),height=Math.max(180,Math.floor(rect.height*dpr));
+        if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+        const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,width,height); ctx.save(); ctx.scale(dpr,dpr); const w=width/dpr,h=height/dpr,pad={l:42,r:10,t:12,b:24}; const plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
+        ctx.fillStyle='#fbfbf9';ctx.fillRect(pad.l,pad.t,plotW,plotH); ctx.strokeStyle='#e4e4df';ctx.lineWidth=1;
+        for(let i=0;i<=4;i++){const y=pad.t+plotH*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+plotW,y);ctx.stroke();}
+        const windowMs=Number($('#chartWindow').value)*1000,now=performance.now(),visible=chartHistory.filter(s=>now-s.received<=windowMs); let series=[],range=10,labels=[];
+        if(chartType==='accel'){series=[s=>s.a?.x,s=>s.a?.y,s=>s.a?.z];range=12;labels=['X','Y','Z'];}
+        else if(chartType==='rotation'){series=[s=>s.r?.a,s=>s.r?.b,s=>s.r?.g];range=120;labels=['α','β','γ'];}
+        else {series=[s=>adjustedOrientation(s.o).alpha,s=>adjustedOrientation(s.o).beta,s=>adjustedOrientation(s.o).gamma];range=180;labels=['α','β','γ'];}
+        let maxAbs=0; visible.forEach(s=>series.forEach(fn=>{const v=fn(s);if(Number.isFinite(v))maxAbs=Math.max(maxAbs,Math.abs(v));})); if(chartType!=='orientation') range=Math.max(range,Math.ceil(maxAbs/5)*5||range);
+        ctx.fillStyle='#7a7c76';ctx.font='10px system-ui';ctx.textAlign='right'; for(let i=0;i<=4;i++){const val=range-(2*range*i/4);const y=pad.t+plotH*i/4+3;ctx.fillText(String(Math.round(val)),pad.l-6,y);}
+        const colors=['#16624f','#3e6d9c','#9b6435']; series.forEach((fn,index)=>{ctx.beginPath();let started=false;visible.forEach(s=>{const v=fn(s);if(!Number.isFinite(v))return;const x=pad.l+plotW*(1-(now-s.received)/windowMs),y=pad.t+plotH*(range-v)/(2*range);if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);});ctx.strokeStyle=colors[index];ctx.lineWidth=1.6;ctx.stroke();});
+        ctx.fillStyle='#7a7c76';ctx.textAlign='center';ctx.fillText(`-${Math.round(windowMs/1000)} s`,pad.l,pad.t+plotH+18);ctx.fillText('0 s',pad.l+plotW,pad.t+plotH+18);ctx.restore(); requestAnimationFrame(drawChart);
+      }
+
+      function setZero(){ if(!lastSample?.o) return; zeroOffset={alpha:lastSample.o.alpha||0,beta:lastSample.o.beta||0,gamma:lastSample.o.gamma||0,active:true}; updateLiveValues(lastSample); toast(t('zeroed'),{tone:'success'}); }
+      function toggleRecording(){
+        if(!recording){ recording=true;recordSamples=[];recordingFirstSensorTs=null;recordingStartedAt=performance.now();$('#recordButton').textContent=t('stopRecording');$('#recordStatusText').textContent=t('recording');$('#saveCsvButton').disabled=true;$('#saveJsonButton').disabled=true;$('#recordSamples').textContent='0';recordingTimer=setInterval(updateRecordingDuration,250);updateRecordingDuration(); }
+        else { recording=false;clearInterval(recordingTimer);recordingTimer=0;$('#recordButton').textContent=t('startRecording');$('#recordStatusText').textContent=t('recordStopped');const has=recordSamples.length>0;$('#saveCsvButton').disabled=!has;$('#saveJsonButton').disabled=!has; }
+      }
+      function updateRecordingDuration(){ const ms=recording?performance.now()-recordingStartedAt:(recordSamples.length?recordSamples[recordSamples.length-1].recordElapsedMs:0); const total=Math.max(0,Math.floor(ms/1000)),min=Math.floor(total/60),sec=total%60; $('#recordDuration').textContent=`${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; }
+      function normalizedFilenameBase(){ const input=$('#outputFilename'),fallback=APP_CONFIG.slug||'wireless-sensor'; const cleaned=input.value.trim().replace(/[\\/:*?"<>|\u0000-\u001f]/g,'-').replace(/\.+$/g,'').trim(); let base=cleaned.replace(/\.(csv|json)$/i,'')||fallback; if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(base)) base=`${base}-file`; input.value=base.slice(0,120); return input.value; }
+      function valueOrEmpty(v){ return Number.isFinite(v)?v:''; }
+      function csvEscape(value){ const text=String(value??''); return /[",\n\r]/.test(text)?`"${text.replace(/"/g,'""')}"`:text; }
+      function saveCsv(){
+        const headers=['elapsed_ms','received_epoch_ms','seq','ax','ay','az','accel_magnitude','agx','agy','agz','rotation_alpha','rotation_beta','rotation_gamma','orientation_alpha','orientation_beta','orientation_gamma','orientation_absolute','sensor_interval_ms'];
+        const rows=recordSamples.map(s=>[s.recordElapsedMs,s.receivedEpochMs,s.seq,valueOrEmpty(s.a?.x),valueOrEmpty(s.a?.y),valueOrEmpty(s.a?.z),valueOrEmpty(vectorMagnitude(s.a)),valueOrEmpty(s.g?.x),valueOrEmpty(s.g?.y),valueOrEmpty(s.g?.z),valueOrEmpty(s.r?.a),valueOrEmpty(s.r?.b),valueOrEmpty(s.r?.g),valueOrEmpty(s.o?.alpha),valueOrEmpty(s.o?.beta),valueOrEmpty(s.o?.gamma),Boolean(s.o?.absolute),valueOrEmpty(s.interval)].map(csvEscape).join(','));
+        downloadBlob(new Blob(['\ufeff'+headers.join(',')+'\r\n'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'}),`${normalizedFilenameBase()}.csv`);
+      }
+      function saveJson(){ const payload={format:'browser-kitty-wireless-sensor-v1',createdAt:new Date().toISOString(),coordinateSystem:{description:'Device-fixed browser coordinates; X right, Y toward top of screen, Z outward from screen when provided by browser.'},zeroOffset,connection:{serverless:true,iceServers:[]},samples:recordSamples}; downloadBlob(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),`${normalizedFilenameBase()}.json`); }
+      function downloadBlob(blob,filename){ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(t('saved'),{tone:'success'}); }
+
+      function currentScannerElements(){
+        if(scannerMode==='offer'){
+          return {
+            panel:$('#sensorScanPanel'),video:$('#sensorScanVideo'),canvas:$('#sensorScanCanvas'),
+            resolution:$('#sensorScanResolution'),progress:$('#sensorScanProgress'),
+            cameraField:$('#sensorCameraSelectField'),cameraSelect:$('#sensorCameraSelect')
+          };
+        }
+        return {
+          panel:$('#scanPanel'),video:$('#scanVideo'),canvas:$('#scanCanvas'),
+          resolution:$('#scanResolution'),progress:$('#scanProgress'),
+          cameraField:$('#cameraSelectField'),cameraSelect:$('#cameraSelect')
+        };
+      }
+      async function ensureScannerDecoder(){
+        if(scannerDecoder) return scannerDecoder;
+        if('BarcodeDetector' in window){
+          try{
+            const formats=typeof BarcodeDetector.getSupportedFormats==='function'?await BarcodeDetector.getSupportedFormats():['qr_code'];
+            if(formats.includes('qr_code')){ const detector=new BarcodeDetector({formats:['qr_code']}); scannerDecoder=async video=>{ const codes=await detector.detect(video); return codes[0]?.rawValue||''; }; return scannerDecoder; }
+          }catch(error){ console.warn('Native BarcodeDetector unavailable',error); }
+        }
+        if(typeof window.jsQR!=='function') await window.StandaloneAssets.loadClassicScript('jsqr','decoder','jsQR');
+        if(typeof window.jsQR!=='function') throw new Error('jsQR unavailable');
+        const canvas=currentScannerElements().canvas; scannerCanvasCtx=canvas.getContext('2d',{willReadFrequently:true});
+        scannerDecoder=async video=>{
+          if(!video.videoWidth||!video.videoHeight) return '';
+          const scale=Math.min(1,1280/video.videoWidth); const w=Math.max(320,Math.round(video.videoWidth*scale)); const h=Math.max(240,Math.round(video.videoHeight*scale));
+          if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+          scannerCanvasCtx.drawImage(video,0,0,w,h); const image=scannerCanvasCtx.getImageData(0,0,w,h); const code=window.jsQR(image.data,w,h,{inversionAttempts:'attemptBoth'}); return code?.data||'';
+        };
+        return scannerDecoder;
+      }
+      async function openScannerCamera(deviceId=''){
+        if(scannerStream){scannerStream.getTracks().forEach(track=>track.stop());scannerStream=null;}
+        const els=currentScannerElements();
+        const videoConstraints={width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:15,max:30}};
+        if(deviceId) videoConstraints.deviceId={exact:deviceId};
+        else if(scannerMode==='offer') videoConstraints.facingMode={ideal:'environment'};
+        scannerStream=await navigator.mediaDevices.getUserMedia({video:videoConstraints,audio:false});
+        const video=els.video;video.srcObject=scannerStream;await video.play();
+        const track=scannerStream.getVideoTracks()[0]; const settings=track.getSettings?.()||{};
+        els.resolution.textContent=formatText('scanResolutionLabel',{width:settings.width||video.videoWidth||'—',height:settings.height||video.videoHeight||'—'});
+        try{
+          const caps=track.getCapabilities?.()||{}; const advanced={};
+          if(caps.focusMode?.includes?.('continuous')) advanced.focusMode='continuous';
+          if(caps.width?.max&&caps.height?.max) await track.applyConstraints({width:{ideal:Math.min(1920,caps.width.max)},height:{ideal:Math.min(1080,caps.height.max)},advanced:Object.keys(advanced).length?[advanced]:[]});
+        }catch(error){console.warn('Camera tuning skipped',error);}
+        const devices=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput'); const select=els.cameraSelect;
+        select.innerHTML=''; devices.forEach((d,i)=>{const option=document.createElement('option');option.value=d.deviceId;option.textContent=d.label||`Camera ${i+1}`;if(d.deviceId===track.getSettings?.().deviceId)option.selected=true;select.append(option);});
+        els.cameraField.hidden=devices.length<2;
+      }
+      function parseTransferQr(raw){
+        if(raw.startsWith('ws1.')) return {complete:raw};
+        const match=/^wsq1\.([a-z0-9]+)\.(\d+)\.(\d+)\.(.+)$/i.exec(raw); if(!match)return null;
+        const [,session,indexText,totalText,chunk]=match; const index=Number(indexText),total=Number(totalText); if(index<1||total<1||index>total||total>20)return null;
+        if(scanChunkSession!==session){scanChunkSession=session;scanChunkTotal=total;scanChunkParts=new Map();}
+        if(scanChunkTotal!==total)return null; scanChunkParts.set(index,chunk);
+        const progress=currentScannerElements().progress;
+        progress.textContent=formatText(scannerMode==='offer'?'scanOfferChunkProgress':'scanChunkProgress',{read:scanChunkParts.size,total});
+        if(scanChunkParts.size===total){let full='';for(let i=1;i<=total;i++){if(!scanChunkParts.has(i))return null;full+=scanChunkParts.get(i);}return {complete:full};}
+        return {partial:true};
+      }
+      async function startScanner(mode='answer'){
+        if(!navigator.mediaDevices?.getUserMedia){toast(t('scanUnsupported'),{tone:'warning'});return;}
+        stopScanner();
+        scannerMode=mode;
+        const els=currentScannerElements();
+        try{
+          scanChunkSession='';scanChunkTotal=0;scanChunkParts=new Map();els.progress.textContent=t('scanProgressStart');
+          els.panel.hidden=false; await ensureScannerDecoder(); await openScannerCamera();
+          const video=els.video;
+          const tick=async now=>{ if(!scannerStream)return; if(now-scannerLastDecode>180){scannerLastDecode=now;try{const raw=await scannerDecoder(video);if(raw){const parsed=parseTransferQr(String(raw).trim());if(parsed?.complete){if(scannerMode==='offer'){const complete=parsed.complete;$('#sensorOfferInput').value=complete;toast(t('scanOfferFound'),{tone:'success'});stopScanner();await useSensorOffer();return;}$('#answerInput').value=parsed.complete;$('#applyAnswerButton').disabled=false;toast(t('scanFound'),{tone:'success'});stopScanner();await applyReceiverAnswer();return;}}}catch(error){console.warn('QR decode',error);}} scannerFrame=requestAnimationFrame(tick);}; scannerFrame=requestAnimationFrame(tick);
+        }catch(error){console.error(error);toast(t('scanCameraFailed'),{tone:'warning'});stopScanner();}
+      }
+      function stopScanner(){
+        if(scannerFrame)cancelAnimationFrame(scannerFrame);scannerFrame=0;scannerDecoder=null;scannerCanvasCtx=null;scannerLastDecode=0;
+        if(scannerStream){scannerStream.getTracks().forEach(track=>track.stop());scannerStream=null;}
+        for(const id of ['scanPanel','sensorScanPanel']){const panel=$(`#${id}`);if(panel)panel.hidden=true;}
+        for(const id of ['scanVideo','sensorScanVideo']){const video=$(`#${id}`);if(video)video.srcObject=null;}
+        scannerMode='';
+      }
+
+
+      function escapeHtml(value){ return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+      $('#languageButton').addEventListener('click',()=>{language=language==='ja'?'en':'ja';writeStorage(storageKeys.language,language);applyLanguage();});
+      const helpDialog=$('#helpDialog'); $('#helpButton').addEventListener('click',()=>helpDialog.showModal()); $('#closeHelpButton').addEventListener('click',()=>helpDialog.close()); helpDialog.addEventListener('click',event=>{const rect=helpDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)helpDialog.close();});
+      $('#chooseReceiver').addEventListener('click',()=>setRole('receiver')); $('#chooseSensor').addEventListener('click',()=>setRole('sensor'));
+      $('#backFromReceiver').addEventListener('click',()=>{resetConnection();setRole('');}); $('#backFromSensor').addEventListener('click',()=>{resetConnection();setRole('');history.replaceState(null,'',location.href.split('#')[0]);});
+      $('#createOfferButton').addEventListener('click',createReceiverOffer); $('#copyOfferButton').addEventListener('click',()=>copyText(offerCode)); $('#scanAnswerButton').addEventListener('click',()=>startScanner('answer'));
+      $('#answerInput').addEventListener('input',()=>{$('#applyAnswerButton').disabled=!pc||!$('#answerInput').value.trim();}); $('#applyAnswerButton').addEventListener('click',applyReceiverAnswer);
+      $('#stopScanButton').addEventListener('click',stopScanner);
+      $('#scanOfferButton').addEventListener('click',()=>startScanner('offer')); $('#stopSensorScanButton').addEventListener('click',stopScanner);
+      $('#useOfferButton').addEventListener('click',useSensorOffer); $('#copyAnswerButton').addEventListener('click',()=>copyText(answerCode));
+      $('#shareAnswerButton').addEventListener('click',async()=>{try{await navigator.share({title:'Wireless Sensor reply',text:answerCode});}catch{await copyText(answerCode);toast(t('shareFailed'));}});
+      $('#prevOfferQr').addEventListener('click',()=>stepOfferQr(-1)); $('#nextOfferQr').addEventListener('click',()=>stepOfferQr(1)); $('#fullscreenOfferQr').addEventListener('click',async()=>{$('#offerQrFullscreen').hidden=false;await showOfferQrPage();}); $('#closeOfferQrFullscreen').addEventListener('click',()=>{$('#offerQrFullscreen').hidden=true;});
+      $('#prevAnswerQr').addEventListener('click',()=>stepAnswerQr(-1)); $('#nextAnswerQr').addEventListener('click',()=>stepAnswerQr(1)); $('#fullscreenAnswerQr').addEventListener('click',async()=>{$('#answerQrFullscreen').hidden=false;await showAnswerQrPage();}); $('#closeAnswerQrFullscreen').addEventListener('click',()=>{$('#answerQrFullscreen').hidden=true;});
+      $('#cameraSelect').addEventListener('change',async event=>{try{scannerMode='answer';await openScannerCamera(event.target.value);}catch(error){console.error(error);toast(t('scanCameraFailed'),{tone:'warning'});}});
+      $('#sensorCameraSelect').addEventListener('change',async event=>{try{scannerMode='offer';await openScannerCamera(event.target.value);}catch(error){console.error(error);toast(t('scanCameraFailed'),{tone:'warning'});}});
+      $('#startSensorButton').addEventListener('click',startSensorStream); $('#stopSensorButton').addEventListener('click',stopSensorStream);
+      $('#zeroButton').addEventListener('click',setZero); $('#recordButton').addEventListener('click',toggleRecording); $('#disconnectButton').addEventListener('click',()=>{resetConnection();$('#receiverLivePanel').hidden=true;$('#recordPanel').hidden=true;$('#receiverConnectPanel').hidden=false;setRole('receiver');});
+      $('#saveCsvButton').addEventListener('click',saveCsv); $('#saveJsonButton').addEventListener('click',saveJson); $('#outputFilename').addEventListener('blur',normalizedFilenameBase);
+      $$('.tab-button').forEach(button=>button.addEventListener('click',()=>{$$('.tab-button').forEach(b=>b.classList.remove('active'));button.classList.add('active');chartType=button.dataset.chart;}));
+      window.addEventListener('resize',()=>{}); document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&sensorRunning&&!wakeLock&&'wakeLock'in navigator){try{wakeLock=await navigator.wakeLock.request('screen');}catch{}}});
+
+      if(!navigator.mediaDevices?.getUserMedia){ $('#scanAnswerButton').disabled=true; $('#scanOfferButton').disabled=true; }
+      $('#versionBadge').textContent=`v${APP_CONFIG.version}`; $('#buildVersion').textContent=APP_CONFIG.version; $('#builtAt').textContent=BUILD_MANIFEST.generatedAtUtc||'—'; $('#dependencyCount').textContent=String(BUILD_MANIFEST.dependencies?.length||0); $('#outputFilename').value=APP_CONFIG.slug||'wireless-sensor';
+      applyLanguage();
+
+      const hash=new URLSearchParams(location.hash.startsWith('#')?location.hash.slice(1):location.hash); const autoOffer=hash.get('sensor');
+      if(autoOffer){ setRole('sensor'); $('#sensorOfferInput').value=autoOffer; setTimeout(useSensorOffer,0); }
+    })();
+  </script>
+</body>
+</html>

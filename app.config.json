@@ -1,0 +1,26 @@
+{
+  "$schema": "./schemas/app-config.schema.json",
+  "name": "Wireless Sensor",
+  "nameJa": "Wireless Sensor",
+  "slug": "wireless-sensor",
+  "version": "0.9.0",
+  "description": "Turn a phone into a serverless wireless motion sensor and stream measurements directly to another browser over WebRTC.",
+  "descriptionJa": "スマホをサーバー不要のワイヤレス動きセンサーにして、WebRTCで別のブラウザーへ測定値を直接送信します。",
+  "defaultLanguage": "auto",
+  "repository": {
+    "owner": "ttomohisa",
+    "name": "htmlapps-wireless-sensor"
+  },
+  "build": {
+    "output": "dist/index.html",
+    "blockRuntimeNetwork": true,
+    "selfExtract": {
+      "enabled": true,
+      "output": "dist/index.self-extract.html"
+    },
+    "sizeBudget": {
+      "readableWarningMb": 2,
+      "selfExtractWarningMb": 1
+    }
+  }
+}
