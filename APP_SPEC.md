@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 0.13.0
+- **Version:** 0.14.0
 
 ## 2. Product principles
 
@@ -118,7 +118,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Each sensor also records its own `sensor_elapsed_ms` relative to the first packet from that sensor during the session.
 - Samples stay in browser memory; v0.12 does not persist measurement history to localStorage or IndexedDB.
 - CSV fields include sensor ID/name/device label, measurement mode, synchronized elapsed time, receive elapsed time, per-sensor elapsed time, sensor timestamp, synchronized/receive epoch time, sync uncertainty, clock offset/drift, sequence, acceleration, vibration value, gravity-included acceleration, rotation rate/magnitude, orientation, absolute flag, and browser-reported interval.
-- JSON format `browser-kitty-wireless-sensor-v4` contains sensor metadata (including per-sensor zero offsets and final clock model), connection/privacy metadata, synchronization method metadata, and raw/corrected samples.
+- JSON format `browser-kitty-wireless-sensor-v5` contains sensor metadata (including per-sensor zero offsets and final clock model), connection/privacy metadata, synchronization method metadata, and raw/corrected samples.
 - When a recording stops, a receiver-only post-analysis view is derived from the in-memory samples and events. It does not change raw samples or require a network request.
 - Post-analysis shows recording-level KPIs, per-sensor vibration peak/RMS and FFT summary, grouped impact-event timing, and event-centered zoomed waveforms.
 - Whole-recording FFT searches for the strongest approximately four-second vibration window per sensor before reusing the existing resampling/Hann/radix-2 FFT pipeline.
@@ -128,7 +128,17 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - CSV uses UTF-8 with BOM for spreadsheet compatibility.
 - Clock synchronization is best-effort browser timing, not scientific PTP/GNSS-grade synchronization.
 
-## 9. QR behavior
+## 9. Experiment presets
+
+- Receiver UI provides eight presets: Impact propagation, Vibration comparison, Tilt comparison, Rotation comparison, Car / bicycle, Elevator, Washer / motor, and Free measurement.
+- A preset is guidance plus configuration, not a different sensor protocol.
+- Non-free presets can set measurement mode, display layout, chart window, impact detection/threshold, and a recommended application-level phone send rate.
+- Recommended send rate is sent over the existing reliable control DataChannel using `set-rate`; the sensor updates its 10 / 30 / unlimited throttle selection and acknowledges with `rate-applied`.
+- A newly connected sensor receives the current preset rate after its control channel opens.
+- Preset changes are blocked while recording to keep a session configuration stable. Manual measurement/layout/impact changes return the preset indicator to Free measurement.
+- The active preset is saved with recording metadata and export rows.
+
+## 10. QR behavior
 
 - QR generation is an embedded build-time dependency (`qrcode-generator` 1.4.4); there is no runtime CDN.
 - Both offer and answer handoffs use segmented QR pages carrying only compact `ws1...` signaling data.
@@ -138,14 +148,14 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - QR generation/decoding is available from `file://` as long as camera access is available in the browser context; manual copy/paste remains the fallback.
 - QR failure must never block manual copy/paste signaling.
 
-## 10. Sensor permissions and wake lock
+## 11. Sensor permissions and wake lock
 
 - Sensor permission is requested only from the explicit **Start sensor** action.
 - Support `DeviceMotionEvent.requestPermission()` / `DeviceOrientationEvent.requestPermission()` when present.
 - If supported, use Screen Wake Lock while streaming and re-acquire when the page becomes visible again.
 - Failure to acquire wake lock is non-fatal.
 
-## 11. Data and privacy
+## 12. Data and privacy
 
 - No signaling server.
 - No STUN server.
@@ -156,7 +166,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Measurements are not uploaded to Browser Kitty.
 - Saved CSV/JSON files are created only after an explicit user action.
 
-## 12. Non-goals for v0.13.0
+## 13. Non-goals for v0.14.0
 
 - Cross-internet/NAT traversal.
 - TURN fallback.
@@ -165,7 +175,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Scientific calibration certification.
 - Background operation while the browser/OS suspends the page.
 
-## 13. UX and accessibility
+## 14. UX and accessibility
 
 - Mobile-first from 320px upward.
 - Role selection must be understandable without WebRTC terminology.
@@ -189,7 +199,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 15. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `0.13.0`.
+- `app.config.json` version is `0.14.0`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.

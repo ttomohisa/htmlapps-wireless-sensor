@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.0 - 2026-08-28
+
+- Added eight experiment presets: Impact propagation, Vibration comparison, Tilt comparison, Rotation comparison, Car / bicycle, Elevator, Washer / motor, and Free measurement.
+- Added preset-specific setup instructions and recommended display/measurement settings directly in the receiver UI.
+- Presets automatically configure measurement mode, stacked/per-device layout, chart window, impact detection, and threshold where appropriate.
+- Added receiver-to-sensor control messages that change the application-level send rate on already-connected phones and automatically apply the same recommendation to phones connected later.
+- Blocked preset switching while a recording is active so one experiment session keeps a consistent preset configuration.
+- Added the selected experiment preset to recorded sensor metadata, CSV rows, and JSON export. JSON recording format is now `browser-kitty-wireless-sensor-v5`.
+- Kept Free measurement non-destructive so existing manual settings can continue to be combined without forcing a new configuration.
+
 ## 0.13.0 - 2026-08-28
 
 - Added a post-recording analysis view that opens automatically when a recording stops.

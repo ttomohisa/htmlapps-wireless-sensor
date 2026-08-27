@@ -6,7 +6,7 @@
 
 [日本語版 README](README.ja.md)
 
-A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, streams them directly to a receiver PC over WebRTC, synchronizes their clocks for shared recording, detects cross-device impact timing, analyzes vibration frequency with FFT, compares the same signal in vertically stacked charts, and summarizes each recording in a local post-analysis view.
+A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, streams them directly to a receiver PC over WebRTC, provides guided experiment presets, synchronizes their clocks for shared recording, detects cross-device impact timing, analyzes vibration frequency with FFT, compares the same signal in vertically stacked charts, and summarizes each recording locally.
 
 ## 🚀 Live demo
 
@@ -18,6 +18,7 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 
 ## Features
 
+- **Guided experiment presets** — Choose **Impact propagation / Vibration comparison / Tilt comparison / Rotation comparison / Car or bicycle / Elevator / Washer or motor / Free measurement** to configure the measurement mode, layout, chart window, impact detection, and recommended phone send rate together, with placement and procedure guidance.
 - **Measure up to four phones at once** — The receiver keeps an independent WebRTC peer connection per phone, so one disconnected sensor does not stop the others.
 - **Use a phone as a wireless motion sensor** — Read acceleration, acceleration including gravity, rotation rate, and device orientation from the browser.
 - **Connect without a signaling server** — WebRTC peers are created with `iceServers: []`; offer/answer metadata is handed directly between devices.
@@ -70,9 +71,9 @@ Python, Node.js, and a local web server are not required. The builder uses Windo
 10. Adjust the **Impact events** threshold to detect shocks and compare synchronized arrival-time differences across phones.
 11. Use **Frequency analysis (FFT)** to inspect dominant vibration frequencies from the selected phone.
 12. Pose zeroing applies only to the selected phone.
-13. Clock synchronization runs automatically after connection and periodically afterward. The **Sync** label shows the estimated uncertainty for each phone.
-14. Start one recording session to capture all connected sensors on the corrected shared timeline. JSON v4 also stores impact events detected during the recording.
-15. When recording stops, the **Measurement results** view opens automatically. Review per-sensor vibration peak/RMS, whole-recording dominant frequencies, impact groups, arrival-time differences, and zoomed event waveforms before saving CSV or JSON.
+14. Clock synchronization runs automatically after connection and periodically afterward. The **Sync** label shows the estimated uncertainty for each phone.
+14. Start one recording session to capture all connected sensors on the corrected shared timeline. JSON v5 also stores the active experiment preset and impact events detected during the recording.
+16. When recording stops, the **Measurement results** view opens automatically. Review per-sensor vibration peak/RMS, whole-recording dominant frequencies, impact groups, arrival-time differences, and zoomed event waveforms before saving CSV or JSON.
 
 ### Sensor: phone
 
@@ -101,7 +102,7 @@ Wireless Sensor uses the browser `devicemotion` and `deviceorientation` events. 
 - clock-synchronized shared elapsed time for cross-device comparison
 - receive-time elapsed value as a diagnostic/fallback
 - estimated sync uncertainty, clock offset, and clock drift
-- measurement mode, vibration value, and combined rotation magnitude
+- experiment preset, measurement mode, vibration value, and combined rotation magnitude
 - per-sensor elapsed time, sensor timestamp, and receive timestamp
 - sequence number
 
@@ -175,7 +176,7 @@ The GitHub Pages version still needs the initial HTML request. For a completely 
 - Backgrounding or locking the phone can suspend browser sensor events and stop streaming.
 - Long recordings remain in receiver memory until saved. Multi-phone sessions accumulate samples faster, so save in segments when needed.
 - Clock synchronization is an NTP-like estimate over the WebRTC DataChannel. It favors low-RTT samples and corrects offset and long-run drift, but cannot guarantee asymmetric network delay or OS/browser timer behavior. It is not a replacement for PTP/GNSS-grade scientific synchronization.
-- v0.13.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
+- v0.14.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
 - Impact timing is a browser-level threshold detector. Sampling frequency, threshold, device mounting, and sensor quality affect the detected arrival time.
 - FFT bandwidth is limited by the measured sensor sample rate. Around 30 Hz sampling, useful analysis is limited to roughly 15 Hz and below.
 

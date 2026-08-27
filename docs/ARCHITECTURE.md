@@ -44,6 +44,7 @@ Set remote answer
   +========= WebRTC DataChannels ===========+
        sensor: unordered, no retransmit
        control: ordered, reliable
+                (sync + preset send-rate control)
 ```
 
 Pairing another phone creates another `RTCPeerConnection`; it does not replace existing connected peers.
@@ -77,6 +78,14 @@ The receiver stores one state object per smartphone. Important per-peer state in
 - independent orientation zero offset
 
 The connected-sensor roster selects which peer drives the detailed numeric values and CSS 3D phone view.
+
+## Experiment presets
+
+Experiment presets live entirely on the receiver and reuse existing measurement/rendering features. A preset can select measurement mode, display layout, chart time window, impact detection/threshold, and a recommended sender throttle. The sender throttle is not a request to the hardware sensor; it only controls how often browser motion events are forwarded.
+
+When a preset recommends 10 Hz, 30 Hz, or unrestricted sending, the receiver sends `set-rate` over each reliable control DataChannel. The phone updates the same radio selection exposed in its UI and returns `rate-applied`. Newly connected phones receive the currently selected preset rate when their control channel opens. No new network path or server is introduced.
+
+Preset switching is disabled while recording so a guided experiment has stable high-level settings. Manual measurement-mode, layout, impact-threshold, or impact-enable edits return the preset indicator to Free measurement. The selected preset is stored in record metadata and exports for reproducibility.
 
 ## Signaling serialization
 
@@ -113,6 +122,7 @@ Each phone has two DataChannels.
 - reliable / ordered defaults
 - hello metadata
 - ping / pong timestamp exchange used for RTT and clock-model estimation
+- preset `set-rate` / `rate-applied` messages for application-level sender throttling
 
 ## Sensor adapter
 
@@ -161,7 +171,7 @@ A recording session stores both timelines:
 - `synchronized_elapsed_ms`: sensor timestamp mapped onto receiver time, then measured from the recording start
 - `receive_elapsed_ms`: receiver packet-arrival time from the recording start, retained for diagnostics/fallback
 
-CSV also records synchronization uncertainty, offset, drift, measurement mode, vibration value, and raw sensor fields. JSON format `browser-kitty-wireless-sensor-v4` stores the final clock model for each sensor so corrected timestamps remain auditable.
+CSV also records synchronization uncertainty, offset, drift, measurement mode, vibration value, and raw sensor fields. JSON format `browser-kitty-wireless-sensor-v5` stores the final clock model for each sensor so corrected timestamps remain auditable.
 
 This is a practical browser-level synchronization scheme, not a guarantee of scientific PTP/GNSS-grade time alignment. Asymmetric network delay and browser/OS scheduling can still bias the estimate.
 
@@ -199,7 +209,7 @@ The receiver derives a gravity-free acceleration magnitude from `event.accelerat
 
 Each impact is timestamped on the peer's corrected receiver-time mapping. Impacts from different sensor IDs within a short synchronized window are grouped as the same physical event. The UI sorts the grouped events by corrected time and reports deltas from the earliest sensor together with each peer's synchronization uncertainty. The marker time is the threshold crossing; the displayed peak may continue updating for a short window after the crossing.
 
-When recording is active, detected impacts are included in JSON v4 alongside samples.
+When recording is active, detected impacts are included in JSON v5 alongside samples and the active experiment preset.
 
 ## FFT analysis
 
@@ -223,4 +233,4 @@ The analysis pipeline:
 4. Draws event-centered vibration windows from -250 ms to +750 ms around the first device arrival, using a shared amplitude scale across participating sensors.
 5. Searches each sensor recording for the strongest roughly four-second vibration window and sends that window through the existing irregular-sample resampling, Hann-window, and radix-2 FFT implementation.
 
-The UI is intentionally derived rather than stored. Starting a new recording replaces the in-memory recording and hides the previous analysis view. CSV/JSON export remains compatible with the v0.12.0 recording format (`browser-kitty-wireless-sensor-v4`).
+The UI is intentionally derived rather than stored. Starting a new recording replaces the in-memory recording and hides the previous analysis view. CSV/JSON export keeps the same raw sensor/timing fields while JSON v5 adds the active experiment preset to the recording metadata.
