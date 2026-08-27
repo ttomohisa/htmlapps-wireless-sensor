@@ -6,7 +6,7 @@
 
 [日本語版 README](README.ja.md)
 
-A privacy-focused, single-HTML Browser Kitty tool that turns a smartphone into a wireless motion sensor and streams acceleration, rotation, and orientation directly to another browser over WebRTC.
+A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, streams acceleration, rotation, and orientation directly to a receiver PC over WebRTC, and records them on a shared timeline corrected for the phones’ clock offsets and drift.
 
 ## 🚀 Live demo
 
@@ -18,12 +18,14 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 
 ## Features
 
+- **Measure up to four phones at once** — The receiver keeps an independent WebRTC peer connection per phone, so one disconnected sensor does not stop the others.
 - **Use a phone as a wireless motion sensor** — Read acceleration, acceleration including gravity, rotation rate, and device orientation from the browser.
 - **Connect without a signaling server** — WebRTC peers are created with `iceServers: []`; offer/answer metadata is handed directly between devices.
 - **Camera-first QR handoff in both directions** — The PC shows segmented offer QR pages, the phone scans them, then the PC scans the phone's segmented reply QR pages.
 - **Designed for ordinary cameras** — QR payloads are split into lower-density pages, the phone prefers its rear camera, and desktop scanning falls back to embedded `jsQR` when native QR decoding is unavailable.
-- **See motion live** — View numeric values, a CSS 3D phone preview, rolling charts, measured sample rate, and WebRTC RTT.
-- **Record locally** — Set the current pose as zero, record samples in receiver memory, then save CSV or JSON explicitly.
+- **Selected and overlay views** — Pick any connected sensor for live values, 3D pose, measured sample rate, and RTT, or overlay all connected sensors on the chart.
+- **Clock-corrected synchronized recording** — Connection-time and periodic ping/pong bursts estimate each phone’s offset and drift relative to the PC, favoring low-RTT samples. Per-sensor sync uncertainty is shown in the UI.
+- **Measurement modes for common tasks** — Switch between **Motion / Vibration / Tilt / Rotation / Free view**. Vibration mode includes rolling 2-second RMS, peak, and range; rotation mode includes combined rotation metrics.
 - **Single HTML, bilingual UI** — Required QR libraries are embedded at build time; Japanese and English are included in the same app.
 
 ## Quick start
@@ -36,6 +38,7 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 4. On the phone, choose **Use this phone as the sensor**, press **Scan PC QR with camera**, and scan the QR pages shown on the PC.
 5. When the phone shows reply QR pages, press **Scan phone reply QR with camera** on the PC and point the phone screen at the PC camera.
 6. After the WebRTC connection opens, press **Start sensor** on the phone and grant motion-sensor permission when requested.
+7. To add another phone, press **Add sensor** on the receiver and repeat the same QR pairing flow. Up to four phones can remain connected at once.
 
 No installation or account is required. HTTPS hosting is recommended for phone camera and motion-sensor permissions.
 
@@ -57,8 +60,12 @@ Python, Node.js, and a local web server are not required. The builder uses Windo
 3. Let the phone scan all offer pages. Order does not matter.
 4. Press **Scan phone reply QR with camera** and point the phone screen at the PC camera.
 5. When all reply pages are collected, the answer is applied automatically and the app waits for the peer connection to open.
-6. Use live values, the 3D preview, chart tabs, 5/10/30/60-second windows, and **Set current pose to zero** as needed.
-7. Start/stop recording and save CSV or JSON with the output filename you choose.
+6. Use **Add sensor** to repeat the pairing flow while existing sensors remain connected.
+7. Select a sensor card to inspect that phone’s live values, 3D pose, measured rate, and RTT.
+8. Choose a **Measurement mode**: **Motion / Vibration / Tilt / Rotation / Free view**. The chart focus and summary metrics change with the mode.
+9. Switch the chart between **Selected sensor** and **Overlay all sensors** with 5 / 10 / 30 / 60-second windows. Pose zeroing applies only to the selected phone.
+10. Clock synchronization runs automatically after connection and periodically afterward. The **Sync** label shows the estimated uncertainty for each phone.
+11. Start one recording session to capture all connected sensors on the corrected shared timeline, then export CSV or JSON.
 
 ### Sensor: phone
 
@@ -83,7 +90,13 @@ Wireless Sensor uses the browser `devicemotion` and `deviceorientation` events. 
 - orientation alpha / beta / gamma
 - orientation absolute flag
 - browser-reported `DeviceMotionEvent.interval`
-- sequence number, sensor-side elapsed time, and receiver timestamp
+- sensor ID / sensor name / device label
+- clock-synchronized shared elapsed time for cross-device comparison
+- receive-time elapsed value as a diagnostic/fallback
+- estimated sync uncertainty, clock offset, and clock drift
+- measurement mode, vibration value, and combined rotation magnitude
+- per-sensor elapsed time, sensor timestamp, and receive timestamp
+- sequence number
 
 Unavailable browser/device values are stored as empty CSV fields or `null` in JSON.
 
@@ -153,8 +166,9 @@ The GitHub Pages version still needs the initial HTML request. For a completely 
 - Browser sensor values are not a substitute for calibrated scientific instruments. Accuracy, available fields, and sample rates vary by device, OS, and browser.
 - iPhone/iPad and some browsers require an explicit permission gesture for motion sensors.
 - Backgrounding or locking the phone can suspend browser sensor events and stop streaming.
-- Long recordings remain in receiver memory until saved; record in segments when memory usage matters.
-- v0.9.0 does not include multi-phone measurement, GPS, magnetometer, microphone sensing, or camera sensing beyond QR setup.
+- Long recordings remain in receiver memory until saved. Multi-phone sessions accumulate samples faster, so save in segments when needed.
+- Clock synchronization is an NTP-like estimate over the WebRTC DataChannel. It favors low-RTT samples and corrects offset and long-run drift, but cannot guarantee asymmetric network delay or OS/browser timer behavior. It is not a replacement for PTP/GNSS-grade scientific synchronization.
+- v0.11.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
 
 ## Dependencies
 
