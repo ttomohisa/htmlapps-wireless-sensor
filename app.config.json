@@ -3,9 +3,9 @@
   "name": "Wireless Sensor",
   "nameJa": "Wireless Sensor",
   "slug": "wireless-sensor",
-  "version": "0.11.0",
-  "description": "Turn up to four phones into fully serverless wireless motion sensors with clock-synchronized multi-device recording and measurement modes over WebRTC.",
-  "descriptionJa": "最大4台のスマホを完全サーバーレスのワイヤレス動きセンサーにして、時計同期を補正した多点記録と計測モードをWebRTCだけで利用できます。",
+  "version": "0.12.0",
+  "description": "Turn up to four phones into fully serverless wireless motion sensors with synchronized multi-device recording, impact timing, FFT analysis, and stacked signal comparison over WebRTC.",
+  "descriptionJa": "最大4台のスマホを完全サーバーレスのワイヤレス動きセンサーにして、同期多点記録、衝撃到達時間差、FFT周波数分析、同一信号の縦並び比較をWebRTCだけで利用できます。",
   "defaultLanguage": "auto",
   "repository": {
     "owner": "ttomohisa",

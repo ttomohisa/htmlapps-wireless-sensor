@@ -147,6 +147,45 @@
     .sensor-legend { display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:8px; color:var(--muted); font-size:10px; }
     .sensor-legend-item { display:inline-flex; align-items:center; gap:5px; }
     .sensor-legend-dot { width:10px; height:3px; border-radius:4px; background:var(--sensor-color); }
+    .display-mode-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin:0 0 12px; }
+    .display-mode-buttons { display:flex; flex-wrap:wrap; gap:6px; }
+    .chart-global-controls { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin:-4px 0 12px; }
+    .display-mode-button { min-height:34px; padding:6px 10px; border:1px solid var(--line); border-radius:9px; background:var(--surface); color:var(--muted); font-size:11px; font-weight:760; cursor:pointer; }
+    .display-mode-button.active { border-color:color-mix(in srgb,var(--accent) 35%,var(--line)); background:var(--accent-soft); color:var(--accent); }
+    .comparison-stack { display:grid; gap:12px; }
+    .comparison-card { padding:12px; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    .comparison-card-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+    .comparison-card-title { display:flex; align-items:center; gap:7px; min-width:0; }
+    .comparison-card-title strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+    .comparison-card-meta { color:var(--muted); font-size:10px; font-variant-numeric:tabular-nums; }
+    .comparison-chart-wrap { height:185px; }
+    .comparison-chart { width:100%; height:100%; display:block; }
+    .analysis-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; margin-top:14px; }
+    .analysis-card { min-width:0; padding:14px; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    .analysis-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .analysis-card-head h3 { margin:0; font-size:13px; }
+    .analysis-card-head p { margin:3px 0 0; color:var(--muted); font-size:10px; }
+    .impact-controls { display:flex; align-items:end; flex-wrap:wrap; gap:8px 12px; margin-bottom:10px; }
+    .impact-threshold-field { min-width:170px; flex:1; }
+    .impact-threshold-field input[type=range] { width:100%; accent-color:var(--accent); }
+    .impact-threshold-readout { font-size:11px; font-variant-numeric:tabular-nums; color:var(--muted); }
+    .check-row { display:inline-flex; align-items:center; gap:6px; min-height:34px; color:var(--muted); font-size:11px; }
+    .impact-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+    .impact-kpi { padding:9px 10px; border-radius:10px; background:var(--surface-muted); }
+    .impact-kpi span { display:block; color:var(--muted); font-size:9px; }
+    .impact-kpi strong { display:block; margin-top:2px; font-size:15px; font-variant-numeric:tabular-nums; }
+    .impact-list { display:grid; gap:6px; max-height:210px; overflow:auto; }
+    .impact-row { display:grid; grid-template-columns:minmax(90px,1fr) auto auto; gap:8px; align-items:center; padding:8px 9px; border:1px solid var(--line); border-radius:9px; background:#fbfbf9; font-size:10px; }
+    .impact-row strong { display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
+    .impact-row .delta { font-variant-numeric:tabular-nums; font-weight:800; color:var(--accent); }
+    .impact-row .peak { color:var(--muted); font-variant-numeric:tabular-nums; }
+    .fft-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:8px; }
+    .fft-kpi { padding:9px 10px; border-radius:10px; background:var(--surface-muted); }
+    .fft-kpi span { display:block; color:var(--muted); font-size:9px; }
+    .fft-kpi strong { display:block; margin-top:2px; font-size:15px; font-variant-numeric:tabular-nums; }
+    .fft-canvas-wrap { height:210px; }
+    #fftChart { width:100%; height:100%; display:block; }
+    .analysis-empty { padding:14px; border:1px dashed var(--line-strong); border-radius:10px; color:var(--muted); text-align:center; font-size:11px; }
     .dashboard-grid { display:grid; grid-template-columns:320px minmax(0,1fr); gap:16px; align-items:start; }
     .phone-card { display:grid; gap:12px; }
     .phone-stage { min-height:260px; display:grid; place-items:center; perspective:700px; border:1px solid var(--line); border-radius:14px; background:radial-gradient(circle at 50% 38%,#fff 0,#f6f6f2 58%,#eeeeea 100%); overflow:hidden; }
@@ -251,7 +290,7 @@
       .page-intro { flex-direction:column; gap:10px; padding-bottom:14px; }
       .panel { padding:14px; border-radius:14px; }
       .panel-head { flex-direction:column; gap:8px; }
-      .role-grid,.record-grid { grid-template-columns:1fr; }
+      .role-grid,.record-grid,.analysis-grid { grid-template-columns:1fr; }
       .sensor-roster { grid-template-columns:1fr; }
       .measurement-mode-head { flex-direction:column; }
       .mode-summary { grid-template-columns:1fr 1fr 1fr; }
@@ -271,7 +310,9 @@
       .build-grid { grid-template-columns:1fr; }
     }
     @media (max-width:380px) {
-      .mode-summary { grid-template-columns:1fr; }
+      .mode-summary,.impact-summary,.fft-summary { grid-template-columns:1fr; }
+      .impact-row { grid-template-columns:minmax(86px,1fr) auto; }
+      .impact-row .peak { grid-column:1 / -1; }
       .mode-buttons { display:grid; grid-template-columns:1fr 1fr; }
     }
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
@@ -419,7 +460,24 @@
           </div>
         </div>
 
-        <div class="dashboard-grid">
+        <div class="display-mode-row">
+          <div class="display-mode-buttons" role="group" aria-label="Display mode">
+            <button class="display-mode-button active" type="button" data-display-mode="single" data-i18n="displaySingle">端末ごとに見る</button>
+            <button class="display-mode-button" type="button" data-display-mode="stacked" data-i18n="displayStacked">同じ項目を縦に比較</button>
+          </div>
+          <span class="helper" id="displayModeHint" data-i18n="displaySingleHint">接続中のセンサーを選んで詳細を表示します。</span>
+        </div>
+        <div class="chart-global-controls">
+          <div class="tab-row" id="chartTabs" hidden>
+            <button class="tab-button active" type="button" data-chart="accel" data-i18n="accelTab">加速度</button>
+            <button class="tab-button" type="button" data-chart="rotation" data-i18n="rotationTab">回転</button>
+            <button class="tab-button" type="button" data-chart="orientation" data-i18n="orientationTab">傾き</button>
+          </div>
+          <select id="chartWindow" style="width:auto;min-height:34px;padding:5px 8px" aria-label="Chart window"><option value="5">5 s</option><option value="10" selected>10 s</option><option value="30">30 s</option><option value="60">60 s</option></select>
+          <div class="legend" id="stackedAxisLegend" hidden><span class="axis-x" id="stackedAxisLegend1">X</span><span class="axis-y" id="stackedAxisLegend2">Y</span><span class="axis-z" id="stackedAxisLegend3">Z</span></div>
+        </div>
+
+        <div class="dashboard-grid" id="singleDashboard">
           <div class="phone-card">
             <div class="phone-stage"><div class="phone-3d" id="phone3d"><div class="phone-screen-mark">SENSOR</div></div></div>
             <div class="sensor-groups">
@@ -443,16 +501,38 @@
           </div>
           <div class="chart-card">
             <div class="chart-toolbar">
-              <div class="tab-row" id="chartTabs" hidden>
-                <button class="tab-button active" type="button" data-chart="accel" data-i18n="accelTab">加速度</button>
-                <button class="tab-button" type="button" data-chart="rotation" data-i18n="rotationTab">回転</button>
-                <button class="tab-button" type="button" data-chart="orientation" data-i18n="orientationTab">傾き</button>
-              </div>
-              <div class="chart-scope-row"><select id="chartScope" style="width:auto;min-height:34px;padding:5px 8px" aria-label="Chart scope"><option value="selected" data-i18n="chartSelected">選択中</option><option value="all" data-i18n="chartAll">全センサー重ね合わせ</option></select><select id="chartWindow" style="width:auto;min-height:34px;padding:5px 8px" aria-label="Chart window"><option value="5">5 s</option><option value="10" selected>10 s</option><option value="30">30 s</option><option value="60">60 s</option></select></div>
+              <div class="chart-scope-row"><select id="chartScope" style="width:auto;min-height:34px;padding:5px 8px" aria-label="Chart scope"><option value="selected" data-i18n="chartSelected">選択中</option><option value="all" data-i18n="chartAll">全センサー重ね合わせ</option></select></div>
             </div>
             <div class="chart-canvas-wrap"><canvas id="sensorChart"></canvas></div>
             <div class="legend" id="axisLegend"><span class="axis-x" id="axisLegend1">X</span><span class="axis-y" id="axisLegend2">Y</span><span class="axis-z" id="axisLegend3">Z</span></div>
             <div class="sensor-legend" id="sensorLegend"></div>
+          </div>
+        </div>
+
+        <div class="comparison-stack" id="stackedComparison" hidden></div>
+
+        <div class="analysis-grid">
+          <div class="analysis-card">
+            <div class="analysis-card-head"><div><h3 data-i18n="impactTitle">衝撃イベント</h3><p data-i18n="impactDesc">重力を除いた加速度がしきい値を超えた瞬間を、同期済み時刻で端末間比較します。</p></div><button class="button small" id="clearImpactButton" type="button" data-i18n="clearEvents">クリア</button></div>
+            <div class="impact-controls">
+              <div class="impact-threshold-field"><label class="field-label" for="impactThreshold" data-i18n="impactThreshold">検出しきい値</label><input id="impactThreshold" type="range" min="1" max="20" step="0.5" value="4"><div class="impact-threshold-readout"><strong id="impactThresholdValue">4.0</strong> m/s²</div></div>
+              <label class="check-row"><input id="impactEnabled" type="checkbox" checked><span data-i18n="impactAutoDetect">自動検出</span></label>
+            </div>
+            <div class="impact-summary">
+              <div class="impact-kpi"><span data-i18n="impactCount">検出数</span><strong id="impactCount">0</strong></div>
+              <div class="impact-kpi"><span data-i18n="impactLatestPeak">最新ピーク</span><strong id="impactLatestPeak">—</strong></div>
+              <div class="impact-kpi"><span data-i18n="impactMaxDelta">端末間時間差</span><strong id="impactMaxDelta">—</strong></div>
+            </div>
+            <div class="impact-list" id="impactList"><div class="analysis-empty" data-i18n="impactEmpty">衝撃を検出すると、ここに各端末の到達時間差を表示します。</div></div>
+          </div>
+          <div class="analysis-card">
+            <div class="analysis-card-head"><div><h3 data-i18n="fftTitle">周波数分析 (FFT)</h3><p id="fftSensorLabel" data-i18n="fftDesc">選択中センサーの直近約4秒の振動を解析します。</p></div></div>
+            <div class="fft-summary">
+              <div class="fft-kpi"><span data-i18n="fftPrimary">主な周波数</span><strong id="fftPrimary">—</strong></div>
+              <div class="fft-kpi"><span data-i18n="fftSecondary">次のピーク</span><strong id="fftSecondary">—</strong></div>
+              <div class="fft-kpi"><span data-i18n="fftResolution">周波数分解能</span><strong id="fftResolution">—</strong></div>
+            </div>
+            <div class="fft-canvas-wrap"><canvas id="fftChart"></canvas></div>
           </div>
         </div>
       </section>
@@ -620,23 +700,23 @@
 
       const translations={
         ja:{
-          brandMeta:'単一HTML · サーバー不要 · P2P',helpTitle:'使い方と注意事項',close:'閉じる',introTitle:'スマホをワイヤレスな動きセンサーに',lead:'最大4台のスマホから加速度・回転・傾きをWebRTCでPCへ直接送り、同時表示と同期記録ができます。',localBadge:'シグナリング / STUN / TURN 不使用',
+          brandMeta:'単一HTML · サーバー不要 · P2P',helpTitle:'使い方と注意事項',close:'閉じる',introTitle:'スマホをワイヤレスな動きセンサーに',lead:'最大4台のスマホから加速度・回転・傾きをWebRTCでPCへ直接送り、同期記録・衝撃時間差・FFT・縦並び比較までできます。',localBadge:'シグナリング / STUN / TURN 不使用',
           roleTitle:'この端末の役割を選ぶ',roleBody:'PCやタブレットは受信側、センサーを持つスマホは送信側にします。',receiverRoleTitle:'この端末で測定を見る',receiverRoleBody:'PC / タブレット向け。最大4台のスマホを接続し、センサー値を同時表示・記録します。',sensorRoleTitle:'このスマホをセンサーにする',sensorRoleBody:'加速度・回転・傾きを取得して、接続した受信側へ直接送ります。',
           stepOffer:'スマホへ接続情報を渡す',stepAnswer:'スマホから返答を受け取る',stepMeasure:'測定',receiverConnectTitle:'スマホと接続',receiverConnectBody:'接続情報もBrowser Kittyのサーバーを経由しません。端末間で直接受け渡します。',changeRole:'役割を変更',sameNetworkNote:'サーバーを一切使わないため、基本的に同じWi-Fi / LAN上の端末同士で使用してください。会社・学校・ゲストWi-Fiなど、端末間通信を遮断するネットワークでは接続できません。',offerQrPlaceholder:'「接続情報を作る」を押すと、スマホで読み取るQRコードを表示します。',offerQrHint:'スマホ側で「PCのQRをカメラで読む」を押し、このQRを読み取ってください。',offerQrAuto:'QRは自動で切り替わります',statusNotStarted:'まだ接続していません',createOffer:'接続情報を作る',copyOffer:'接続コードをコピー',manualOfferTitle:'QRを使わず手動で渡す',offerCodeLabel:'接続コード',answerInputLabel:'スマホに表示された返答コード',answerPlaceholder:'ここに返答コードを貼り付け',applyAnswer:'返答を読み込む',scanAnswer:'スマホの返答QRをカメラで読む',scanAnswerHint:'スマホ画面をPCカメラへ向けます。低解像度カメラ向けに返答QRは複数の読みやすいQRへ自動分割されます。',scanProgressStart:'QRを枠いっぱいに映してください',cameraSelectLabel:'カメラ',manualAnswerTitle:'QRを使えない場合は返答コードを貼り付ける',stopScan:'読み取りをやめる',
-          connected:'接続中',connectedCount:'{count}台接続中',rateLabel:'実測',syncLabel:'同期',syncWaiting:'調整中',syncGood:'良好 ±{ms} ms',syncFair:'普通 ±{ms} ms',syncPoor:'不安定 ±{ms} ms',startRecording:'記録開始',stopRecording:'記録停止',zeroCurrent:'現在の姿勢を0にする',zeroSelected:'選択中の姿勢を0にする',disconnect:'接続終了',disconnectSelected:'選択中を切断',connectedSensorsTitle:'接続中のセンサー',addSensor:'センサーを追加',disconnectAll:'すべて切断',sensorName:'センサー {number}',maxSensorsReached:'同時接続は最大4台です。',chartSelected:'選択中',chartAll:'全センサー重ね合わせ',measurementModeTitle:'計測モード',modeMotion:'動き',modeVibration:'振動',modeTilt:'傾き',modeRotation:'回転',modeFree:'自由表示',modeMotionDesc:'XYZ加速度と動きの大きさを確認します。',modeVibrationDesc:'重力を除いた加速度から直近2秒の振動RMSとピークを見ます。',modeTiltDesc:'端末の前後・左右の傾きを中心に確認します。',modeRotationDesc:'回転速度と回転の大きさを確認します。',modeFreeDesc:'従来どおり加速度・回転・傾きのグラフを自由に切り替えます。',metricCurrentAccel:'現在の加速度',metricPeak2s:'2秒ピーク',metricSampleRate:'実測レート',metricVibrationRms:'振動RMS (2秒)',metricVibrationPeak:'振動ピーク (2秒)',metricVibrationRange:'振動幅 (2秒)',metricTilt:'現在の傾き',metricPitch:'前後',metricRoll:'左右',metricRotation:'回転の大きさ',metricRotationPeak:'回転ピーク (2秒)',metricRotationAvg:'回転平均 (2秒)',metricRtt:'RTT',metricSync:'同期精度',orientationTitle:'傾き',pitch:'前後',roll:'左右',yaw:'方位',accelTitle:'加速度',magnitude:'大きさ',rotationTitle:'回転速度',accelTab:'加速度',rotationTab:'回転',orientationTab:'傾き',recordTitle:'測定記録',recordReady:'記録を開始すると、各スマホの時計差を補正した共通時間軸で全センサーを記録します。',recording:'時計同期で補正した共通時間軸へ全センサーを記録しています。停止するとCSV / JSONとして保存できます。',recordStopped:'記録を停止しました。必要な形式で保存してください。',recordDuration:'時間',recordSamples:'サンプル数',recordSensors:'記録対象',recordClock:'同期基準',receiverClock:'受信PC',correctedClock:'補正後PC時刻',outputFilename:'出力ファイル名',outputFilenameHint:'保存時に形式に応じた拡張子が付きます',saveCsv:'CSVを保存',saveJson:'JSONを保存',csvFieldsTitle:'記録される項目',csvFieldsBody:'センサーID・名前、計測モード、時計同期で補正した共通経過時間、受信時刻基準の経過時間、同期精度、加速度、振動値、回転速度、端末の向き、取得間隔を保存します。',
+          connected:'接続中',connectedCount:'{count}台接続中',rateLabel:'実測',syncLabel:'同期',syncWaiting:'調整中',syncGood:'良好 ±{ms} ms',syncFair:'普通 ±{ms} ms',syncPoor:'不安定 ±{ms} ms',startRecording:'記録開始',stopRecording:'記録停止',zeroCurrent:'現在の姿勢を0にする',zeroSelected:'選択中の姿勢を0にする',disconnect:'接続終了',disconnectSelected:'選択中を切断',connectedSensorsTitle:'接続中のセンサー',addSensor:'センサーを追加',disconnectAll:'すべて切断',sensorName:'センサー {number}',maxSensorsReached:'同時接続は最大4台です。',chartSelected:'選択中',chartAll:'全センサー重ね合わせ',displaySingle:'端末ごとに見る',displayStacked:'同じ項目を縦に比較',displaySingleHint:'接続中のセンサーを選んで詳細を表示します。',displayStackedHint:'同じ種類のグラフを端末ごとに上下へ並べて比較します。',impactTitle:'衝撃イベント',impactDesc:'重力を除いた加速度がしきい値を超えた瞬間を、同期済み時刻で端末間比較します。',impactThreshold:'検出しきい値',impactAutoDetect:'自動検出',impactCount:'検出数',impactLatestPeak:'最新ピーク',impactMaxDelta:'端末間時間差',impactEmpty:'衝撃を検出すると、ここに各端末の到達時間差を表示します。',clearEvents:'クリア',fftTitle:'周波数分析 (FFT)',fftDesc:'選択中センサーの直近約4秒の振動を解析します。',fftPrimary:'主な周波数',fftSecondary:'次のピーク',fftResolution:'周波数分解能',fftWaiting:'解析に十分なサンプルを待っています…',measurementModeTitle:'計測モード',modeMotion:'動き',modeVibration:'振動',modeTilt:'傾き',modeRotation:'回転',modeFree:'自由表示',modeMotionDesc:'XYZ加速度と動きの大きさを確認します。',modeVibrationDesc:'重力を除いた加速度から直近2秒の振動RMSとピークを見ます。',modeTiltDesc:'端末の前後・左右の傾きを中心に確認します。',modeRotationDesc:'回転速度と回転の大きさを確認します。',modeFreeDesc:'従来どおり加速度・回転・傾きのグラフを自由に切り替えます。',metricCurrentAccel:'現在の加速度',metricPeak2s:'2秒ピーク',metricSampleRate:'実測レート',metricVibrationRms:'振動RMS (2秒)',metricVibrationPeak:'振動ピーク (2秒)',metricVibrationRange:'振動幅 (2秒)',metricTilt:'現在の傾き',metricPitch:'前後',metricRoll:'左右',metricRotation:'回転の大きさ',metricRotationPeak:'回転ピーク (2秒)',metricRotationAvg:'回転平均 (2秒)',metricRtt:'RTT',metricSync:'同期精度',orientationTitle:'傾き',pitch:'前後',roll:'左右',yaw:'方位',accelTitle:'加速度',magnitude:'大きさ',rotationTitle:'回転速度',accelTab:'加速度',rotationTab:'回転',orientationTab:'傾き',recordTitle:'測定記録',recordReady:'記録を開始すると、各スマホの時計差を補正した共通時間軸で全センサーを記録します。',recording:'時計同期で補正した共通時間軸へ全センサーを記録しています。停止するとCSV / JSONとして保存できます。',recordStopped:'記録を停止しました。必要な形式で保存してください。',recordDuration:'時間',recordSamples:'サンプル数',recordSensors:'記録対象',recordClock:'同期基準',receiverClock:'受信PC',correctedClock:'補正後PC時刻',outputFilename:'出力ファイル名',outputFilenameHint:'保存時に形式に応じた拡張子が付きます',saveCsv:'CSVを保存',saveJson:'JSONを保存',csvFieldsTitle:'記録される項目',csvFieldsBody:'CSVにはセンサーID・名前、計測モード、補正済み/受信時刻、同期精度、加速度、振動値、回転速度、向き、取得間隔を保存します。JSON v4には記録中に検出した衝撃イベントと端末間時間差も含めます。',
           sensorStepOffer:'PCのQRを読み取る',sensorStepAnswer:'返答をPCへ戻す',sensorStepSend:'センサー送信',sensorConnectTitle:'受信側へ接続',sensorConnectBody:'スマホのカメラでPC画面のQRを読み取ります。接続情報はサーバーを経由しません。',scanOffer:'PCのQRをカメラで読む',scanOfferHint:'PC画面のQRを枠いっぱいに映してください。複数QRの場合は自動で集めて接続情報を復元します。',manualOfferReceiveTitle:'QRを使えない場合は接続コードを貼り付ける',sensorOfferLabel:'PCの接続コード',sensorOfferPlaceholder:'PC側の接続コードを貼り付け',useOffer:'この接続コードを使う',answerReadyNote:'返答を作成しました。PC側へ戻してください。サーバーへの送信はありません。',answerQrPlaceholder:'返答QRを作成中…',answerQrHint:'PC側で「返答QRをカメラで読む」を押し、スマホ画面をカメラへ向けてください。',answerQrAuto:'QRは自動で切り替わります',previousQr:'前へ',nextQr:'次へ',fullscreenQr:'全画面表示',closeFullscreenQr:'閉じる',answerCodeLabel:'返答コード',copyAnswer:'返答コードをコピー',shareAnswer:'共有',waitingPc:'PC側の読み込み待ち…',sensorConnectedTitle:'PCと接続しました',sensorPermissionBody:'「センサーを開始」を押すと、この端末のモーションセンサーへのアクセスを求めます。',startSensor:'センサーを開始',stopSensor:'送信を停止',sensorIdle:'センサー停止中',sensorSending:'センサー送信中',sendRateTitle:'送信頻度',rateLow:'省電力',rateLowSub:'約10回/秒',rateStandard:'標準',rateStandardSub:'約30回/秒',rateHigh:'高頻度',rateHighSub:'端末が送れるだけ',wakeLockNote:'送信中は、対応ブラウザーでは画面が消えないようにします。',
           privacyDetailsTitle:'接続方式とプライバシー',privacyDetailsBody:'このアプリはシグナリングサーバー、STUN、TURN、WebSocket、APIを使いません。WebRTCの接続情報はQRまたはコピーで端末間を手渡しし、センサーデータは確立したDataChannelで直接送ります。測定データは受信側ブラウザーのメモリにだけ保持され、保存操作をしたときだけファイルになります。',buildInfo:'ビルド情報',appVersion:'アプリバージョン',builtAt:'ビルド日時',dependencies:'内包依存',footer:'ブラウザーだけでP2Pセンサー送信',
-          helpBasicsTitle:'基本操作',helpStep1:'PC側で「この端末で測定を見る」を選び、接続情報を作ります。スマホ側で「PCのQRをカメラで読む」を押してPC画面の分割QRを読み取ります。',helpStep2:'スマホが返答QRを作成したら、PC側のカメラで読み取ります。どちらの方向もコピー＆ペーストを予備として利用できます。',helpStep3:'接続後に各スマホで「センサーを開始」を押します。PC側では最大4台を接続でき、接続直後と定期的なPing/Pongで時計差を補正します。計測モードを選び、個別表示・重ね合わせ表示・CSV/JSON同期記録を行えます。',helpPrivacyTitle:'完全サーバーレス',helpPrivacyBody:'シグナリングサーバー、STUN、TURNは使いません。接続情報もQR/コピーで直接受け渡します。センサー値はWebRTC DataChannelで接続相手へ直接送られます。',helpNotesTitle:'注意事項',helpNoteNetwork:'サーバーを使わない代わりに、同じWi-Fi/LANでも端末間通信を禁止しているネットワークでは接続できません。異なるネットワーク越しの接続は対象外です。',helpNotePermission:'iPhone/iPadなどでは、モーションセンサー利用時に明示的な許可操作が必要です。HTTPSで公開したページの利用を推奨します。',helpNoteAccuracy:'ブラウザーのセンサー値は専用計測器ではありません。端末やブラウザーごとに取得頻度・精度・利用できる項目が異なります。',helpNoteMemory:'記録中のデータは受信側のメモリに保持します。長時間記録ではメモリ使用量が増えるため、区切って保存してください。',helpOffline:'配布用HTMLにはQR生成コードとQR読み取り用jsQRも内包されます。実行中の外部API通信はCSPでも禁止しています。',
+          helpBasicsTitle:'基本操作',helpStep1:'PC側で「この端末で測定を見る」を選び、接続情報を作ります。スマホ側で「PCのQRをカメラで読む」を押してPC画面の分割QRを読み取ります。',helpStep2:'スマホが返答QRを作成したら、PC側のカメラで読み取ります。どちらの方向もコピー＆ペーストを予備として利用できます。',helpStep3:'接続後に各スマホで「センサーを開始」を押します。PC側では最大4台を接続でき、時計差を補正します。計測モード、個別/重ね合わせ/縦並び表示、衝撃時間差、FFTを確認し、CSV/JSONへ同期記録できます。',helpPrivacyTitle:'完全サーバーレス',helpPrivacyBody:'シグナリングサーバー、STUN、TURNは使いません。接続情報もQR/コピーで直接受け渡します。センサー値はWebRTC DataChannelで接続相手へ直接送られます。',helpNotesTitle:'注意事項',helpNoteNetwork:'サーバーを使わない代わりに、同じWi-Fi/LANでも端末間通信を禁止しているネットワークでは接続できません。異なるネットワーク越しの接続は対象外です。',helpNotePermission:'iPhone/iPadなどでは、モーションセンサー利用時に明示的な許可操作が必要です。HTTPSで公開したページの利用を推奨します。',helpNoteAccuracy:'ブラウザーのセンサー値は専用計測器ではありません。端末やブラウザーごとに取得頻度・精度・利用できる項目が異なります。',helpNoteMemory:'記録中のデータは受信側のメモリに保持します。長時間記録ではメモリ使用量が増えるため、区切って保存してください。',helpOffline:'配布用HTMLにはQR生成コードとQR読み取り用jsQRも内包されます。実行中の外部API通信はCSPでも禁止しています。',
           creatingOffer:'接続情報を作成中…',offerReady:'スマホへ接続情報を渡してください',creatingAnswer:'返答を作成中…',answerApplied:'返答を読み込みました。接続を待っています…',connectionFailed:'接続できませんでした',connectionClosed:'接続が終了しました',sensorAdded:'センサーを追加しました',selectedSensorDisconnected:'選択中のセンサーを切断しました',allSensorsDisconnected:'すべてのセンサーを切断しました',copied:'コピーしました',copyFailed:'コピーできませんでした',qrUnavailableFile:'この環境でカメラQRを使えない場合は、接続コードを手動で渡してください。',qrFailed:'QRコードを作れませんでした。接続コードを使用してください。',invalidSignal:'接続コードを読み込めません。コード全体をコピーしているか確認してください。',sensorUnsupported:'このブラウザーではモーションセンサーを取得できません。',sensorPermissionDenied:'センサーの利用が許可されませんでした。',saved:'保存しました',zeroed:'現在の姿勢を0にしました',scanUnsupported:'このブラウザーではQRカメラ読み取りを利用できません。',scanCameraFailed:'カメラを開始できませんでした',scanFound:'返答QRを読み取りました',scanOfferFound:'PCの接続QRを読み取りました',scanChunkProgress:'返答QR {read}/{total} を読み取りました',scanOfferChunkProgress:'PCのQR {read}/{total} を読み取りました',scanResolutionLabel:'カメラ {width}×{height}',candidateNone:'LAN接続に必要なICE候補が0件です。この端末・ブラウザーでは完全サーバーレス接続ができない可能性があります。',candidateReady:'LAN接続候補 {count}件を取得しました。返答の受け渡し中にタイムアウトすることはありません。',candidateRemoteNone:'相手側のLAN接続候補が0件です。接続できない可能性があります。',candidateRemoteReady:'相手側のLAN接続候補 {count}件を確認しました。',connectionTrouble:'同じWi-Fiであること、VPNを切っていること、ゲストWi-Fi/端末分離が有効でないこと、Windowsファイアウォール等でブラウザー通信が遮断されていないことを確認してください。',shareFailed:'共有できなかったため、返答コードをコピーしました'
         },
         en:{
-          brandMeta:'Single HTML · No server · P2P',helpTitle:'How to use & notes',close:'Close',introTitle:'Turn your phone into a wireless motion sensor',lead:'Connect up to four phones and stream acceleration, rotation, and orientation directly to a PC over WebRTC for simultaneous viewing and synchronized recording.',localBadge:'No signaling / STUN / TURN servers',
+          brandMeta:'Single HTML · No server · P2P',helpTitle:'How to use & notes',close:'Close',introTitle:'Turn your phone into a wireless motion sensor',lead:'Connect up to four phones over WebRTC for synchronized recording, impact timing, FFT analysis, and stacked signal comparison.',localBadge:'No signaling / STUN / TURN servers',
           roleTitle:'Choose this device’s role',roleBody:'Use a PC or tablet as the receiver and a sensor-equipped phone as the sender.',receiverRoleTitle:'View measurements on this device',receiverRoleBody:'For PC / tablet. Connect up to four phones and view or record their sensor values together.',sensorRoleTitle:'Use this phone as the sensor',sensorRoleBody:'Read acceleration, rotation, and orientation and send them directly to the connected receiver.',
           stepOffer:'Send connection info to phone',stepAnswer:'Receive reply from phone',stepMeasure:'Measure',receiverConnectTitle:'Connect a phone',receiverConnectBody:'Connection metadata never passes through a Browser Kitty server. You hand it directly between devices.',changeRole:'Change role',sameNetworkNote:'Because this app uses no servers at all, use devices on the same Wi-Fi / LAN. Networks that isolate clients, including many company, school, and guest Wi-Fi networks, will prevent the connection.',offerQrPlaceholder:'Press “Create connection info” to show QR codes for the phone.',offerQrHint:'On the phone, press “Scan PC QR with camera” and point it at this QR.',offerQrAuto:'QR pages advance automatically',statusNotStarted:'Not connected yet',createOffer:'Create connection info',copyOffer:'Copy connection code',manualOfferTitle:'Send manually without QR',offerCodeLabel:'Connection code',answerInputLabel:'Reply code shown on the phone',answerPlaceholder:'Paste the reply code here',applyAnswer:'Load reply',scanAnswer:'Scan phone reply QR with camera',scanAnswerHint:'Point the phone screen at the PC camera. The reply is split into several easier-to-read QR codes for low-resolution webcams.',scanProgressStart:'Fill the guide with the QR code',cameraSelectLabel:'Camera',manualAnswerTitle:'Paste the reply code if QR scanning is unavailable',stopScan:'Stop scanning',
-          connected:'Connected',connectedCount:'{count} sensors connected',rateLabel:'Actual',syncLabel:'Sync',syncWaiting:'Calibrating',syncGood:'Good ±{ms} ms',syncFair:'Fair ±{ms} ms',syncPoor:'Unstable ±{ms} ms',startRecording:'Start recording',stopRecording:'Stop recording',zeroCurrent:'Set current pose to zero',zeroSelected:'Zero selected pose',disconnect:'Disconnect',disconnectSelected:'Disconnect selected',connectedSensorsTitle:'Connected sensors',addSensor:'Add sensor',disconnectAll:'Disconnect all',sensorName:'Sensor {number}',maxSensorsReached:'Up to 4 sensors can be connected at once.',chartSelected:'Selected sensor',chartAll:'Overlay all sensors',measurementModeTitle:'Measurement mode',modeMotion:'Motion',modeVibration:'Vibration',modeTilt:'Tilt',modeRotation:'Rotation',modeFree:'Free view',modeMotionDesc:'Inspect XYZ acceleration and overall motion magnitude.',modeVibrationDesc:'Use gravity-free acceleration to show 2-second vibration RMS and peak.',modeTiltDesc:'Focus on front/back and left/right device tilt.',modeRotationDesc:'Inspect rotation rate and combined rotation magnitude.',modeFreeDesc:'Switch freely between the original acceleration, rotation, and orientation charts.',metricCurrentAccel:'Current acceleration',metricPeak2s:'2 s peak',metricSampleRate:'Actual rate',metricVibrationRms:'Vibration RMS (2 s)',metricVibrationPeak:'Vibration peak (2 s)',metricVibrationRange:'Vibration range (2 s)',metricTilt:'Current tilt',metricPitch:'Pitch',metricRoll:'Roll',metricRotation:'Rotation magnitude',metricRotationPeak:'Rotation peak (2 s)',metricRotationAvg:'Rotation avg (2 s)',metricRtt:'RTT',metricSync:'Sync accuracy',orientationTitle:'Orientation',pitch:'Pitch',roll:'Roll',yaw:'Yaw',accelTitle:'Acceleration',magnitude:'Magnitude',rotationTitle:'Rotation rate',accelTab:'Acceleration',rotationTab:'Rotation',orientationTab:'Orientation',recordTitle:'Measurement record',recordReady:'Start recording to place all sensors on a shared timeline corrected for each phone’s clock offset.',recording:'Recording all sensors on the clock-synchronized shared timeline. Stop to save CSV / JSON.',recordStopped:'Recording stopped. Save the data in the format you need.',recordDuration:'Duration',recordSamples:'Samples',recordSensors:'Sensors',recordClock:'Sync clock',receiverClock:'Receiver PC',correctedClock:'Corrected PC clock',outputFilename:'Output filename',outputFilenameHint:'The correct extension is added when saving',saveCsv:'Save CSV',saveJson:'Save JSON',csvFieldsTitle:'Recorded fields',csvFieldsBody:'Sensor ID/name, measurement mode, clock-synchronized shared elapsed time, receive-time elapsed value, sync accuracy, acceleration, vibration value, rotation rate, orientation, and browser-reported interval are stored.',
+          connected:'Connected',connectedCount:'{count} sensors connected',rateLabel:'Actual',syncLabel:'Sync',syncWaiting:'Calibrating',syncGood:'Good ±{ms} ms',syncFair:'Fair ±{ms} ms',syncPoor:'Unstable ±{ms} ms',startRecording:'Start recording',stopRecording:'Stop recording',zeroCurrent:'Set current pose to zero',zeroSelected:'Zero selected pose',disconnect:'Disconnect',disconnectSelected:'Disconnect selected',connectedSensorsTitle:'Connected sensors',addSensor:'Add sensor',disconnectAll:'Disconnect all',sensorName:'Sensor {number}',maxSensorsReached:'Up to 4 sensors can be connected at once.',chartSelected:'Selected sensor',chartAll:'Overlay all sensors',displaySingle:'Per-device view',displayStacked:'Stack same signal',displaySingleHint:'Select a connected sensor to inspect it in detail.',displayStackedHint:'Stack the same signal vertically for every connected sensor.',impactTitle:'Impact events',impactDesc:'Detect threshold crossings in gravity-free acceleration and compare arrival times on the synchronized clock.',impactThreshold:'Detection threshold',impactAutoDetect:'Auto detect',impactCount:'Events',impactLatestPeak:'Latest peak',impactMaxDelta:'Device time spread',impactEmpty:'Detected impacts and cross-device arrival-time differences will appear here.',clearEvents:'Clear',fftTitle:'Frequency analysis (FFT)',fftDesc:'Analyze roughly the last 4 seconds of vibration from the selected sensor.',fftPrimary:'Dominant frequency',fftSecondary:'Second peak',fftResolution:'Frequency resolution',fftWaiting:'Waiting for enough samples to analyze…',measurementModeTitle:'Measurement mode',modeMotion:'Motion',modeVibration:'Vibration',modeTilt:'Tilt',modeRotation:'Rotation',modeFree:'Free view',modeMotionDesc:'Inspect XYZ acceleration and overall motion magnitude.',modeVibrationDesc:'Use gravity-free acceleration to show 2-second vibration RMS and peak.',modeTiltDesc:'Focus on front/back and left/right device tilt.',modeRotationDesc:'Inspect rotation rate and combined rotation magnitude.',modeFreeDesc:'Switch freely between the original acceleration, rotation, and orientation charts.',metricCurrentAccel:'Current acceleration',metricPeak2s:'2 s peak',metricSampleRate:'Actual rate',metricVibrationRms:'Vibration RMS (2 s)',metricVibrationPeak:'Vibration peak (2 s)',metricVibrationRange:'Vibration range (2 s)',metricTilt:'Current tilt',metricPitch:'Pitch',metricRoll:'Roll',metricRotation:'Rotation magnitude',metricRotationPeak:'Rotation peak (2 s)',metricRotationAvg:'Rotation avg (2 s)',metricRtt:'RTT',metricSync:'Sync accuracy',orientationTitle:'Orientation',pitch:'Pitch',roll:'Roll',yaw:'Yaw',accelTitle:'Acceleration',magnitude:'Magnitude',rotationTitle:'Rotation rate',accelTab:'Acceleration',rotationTab:'Rotation',orientationTab:'Orientation',recordTitle:'Measurement record',recordReady:'Start recording to place all sensors on a shared timeline corrected for each phone’s clock offset.',recording:'Recording all sensors on the clock-synchronized shared timeline. Stop to save CSV / JSON.',recordStopped:'Recording stopped. Save the data in the format you need.',recordDuration:'Duration',recordSamples:'Samples',recordSensors:'Sensors',recordClock:'Sync clock',receiverClock:'Receiver PC',correctedClock:'Corrected PC clock',outputFilename:'Output filename',outputFilenameHint:'The correct extension is added when saving',saveCsv:'Save CSV',saveJson:'Save JSON',csvFieldsTitle:'Recorded fields',csvFieldsBody:'CSV stores sensor ID/name, measurement mode, corrected/receive timing, sync quality, acceleration, vibration, rotation, orientation, and interval. JSON v4 also includes impact events and cross-device time differences detected while recording.',
           sensorStepOffer:'Scan the PC QR',sensorStepAnswer:'Return reply to PC',sensorStepSend:'Stream sensors',sensorConnectTitle:'Connect to receiver',sensorConnectBody:'Use the phone camera to scan the QR pages shown on the PC. Connection metadata never passes through a server.',scanOffer:'Scan PC QR with camera',scanOfferHint:'Fill the frame with the PC QR. If there are several pages, they are collected automatically in any order.',manualOfferReceiveTitle:'Paste the connection code if QR scanning is unavailable',sensorOfferLabel:'Connection code from PC',sensorOfferPlaceholder:'Paste the PC connection code',useOffer:'Use this connection code',answerReadyNote:'Reply created. Return it to the PC. Nothing is sent to a server.',answerQrPlaceholder:'Creating reply QR…',answerQrHint:'If the PC cannot scan QR codes, copy the reply code instead.',answerQrAuto:'QR pages advance automatically',previousQr:'Previous',nextQr:'Next',fullscreenQr:'Fullscreen',closeFullscreenQr:'Close',answerCodeLabel:'Reply code',copyAnswer:'Copy reply code',shareAnswer:'Share',waitingPc:'Waiting for the PC to load the reply…',sensorConnectedTitle:'Connected to the PC',sensorPermissionBody:'Press “Start sensor” to request access to this device’s motion sensors.',startSensor:'Start sensor',stopSensor:'Stop sending',sensorIdle:'Sensor stopped',sensorSending:'Streaming sensor data',sendRateTitle:'Send rate',rateLow:'Power saving',rateLowSub:'About 10 samples/s',rateStandard:'Standard',rateStandardSub:'About 30 samples/s',rateHigh:'High frequency',rateHighSub:'As fast as the device provides',wakeLockNote:'While sending, supported browsers keep the screen awake.',
           privacyDetailsTitle:'Connection & privacy',privacyDetailsBody:'This app uses no signaling server, STUN, TURN, WebSocket, or API. WebRTC connection metadata is handed directly between devices by QR or copy/paste, and sensor data travels directly over the established DataChannel. Measurements stay in receiver memory until you explicitly save a file.',buildInfo:'Build information',appVersion:'App version',builtAt:'Built at',dependencies:'Embedded dependencies',footer:'Browser-only P2P sensor streaming',
-          helpBasicsTitle:'Basic workflow',helpStep1:'On the PC, choose “View measurements on this device” and create connection info. On the phone, press “Scan PC QR with camera” and scan the segmented QR pages on the PC.',helpStep2:'When the phone creates its reply QR pages, scan them with the PC camera. Copy/paste remains available in both directions as a fallback.',helpStep3:'After connecting, press “Start sensor” on each phone. The PC supports up to four devices and estimates clock offset through connection-time and periodic ping/pong bursts. Choose a measurement mode, inspect sensors individually or overlaid, and record the synchronized timeline to CSV/JSON.',helpPrivacyTitle:'Fully serverless',helpPrivacyBody:'No signaling server, STUN, or TURN is used. Connection metadata is transferred directly by QR/copy. Sensor values are sent directly to the peer over WebRTC DataChannel.',helpNotesTitle:'Notes',helpNoteNetwork:'The tradeoff for using no servers is connectivity: networks that block device-to-device traffic will not work, even on the same Wi-Fi. Connections across different networks are out of scope.',helpNotePermission:'iPhone/iPad and some other browsers require an explicit permission gesture for motion sensors. Using the HTTPS-hosted page is recommended.',helpNoteAccuracy:'Browser sensor values are not a substitute for dedicated measurement instruments. Sampling rate, accuracy, and available fields vary by device and browser.',helpNoteMemory:'Recorded samples are kept in receiver memory. For long sessions, save in segments to avoid excessive memory use.',helpOffline:'The release HTML embeds both the QR generator and the jsQR decoder. Runtime external API connections are also blocked by CSP.',
+          helpBasicsTitle:'Basic workflow',helpStep1:'On the PC, choose “View measurements on this device” and create connection info. On the phone, press “Scan PC QR with camera” and scan the segmented QR pages on the PC.',helpStep2:'When the phone creates its reply QR pages, scan them with the PC camera. Copy/paste remains available in both directions as a fallback.',helpStep3:'After connecting, press “Start sensor” on each phone. The PC supports up to four devices and corrects their clock offsets. Use measurement modes, per-device/overlay/stacked views, impact timing, and FFT, then record the synchronized timeline to CSV/JSON.',helpPrivacyTitle:'Fully serverless',helpPrivacyBody:'No signaling server, STUN, or TURN is used. Connection metadata is transferred directly by QR/copy. Sensor values are sent directly to the peer over WebRTC DataChannel.',helpNotesTitle:'Notes',helpNoteNetwork:'The tradeoff for using no servers is connectivity: networks that block device-to-device traffic will not work, even on the same Wi-Fi. Connections across different networks are out of scope.',helpNotePermission:'iPhone/iPad and some other browsers require an explicit permission gesture for motion sensors. Using the HTTPS-hosted page is recommended.',helpNoteAccuracy:'Browser sensor values are not a substitute for dedicated measurement instruments. Sampling rate, accuracy, and available fields vary by device and browser.',helpNoteMemory:'Recorded samples are kept in receiver memory. For long sessions, save in segments to avoid excessive memory use.',helpOffline:'The release HTML embeds both the QR generator and the jsQR decoder. Runtime external API connections are also blocked by CSP.',
           creatingOffer:'Creating connection info…',offerReady:'Send the connection info to the phone',creatingAnswer:'Creating reply…',answerApplied:'Reply loaded. Waiting for connection…',connectionFailed:'Could not connect',connectionClosed:'Connection closed',sensorAdded:'Sensor added',selectedSensorDisconnected:'Selected sensor disconnected',allSensorsDisconnected:'All sensors disconnected',copied:'Copied',copyFailed:'Could not copy',qrUnavailableFile:'If camera QR handoff is unavailable in this environment, transfer the connection code manually.',qrFailed:'Could not create the QR code. Use the connection code instead.',invalidSignal:'Could not read the connection code. Make sure the complete code was copied.',sensorUnsupported:'Motion sensors are not available in this browser.',sensorPermissionDenied:'Sensor access was not allowed.',saved:'Saved',zeroed:'Current pose set to zero',scanUnsupported:'QR camera scanning is not available in this browser.',scanCameraFailed:'Could not start the camera',scanFound:'Reply QR scanned',scanOfferFound:'PC connection QR scanned',scanChunkProgress:'Scanned reply QR {read}/{total}',scanOfferChunkProgress:'Scanned PC QR {read}/{total}',scanResolutionLabel:'Camera {width}×{height}',candidateNone:'No LAN ICE candidate was found. Fully serverless connection may not work in this browser/device.',candidateReady:'Found {count} LAN connection candidate(s). There is no timeout while you transfer the reply.',candidateRemoteNone:'The other device provided no LAN connection candidate. The connection may fail.',candidateRemoteReady:'Confirmed {count} LAN connection candidate(s) from the other device.',connectionTrouble:'Check that both devices are on the same Wi-Fi, VPN is off, guest/client isolation is disabled, and the browser is not blocked by the firewall.',shareFailed:'Sharing failed, so the reply code was copied instead'
         }
       };
@@ -675,6 +755,16 @@
       let scannerFrame=0;
       let chartType='accel';
       let measurementMode=readStorage(`${APP_CONFIG.slug}:measurement-mode`)||'motion';
+      let displayMode=readStorage(`${APP_CONFIG.slug}:display-mode`)||'single';
+      if(!['single','stacked'].includes(displayMode))displayMode='single';
+      let impactEnabled=readStorage(`${APP_CONFIG.slug}:impact-enabled`)!=='0';
+      let impactThreshold=Number(readStorage(`${APP_CONFIG.slug}:impact-threshold`)||4);
+      if(!Number.isFinite(impactThreshold))impactThreshold=4;
+      let impactEvents=[];
+      let impactGroups=[];
+      let impactEventSeq=0;
+      let recordEvents=[];
+      let lastFftRenderAt=0;
       let recording=false;
       let recordingStartedAt=0;
       let recordingStartedEpochMs=0;
@@ -712,6 +802,8 @@
         renderSensorRoster();
         updateSelectedPeerUi();
         updateMeasurementModeUi();
+        updateDisplayModeUi();
+        renderImpactPanel();
       }
 
       function setRole(nextRole){
@@ -827,7 +919,7 @@
         const usedNumbers=new Set(Array.from(receiverPeers.values()).map(peer=>peer.number));
         let number=1; while(usedNumbers.has(number)&&number<=MAX_SENSORS) number+=1;
         const id=`sensor-${number}-${Math.random().toString(36).slice(2,7)}`;
-        const peer={id,number,color:SENSOR_COLORS[(number-1)%SENSOR_COLORS.length],pc:null,sensorChannel:null,controlChannel:null,status:'connecting',everConnected:false,offerCode:'',latestSample:null,zeroOffset:{alpha:0,beta:0,gamma:0,active:false},chartHistory:[],sampleIntervals:[],latestRtt:null,deviceLabel:'Sensor device',pingId:0,pingSent:new Map(),pingTimer:0,syncBurstTimer:0,syncSamples:[],clockModel:{ready:false,slope:1,intercept:0,offsetMs:null,driftPpm:0,uncertaintyMs:null,quality:'waiting',minRtt:null,lastUpdated:0},lastRosterUpdate:0,recordingFirstSensorTs:null};
+        const peer={id,number,color:SENSOR_COLORS[(number-1)%SENSOR_COLORS.length],pc:null,sensorChannel:null,controlChannel:null,status:'connecting',everConnected:false,offerCode:'',latestSample:null,zeroOffset:{alpha:0,beta:0,gamma:0,active:false},chartHistory:[],sampleIntervals:[],latestRtt:null,deviceLabel:'Sensor device',pingId:0,pingSent:new Map(),pingTimer:0,syncBurstTimer:0,syncSamples:[],clockModel:{ready:false,slope:1,intercept:0,offsetMs:null,driftPpm:0,uncertaintyMs:null,quality:'waiting',minRtt:null,lastUpdated:0},lastRosterUpdate:0,recordingFirstSensorTs:null,impactAbove:false,lastImpactAt:-Infinity,activeImpactEventId:null};
         receiverPeers.set(id,peer); return peer;
       }
 
@@ -894,6 +986,7 @@
         $('#disconnectAllButton').disabled=!peers.length;
         $('#recordSensors').textContent=String(recording?recordSessionSensors.size:peers.length);
         renderSensorLegend();
+        if(displayMode==='stacked') renderStackedComparison();
       }
 
       function renderSensorLegend(){
@@ -919,7 +1012,7 @@
         $('#deviceLabel').textContent=`${peerName(peer)} · ${peer.deviceLabel||'Sensor device'}`;
         if(peer.latestSample) updateLiveValues(peer,peer.latestSample);
         else { for(const id of ['pitchValue','rollValue','yawValue','axValue','ayValue','azValue','amValue','raValue','rbValue','rgValue']) $(`#${id}`).textContent='—'; $('#phone3d').style.transform=''; }
-        updateModeSummary();
+        updateModeSummary(); drawFft();
       }
 
       function showReceiverConnectPanel(){
@@ -1115,6 +1208,7 @@
         const received=performance.now(); sample.received=received; sample.syncedReceived=mapSensorTime(peer,sample.t); peer.latestSample=sample;
         updateSampleRate(peer,sample);
         peer.chartHistory.push(sample); const maxAge=65000; while(peer.chartHistory.length>2&&received-peer.chartHistory[0].received>maxAge) peer.chartHistory.shift();
+        detectImpact(peer,sample);
         if(peer.id===selectedReceiverPeerId) updateSelectedPeerUi();
         if(received-peer.lastRosterUpdate>500){ peer.lastRosterUpdate=received; renderSensorRoster(); }
         if(recording){
@@ -1125,6 +1219,81 @@
           $('#recordSamples').textContent=String(recordSamples.length);
         }
       }
+
+      function impactTime(peer,sample){ return sampleDisplayTime(peer,sample); }
+      function detectImpact(peer,sample){
+        const value=vibrationValue(sample); if(!impactEnabled||!Number.isFinite(value)) return;
+        const now=impactTime(peer,sample),above=value>=impactThreshold,release=value<=impactThreshold*.55;
+        if(above&&!peer.impactAbove&&now-peer.lastImpactAt>=240){ peer.impactAbove=true; peer.lastImpactAt=now; peer.activeImpactEventId=registerImpact(peer,sample,value,now); }
+        else if(above&&peer.activeImpactEventId){
+          const event=impactEvents.find(item=>item.id===peer.activeImpactEventId); if(event&&now-event.timeMs<=160&&value>event.peak){event.peak=value;const recorded=recordEvents.find(item=>item.id===event.id);if(recorded)recorded.peak=value;renderImpactPanel();}
+        } else if(release){ peer.impactAbove=false; peer.activeImpactEventId=null; }
+      }
+      function registerImpact(peer,sample,value,timeMs){
+        const event={id:`impact-${++impactEventSeq}`,sensorId:peer.id,sensorName:peerName(peer),deviceLabel:peer.deviceLabel,timeMs,peak:value,sensorTimestampMs:sample.t,syncUncertaintyMs:peer.clockModel?.uncertaintyMs??null,createdEpochMs:Date.now()};
+        impactEvents.push(event); if(impactEvents.length>120)impactEvents.splice(0,impactEvents.length-120);
+        let group=[...impactGroups].reverse().find(candidate=>Math.abs(timeMs-candidate.anchorMs)<=180&&!candidate.events.some(item=>item.sensorId===peer.id));
+        if(!group){ group={id:`group-${impactEventSeq}`,anchorMs:timeMs,events:[]}; impactGroups.push(group); if(impactGroups.length>40)impactGroups.splice(0,impactGroups.length-40); }
+        group.events.push(event); group.anchorMs=Math.min(...group.events.map(item=>item.timeMs));
+        if(recording) recordEvents.push({...event,synchronizedElapsedMs:timeMs-recordingStartedAt,groupId:group.id,deltaFromFirstMs:timeMs-group.anchorMs});
+        for(const item of group.events){item.deltaFromFirstMs=item.timeMs-group.anchorMs;const recorded=recordEvents.find(saved=>saved.id===item.id);if(recorded)recorded.deltaFromFirstMs=item.deltaFromFirstMs;}
+        renderImpactPanel(); return event.id;
+      }
+      function clearImpacts(){ impactEvents=[];impactGroups=[]; for(const peer of receiverPeers.values()){peer.impactAbove=false;peer.lastImpactAt=-Infinity;peer.activeImpactEventId=null;} renderImpactPanel(); }
+      function renderImpactPanel(){
+        if(!$('#impactCount'))return; $('#impactCount').textContent=String(impactEvents.length);
+        const latest=impactEvents[impactEvents.length-1]; $('#impactLatestPeak').textContent=latest?`${latest.peak.toFixed(2)} m/s²`:'—';
+        const group=impactGroups[impactGroups.length-1],list=$('#impactList');
+        if(!group?.events?.length){$('#impactMaxDelta').textContent='—';list.innerHTML=`<div class="analysis-empty">${escapeHtml(t('impactEmpty'))}</div>`;return;}
+        const ordered=[...group.events].sort((a,b)=>a.timeMs-b.timeMs),base=ordered[0].timeMs,maxDelta=ordered.length>1?ordered[ordered.length-1].timeMs-base:0;
+        $('#impactMaxDelta').textContent=ordered.length>1?`${maxDelta.toFixed(1)} ms`:'—';
+        list.innerHTML=ordered.map((item,index)=>`<div class="impact-row"><strong><span class="sensor-color-dot" style="--sensor-color:${receiverPeers.get(item.sensorId)?.color||'#16624f'}"></span>${escapeHtml(item.sensorName)}</strong><span class="delta">${index===0?'0.0':`+${(item.timeMs-base).toFixed(1)}`} ms</span><span class="peak">${item.peak.toFixed(2)} m/s²${Number.isFinite(item.syncUncertaintyMs)?` · ±${Math.round(item.syncUncertaintyMs)} ms`:''}</span></div>`).join('');
+      }
+      function median(values){ if(!values.length)return null;const a=[...values].sort((x,y)=>x-y),m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2; }
+      function nextPowerOfTwoCeil(value){ let n=1;while(n<value)n*=2;return n; }
+      function interpolateSeries(samples,targetTimes,accessor){
+        const out=[];let j=0;for(const target of targetTimes){while(j+1<samples.length&&samples[j+1].t<target)j++;const a=samples[j],b=samples[Math.min(j+1,samples.length-1)],av=accessor(a),bv=accessor(b);if(!Number.isFinite(av)){out.push(Number.isFinite(bv)?bv:0);continue;}if(!Number.isFinite(bv)||!Number.isFinite(b.t)||b.t===a.t){out.push(av);continue;}const f=Math.max(0,Math.min(1,(target-a.t)/(b.t-a.t)));out.push(av+(bv-av)*f);}return out;
+      }
+      function fftMagnitudes(values){
+        const n=values.length,re=values.slice(),im=new Array(n).fill(0);let j=0;for(let i=1;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;if(i<j){[re[i],re[j]]=[re[j],re[i]];}}
+        for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,wlenR=Math.cos(ang),wlenI=Math.sin(ang);for(let i=0;i<n;i+=len){let wr=1,wi=0;for(let k=0;k<len/2;k++){const uR=re[i+k],uI=im[i+k],vR=re[i+k+len/2]*wr-im[i+k+len/2]*wi,vI=re[i+k+len/2]*wi+im[i+k+len/2]*wr;re[i+k]=uR+vR;im[i+k]=uI+vI;re[i+k+len/2]=uR-vR;im[i+k+len/2]=uI-vI;const nextWr=wr*wlenR-wi*wlenI;wi=wr*wlenI+wi*wlenR;wr=nextWr;}}}
+        return re.slice(0,n/2+1).map((r,i)=>Math.hypot(r,im[i])*2/n);
+      }
+      function computeFft(peer){
+        const recent=(peer?.chartHistory||[]).filter(s=>Number.isFinite(s.t)&&Number.isFinite(vibrationValue(s))).slice(-400); if(recent.length<32)return null;
+        const end=recent[recent.length-1].t,startLimit=end-4200,samples=recent.filter(s=>s.t>=startLimit);if(samples.length<32)return null;
+        const duration=end-samples[0].t;if(duration<900)return null;const n=Math.max(32,Math.min(256,nextPowerOfTwoCeil(samples.length))),start=samples[0].t,dt=duration/(n-1);if(!Number.isFinite(dt)||dt<=0)return null;
+        const axisAccessors=[s=>s.a?.x,s=>s.a?.y,s=>s.a?.z],axisScores=axisAccessors.map(fn=>{const vals=samples.map(fn).filter(Number.isFinite);const m=mean(vals)||0;return vals.length?Math.sqrt(vals.reduce((sum,v)=>sum+(v-m)*(v-m),0)/vals.length):0;}),axisIndex=axisScores.indexOf(Math.max(...axisScores)),signalAccessor=axisScores[axisIndex]>0?axisAccessors[axisIndex]:vibrationValue;
+        const times=Array.from({length:n},(_,i)=>start+i*dt),values=interpolateSeries(samples,times,signalAccessor),meanV=mean(values)||0;
+        const windowed=values.map((v,i)=>(v-meanV)*(0.5-0.5*Math.cos(2*Math.PI*i/(n-1))));const mags=fftMagnitudes(windowed),fs=1000/dt,resolution=fs/n;
+        const spectrum=[];for(let k=1;k<mags.length;k++){const freq=k*resolution;if(freq<0.5)continue;spectrum.push({freq,mag:mags[k]});}
+        const peaks=spectrum.filter((p,i,a)=>i===0||i===a.length-1||(p.mag>=a[i-1].mag&&p.mag>=a[i+1].mag)).sort((a,b)=>b.mag-a.mag);const primary=peaks[0]||null,secondary=peaks.find(p=>!primary||Math.abs(p.freq-primary.freq)>=Math.max(.5,resolution*1.5))||null;
+        return {spectrum,fs,resolution,primary,secondary,n};
+      }
+      function drawFft(){
+        const peer=selectedReceiverPeer(),canvas=$('#fftChart'); if(!canvas)return; const result=computeFft(peer); $('#fftSensorLabel').textContent=peer?`${peerName(peer)} · ${t('fftDesc')}`:t('fftDesc');
+        $('#fftPrimary').textContent=result?.primary?`${result.primary.freq.toFixed(2)} Hz`:'—';$('#fftSecondary').textContent=result?.secondary?`${result.secondary.freq.toFixed(2)} Hz`:'—';$('#fftResolution').textContent=result?`${result.resolution.toFixed(2)} Hz`:'—';
+        const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,Math.min(2,devicePixelRatio||1)),width=Math.max(280,Math.floor(rect.width*dpr)),height=Math.max(150,Math.floor(rect.height*dpr));if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}const ctx=canvas.getContext('2d');ctx.clearRect(0,0,width,height);ctx.save();ctx.scale(dpr,dpr);const w=width/dpr,h=height/dpr,pad={l:36,r:8,t:10,b:24},pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;ctx.fillStyle='#fbfbf9';ctx.fillRect(pad.l,pad.t,pw,ph);ctx.strokeStyle='#e4e4df';for(let i=0;i<=4;i++){const y=pad.t+ph*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+pw,y);ctx.stroke();}
+        if(!result?.spectrum?.length){ctx.fillStyle='#7a7c76';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText(t('fftWaiting'),pad.l+pw/2,pad.t+ph/2);ctx.restore();return;}
+        const maxFreq=Math.min(result.fs/2,50),visible=result.spectrum.filter(p=>p.freq<=maxFreq),maxMag=Math.max(.001,...visible.map(p=>p.mag));ctx.strokeStyle='#16624f';ctx.lineWidth=1.6;ctx.beginPath();visible.forEach((p,i)=>{const x=pad.l+pw*(p.freq/maxFreq),y=pad.t+ph*(1-p.mag/maxMag);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.fillStyle='#7a7c76';ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText('0 Hz',pad.l,pad.t+ph+17);ctx.fillText(`${maxFreq.toFixed(0)} Hz`,pad.l+pw,pad.t+ph+17);ctx.restore();
+      }
+      function setDisplayMode(mode){displayMode=mode==='stacked'?'stacked':'single';writeStorage(`${APP_CONFIG.slug}:display-mode`,displayMode);updateDisplayModeUi();}
+      function updateDisplayModeUi(){
+        if(!$('#singleDashboard'))return; $$('.display-mode-button').forEach(button=>button.classList.toggle('active',button.dataset.displayMode===displayMode));$('#displayModeHint').textContent=t(displayMode==='stacked'?'displayStackedHint':'displaySingleHint');$('#singleDashboard').hidden=displayMode==='stacked';$('#stackedComparison').hidden=displayMode!=='stacked';$('#stackedAxisLegend').hidden=displayMode!=='stacked';renderStackedComparison();
+      }
+      function renderStackedComparison(){
+        const root=$('#stackedComparison');if(!root)return;const peers=connectedReceiverPeers();if(!peers.length){root.innerHTML='';root.dataset.signature='';return;}const signature=peers.map(peer=>peer.id).join('|');
+        if(root.dataset.signature===signature&&root.children.length===peers.length){Array.from(root.children).forEach((card,index)=>{const peer=peers[index];const title=card.querySelector('.comparison-card-title strong'),meta=card.querySelector('.comparison-card-meta');if(title)title.textContent=peerName(peer);if(meta)meta.textContent=`${Number.isFinite(peer.sampleRate)?peer.sampleRate.toFixed(1)+' Hz':'—'} · ${syncStatusText(peer)}`;});return;}
+        root.dataset.signature=signature;root.innerHTML=peers.map(peer=>`<div class="comparison-card"><div class="comparison-card-head"><div class="comparison-card-title"><span class="sensor-color-dot" style="--sensor-color:${peer.color}"></span><strong>${escapeHtml(peerName(peer))}</strong></div><span class="comparison-card-meta">${Number.isFinite(peer.sampleRate)?peer.sampleRate.toFixed(1)+' Hz':'—'} · ${escapeHtml(syncStatusText(peer))}</span></div><div class="comparison-chart-wrap"><canvas class="comparison-chart" data-peer-id="${escapeHtml(peer.id)}"></canvas></div></div>`).join('');
+      }
+      function drawTimeChart(canvas,peer,now,sharedRange=null){
+        const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,Math.min(2,devicePixelRatio||1)),width=Math.max(280,Math.floor(rect.width*dpr)),height=Math.max(150,Math.floor(rect.height*dpr));if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}const ctx=canvas.getContext('2d');ctx.clearRect(0,0,width,height);ctx.save();ctx.scale(dpr,dpr);const w=width/dpr,h=height/dpr,pad={l:40,r:8,t:8,b:22},pw=w-pad.l-pad.r,ph=h-pad.t-pad.b,windowMs=Number($('#chartWindow').value)*1000;ctx.fillStyle='#fbfbf9';ctx.fillRect(pad.l,pad.t,pw,ph);ctx.strokeStyle='#e4e4df';ctx.lineWidth=1;for(let i=0;i<=4;i++){const y=pad.t+ph*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+pw,y);ctx.stroke();}
+        const visible=peer.chartHistory.filter(sample=>now-sampleDisplayTime(peer,sample)<=windowMs),series=chartSeries(peer);let range=Number.isFinite(sharedRange)?sharedRange:(chartType==='vibration'?2:chartType==='accel'?12:chartType==='rotation'?120:(measurementMode==='tilt'?90:180)),maxAbs=0;if(!Number.isFinite(sharedRange)){for(const sample of visible)for(const fn of series){const v=fn(sample);if(Number.isFinite(v))maxAbs=Math.max(maxAbs,Math.abs(v));}if(chartType!=='orientation')range=Math.max(range,chartType==='vibration'?Math.ceil(maxAbs)||range:Math.ceil(maxAbs/5)*5||range);}const positiveOnly=chartType==='vibration',yMin=positiveOnly?0:-range,yMax=range,colors=['#16624f','#3e6d9c','#9b6435'];ctx.fillStyle='#7a7c76';ctx.font='9px system-ui';ctx.textAlign='right';for(let i=0;i<=4;i++){const val=yMax-(yMax-yMin)*i/4;ctx.fillText(String(Math.round(val*10)/10),pad.l-5,pad.t+ph*i/4+3);}
+        series.forEach((fn,index)=>{ctx.beginPath();let started=false;for(const sample of visible){const v=fn(sample);if(!Number.isFinite(v))continue;const st=sampleDisplayTime(peer,sample),x=pad.l+pw*(1-(now-st)/windowMs),y=pad.t+ph*(yMax-v)/(yMax-yMin);if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);}ctx.strokeStyle=colors[index];ctx.lineWidth=1.5;ctx.stroke();});
+        const events=impactEvents.filter(e=>e.sensorId===peer.id&&now-e.timeMs<=windowMs);ctx.strokeStyle='#b44d3d';ctx.setLineDash([3,3]);for(const e of events){const x=pad.l+pw*(1-(now-e.timeMs)/windowMs);ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+ph);ctx.stroke();}ctx.setLineDash([]);ctx.fillStyle='#7a7c76';ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText(`-${Math.round(windowMs/1000)} s`,pad.l,pad.t+ph+16);ctx.fillText('0 s',pad.l+pw,pad.t+ph+16);ctx.restore();
+      }
+      function stackedSharedRange(now){const peers=connectedReceiverPeers(),windowMs=Number($('#chartWindow').value)*1000;let range=chartType==='vibration'?2:chartType==='accel'?12:chartType==='rotation'?120:(measurementMode==='tilt'?90:180),maxAbs=0;if(chartType==='orientation')return range;for(const peer of peers){const series=chartSeries(peer);for(const sample of peer.chartHistory){if(now-sampleDisplayTime(peer,sample)>windowMs)continue;for(const fn of series){const value=fn(sample);if(Number.isFinite(value))maxAbs=Math.max(maxAbs,Math.abs(value));}}}return Math.max(range,chartType==='vibration'?Math.ceil(maxAbs)||range:Math.ceil(maxAbs/5)*5||range);}
+      function drawStackedComparison(now){ if(displayMode!=='stacked')return; const sharedRange=stackedSharedRange(now);document.querySelectorAll('.comparison-chart').forEach(canvas=>{const peer=receiverPeers.get(canvas.dataset.peerId);if(peer?.status==='connected')drawTimeChart(canvas,peer,now,sharedRange);}); }
 
       function adjustedOrientation(peer,o={}){
         const raw={alpha:numberOrNull(o.alpha),beta:numberOrNull(o.beta),gamma:numberOrNull(o.gamma)};
@@ -1166,12 +1335,8 @@
         else { const values=recentValues(peer,s=>vectorMagnitude(s.a)); setModeMetric(1,'metricCurrentAccel',formatUnit(vectorMagnitude(sample.a),'m/s²')); setModeMetric(2,'metricPeak2s',formatUnit(values.length?Math.max(...values):null,'m/s²')); setModeMetric(3,'metricSampleRate',Number.isFinite(peer.sampleRate)?`${peer.sampleRate.toFixed(1)} Hz`:'—'); }
       }
       function updateAxisLegend(){
-        const items=[$('#axisLegend1'),$('#axisLegend2'),$('#axisLegend3')]; items.forEach(el=>el.hidden=false);
-        if(chartType==='vibration'){items[0].textContent=t('modeVibration');items[1].hidden=true;items[2].hidden=true;}
-        else if(chartType==='orientation'&&measurementMode==='tilt'){items[0].textContent=t('pitch');items[1].textContent=t('roll');items[2].hidden=true;}
-        else if(chartType==='orientation'){items[0].textContent=t('yaw');items[1].textContent=t('pitch');items[2].textContent=t('roll');}
-        else if(chartType==='rotation'){items[0].textContent='α';items[1].textContent='β';items[2].textContent='γ';}
-        else {items[0].textContent='X';items[1].textContent='Y';items[2].textContent='Z';}
+        const groups=[[$('#axisLegend1'),$('#axisLegend2'),$('#axisLegend3')],[$('#stackedAxisLegend1'),$('#stackedAxisLegend2'),$('#stackedAxisLegend3')]];
+        for(const items of groups){items.forEach(el=>el.hidden=false);if(chartType==='vibration'){items[0].textContent=t('modeVibration');items[1].hidden=true;items[2].hidden=true;}else if(chartType==='orientation'&&measurementMode==='tilt'){items[0].textContent=t('pitch');items[1].textContent=t('roll');items[2].hidden=true;}else if(chartType==='orientation'){items[0].textContent=t('yaw');items[1].textContent=t('pitch');items[2].textContent=t('roll');}else if(chartType==='rotation'){items[0].textContent='α';items[1].textContent='β';items[2].textContent='γ';}else{items[0].textContent='X';items[1].textContent='Y';items[2].textContent='Z';}}
       }
       function updateMeasurementModeUi(){
         const valid=['motion','vibration','tilt','rotation','free']; if(!valid.includes(measurementMode)) measurementMode='motion';
@@ -1179,7 +1344,7 @@
         $('#measurementModeDescription').textContent=t(`mode${measurementMode[0].toUpperCase()+measurementMode.slice(1)}Desc`);
         $('#chartTabs').hidden=measurementMode!=='free';
         if(measurementMode==='motion') chartType='accel'; else if(measurementMode==='vibration') chartType='vibration'; else if(measurementMode==='tilt') chartType='orientation'; else if(measurementMode==='rotation') chartType='rotation';
-        $$('.tab-button').forEach(button=>button.classList.toggle('active',button.dataset.chart===chartType)); updateAxisLegend(); updateModeSummary();
+        $$('.tab-button').forEach(button=>button.classList.toggle('active',button.dataset.chart===chartType)); updateAxisLegend(); updateModeSummary(); renderStackedComparison(); drawFft();
       }
       function setMeasurementMode(mode){ measurementMode=mode; writeStorage(`${APP_CONFIG.slug}:measurement-mode`,mode); if(recording)for(const peer of connectedReceiverPeers())rememberRecordingSensor(peer); updateMeasurementModeUi(); }
 
@@ -1196,6 +1361,7 @@
       function drawChart(){
         chartFrame=0;
         if($('#receiverLivePanel').hidden) return;
+        const nowFrame=performance.now(); if(displayMode==='stacked'){drawStackedComparison(nowFrame);if(nowFrame-lastFftRenderAt>500){lastFftRenderAt=nowFrame;drawFft();}chartFrame=requestAnimationFrame(drawChart);return;}
         const canvas=$('#sensorChart'),rect=canvas.getBoundingClientRect(),dpr=Math.max(1,Math.min(2,devicePixelRatio||1)); const width=Math.max(300,Math.floor(rect.width*dpr)),height=Math.max(180,Math.floor(rect.height*dpr));
         if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
         const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,width,height); ctx.save(); ctx.scale(dpr,dpr); const w=width/dpr,h=height/dpr,pad={l:42,r:10,t:12,b:24}; const plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
@@ -1215,7 +1381,7 @@
           const series=chartSeries(peer),visible=visibleByPeer.get(peer.id)||[];
           series.forEach((fn,index)=>{ ctx.beginPath(); let started=false; for(const sample of visible){ const value=fn(sample); if(!Number.isFinite(value))continue; const sampleTime=sampleDisplayTime(peer,sample),x=pad.l+plotW*(1-(now-sampleTime)/windowMs),y=pad.t+plotH*(yMax-value)/(yMax-yMin); if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y); } ctx.strokeStyle=scope==='all'?peer.color:axisColors[index];ctx.lineWidth=scope==='all'?1.45:1.6;ctx.setLineDash(scope==='all'?dashPatterns[index]:[]);ctx.stroke(); });
         }
-        ctx.setLineDash([]);ctx.fillStyle='#7a7c76';ctx.textAlign='center';ctx.fillText(`-${Math.round(windowMs/1000)} s`,pad.l,pad.t+plotH+18);ctx.fillText('0 s',pad.l+plotW,pad.t+plotH+18);ctx.restore(); chartFrame=requestAnimationFrame(drawChart);
+        ctx.setLineDash([]); const eventPeers=new Set(peers.map(peer=>peer.id));ctx.strokeStyle='#b44d3d';ctx.setLineDash([3,3]);for(const event of impactEvents){if(!eventPeers.has(event.sensorId)||now-event.timeMs>windowMs)continue;const x=pad.l+plotW*(1-(now-event.timeMs)/windowMs);ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+plotH);ctx.stroke();}ctx.setLineDash([]);ctx.fillStyle='#7a7c76';ctx.textAlign='center';ctx.fillText(`-${Math.round(windowMs/1000)} s`,pad.l,pad.t+plotH+18);ctx.fillText('0 s',pad.l+plotW,pad.t+plotH+18);ctx.restore(); if(now-lastFftRenderAt>500){lastFftRenderAt=now;drawFft();} chartFrame=requestAnimationFrame(drawChart);
       }
 
       function setZero(){
@@ -1232,7 +1398,7 @@
 
       function toggleRecording(){
         if(!recording){
-          recording=true; recordSamples=[]; recordSessionSensors=new Map(); recordingStartedAt=performance.now(); recordingStartedEpochMs=Date.now();
+          recording=true; recordSamples=[]; recordEvents=[]; recordSessionSensors=new Map(); recordingStartedAt=performance.now(); recordingStartedEpochMs=Date.now();
           for(const peer of connectedReceiverPeers()){ peer.recordingFirstSensorTs=null; runSyncBurst(peer,6,100); rememberRecordingSensor(peer); }
           $('#recordButton').textContent=t('stopRecording'); $('#recordStatusText').textContent=t('recording'); $('#saveCsvButton').disabled=true; $('#saveJsonButton').disabled=true; $('#recordSamples').textContent='0';
           recordingTimer=setInterval(updateRecordingDuration,250); updateRecordingDuration();
@@ -1254,7 +1420,7 @@
       }
       function saveJson(){
         const samples=recordSamples.map(sample=>{const elapsed=synchronizedElapsedForRecord(sample);return {...sample,synchronizedElapsedMs:elapsed,synchronizedEpochMs:Number.isFinite(elapsed)?recordingStartedEpochMs+elapsed:null};});
-        const payload={format:'browser-kitty-wireless-sensor-v3',createdAt:new Date().toISOString(),measurementMode,clockSynchronization:{method:'NTP-like WebRTC DataChannel ping/pong with low-RTT weighted clock mapping',recordingStartedEpochMs,recordingStartedPerformanceMs:recordingStartedAt},coordinateSystem:{description:'Device-fixed browser coordinates; X right, Y toward top of screen, Z outward from screen when provided by browser.'},connection:{serverless:true,iceServers:[],maxSensors:MAX_SENSORS},sensors:Array.from(recordSessionSensors.values()),samples};
+        const payload={format:'browser-kitty-wireless-sensor-v4',createdAt:new Date().toISOString(),measurementMode,clockSynchronization:{method:'NTP-like WebRTC DataChannel ping/pong with low-RTT weighted clock mapping',recordingStartedEpochMs,recordingStartedPerformanceMs:recordingStartedAt},coordinateSystem:{description:'Device-fixed browser coordinates; X right, Y toward top of screen, Z outward from screen when provided by browser.'},connection:{serverless:true,iceServers:[],maxSensors:MAX_SENSORS},sensors:Array.from(recordSessionSensors.values()),events:recordEvents,samples};
         downloadBlob(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),`${normalizedFilenameBase()}.json`);
       }
       function downloadBlob(blob,filename){ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(t('saved'),{tone:'success'}); }
@@ -1363,13 +1529,20 @@
       $('#zeroButton').addEventListener('click',setZero); $('#recordButton').addEventListener('click',toggleRecording); $('#disconnectButton').addEventListener('click',()=>{const peer=selectedReceiverPeer();if(peer)disconnectReceiverPeer(peer.id,{notify:true});}); $('#addSensorButton').addEventListener('click',showReceiverConnectPanel); $('#disconnectAllButton').addEventListener('click',()=>disconnectAllReceiverPeers({notify:true}));
       $('#saveCsvButton').addEventListener('click',saveCsv); $('#saveJsonButton').addEventListener('click',saveJson); $('#outputFilename').addEventListener('blur',normalizedFilenameBase);
       $$('.mode-button').forEach(button=>button.addEventListener('click',()=>setMeasurementMode(button.dataset.mode)));
-      $$('.tab-button').forEach(button=>button.addEventListener('click',()=>{$$('.tab-button').forEach(b=>b.classList.remove('active'));button.classList.add('active');chartType=button.dataset.chart;updateAxisLegend();})); $('#chartScope').addEventListener('change',renderSensorLegend);
+      $$('.display-mode-button').forEach(button=>button.addEventListener('click',()=>setDisplayMode(button.dataset.displayMode)));
+      $('#impactThreshold').addEventListener('input',event=>{impactThreshold=Number(event.target.value);$('#impactThresholdValue').textContent=impactThreshold.toFixed(1);writeStorage(`${APP_CONFIG.slug}:impact-threshold`,String(impactThreshold));});
+      $('#impactEnabled').addEventListener('change',event=>{impactEnabled=event.target.checked;writeStorage(`${APP_CONFIG.slug}:impact-enabled`,impactEnabled?'1':'0');});
+      $('#clearImpactButton').addEventListener('click',clearImpacts);
+      $$('.tab-button').forEach(button=>button.addEventListener('click',()=>{$$('.tab-button').forEach(b=>b.classList.remove('active'));button.classList.add('active');chartType=button.dataset.chart;updateAxisLegend();renderStackedComparison();drawFft();})); $('#chartScope').addEventListener('change',renderSensorLegend);
       window.addEventListener('resize',()=>{}); document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){if(role==='receiver')for(const peer of connectedReceiverPeers())runSyncBurst(peer,4,120);if(sensorRunning&&!wakeLock&&'wakeLock'in navigator){try{wakeLock=await navigator.wakeLock.request('screen');}catch{}}}});
 
       if(!navigator.mediaDevices?.getUserMedia){ $('#scanAnswerButton').disabled=true; $('#scanOfferButton').disabled=true; }
       $('#versionBadge').textContent=`v${APP_CONFIG.version}`; $('#buildVersion').textContent=APP_CONFIG.version; $('#builtAt').textContent=BUILD_MANIFEST.generatedAtUtc||'—'; $('#dependencyCount').textContent=String(BUILD_MANIFEST.dependencies?.length||0); $('#outputFilename').value=APP_CONFIG.slug||'wireless-sensor';
+      $('#impactThreshold').value=String(Math.max(1,Math.min(20,impactThreshold))); impactThreshold=Number($('#impactThreshold').value); $('#impactThresholdValue').textContent=impactThreshold.toFixed(1); $('#impactEnabled').checked=impactEnabled;
       applyLanguage();
       updateMeasurementModeUi();
+      updateDisplayModeUi();
+      renderImpactPanel();
 
       const hash=new URLSearchParams(location.hash.startsWith('#')?location.hash.slice(1):location.hash); const autoOffer=hash.get('sensor');
       if(autoOffer){ setRole('sensor'); $('#sensorOfferInput').value=autoOffer; setTimeout(useSensorOffer,0); }

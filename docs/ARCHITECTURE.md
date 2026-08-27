@@ -20,6 +20,8 @@ Phone D browser ────┤ Peer D                 │
                          │
                          ├─ selected-sensor detail view
                          ├─ all-sensor overlay chart
+                         ├─ same-signal stacked charts
+                         ├─ impact timing + FFT analysis
                          └─ synchronized receiver-side recording
 ```
 
@@ -159,7 +161,7 @@ A recording session stores both timelines:
 - `synchronized_elapsed_ms`: sensor timestamp mapped onto receiver time, then measured from the recording start
 - `receive_elapsed_ms`: receiver packet-arrival time from the recording start, retained for diagnostics/fallback
 
-CSV also records synchronization uncertainty, offset, drift, measurement mode, vibration value, and raw sensor fields. JSON format `browser-kitty-wireless-sensor-v3` stores the final clock model for each sensor so corrected timestamps remain auditable.
+CSV also records synchronization uncertainty, offset, drift, measurement mode, vibration value, and raw sensor fields. JSON format `browser-kitty-wireless-sensor-v4` stores the final clock model for each sensor so corrected timestamps remain auditable.
 
 This is a practical browser-level synchronization scheme, not a guarantee of scientific PTP/GNSS-grade time alignment. Asymmetric network delay and browser/OS scheduling can still bias the estimate.
 
@@ -190,3 +192,21 @@ connect-src 'none'
 ```
 
 No fetch/XHR/WebSocket/API path is required by the application.
+
+## Impact timing
+
+The receiver derives a gravity-free acceleration magnitude from `event.acceleration` when available, with the existing gravity-magnitude fallback otherwise. A configurable threshold plus release hysteresis detects a new impact only on a rising crossing and avoids repeated triggers while the signal remains high.
+
+Each impact is timestamped on the peer's corrected receiver-time mapping. Impacts from different sensor IDs within a short synchronized window are grouped as the same physical event. The UI sorts the grouped events by corrected time and reports deltas from the earliest sensor together with each peer's synchronization uncertainty. The marker time is the threshold crossing; the displayed peak may continue updating for a short window after the crossing.
+
+When recording is active, detected impacts are included in JSON v4 alongside samples.
+
+## FFT analysis
+
+FFT analysis is local and dependency-free. The selected peer contributes roughly the most recent four seconds of motion history. Because browser sensor timestamps are not perfectly uniform, recent samples are resampled onto an evenly spaced power-of-two timeline spanning the available analysis window. The app chooses the acceleration axis with the largest recent standard deviation, subtracts its mean, applies a Hann window, and runs an in-page radix-2 FFT.
+
+Choosing a signed axis instead of acceleration magnitude avoids the common frequency-doubling artifact that appears when a sinusoidal signal is converted to an absolute magnitude. The UI reports the strongest peak above 0.5 Hz, a separated secondary peak, and the bin resolution. Maximum meaningful frequency remains bounded by the sensor's actual sample rate (Nyquist limit).
+
+## Stacked comparison
+
+The existing connected-sensor roster remains the way to select one peer for detailed values and FFT. A separate display-mode switch can replace the single dashboard with one time-series chart per connected phone, stacked vertically. Every stacked chart uses the same measurement/chart type and time-window setting, so acceleration, vibration, tilt, or rotation can be compared without overlapping lines. Impact markers use the same corrected time base in each chart.

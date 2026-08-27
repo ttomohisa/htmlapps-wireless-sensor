@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 0.11.0
+- **Version:** 0.12.0
 
 ## 2. Product principles
 
@@ -48,12 +48,12 @@
 
 - Create `RTCPeerConnection` with `iceServers: []`.
 - No trickle signaling. Wait for ICE gathering to complete (with a bounded timeout), then serialize the complete local description.
-- The receiver creates one independent `RTCPeerConnection` per phone, with a maximum of four simultaneous sensor peers in v0.11. A failed/disconnected phone must not stop the other peers.
+- The receiver creates one independent `RTCPeerConnection` per phone, with a maximum of four simultaneous sensor peers in v0.12. A failed/disconnected phone must not stop the other peers.
 - A terminal `failed` peer is removed and its 1–4 sensor slot becomes reusable. A transient WebRTC `disconnected` state is treated as recoverable until the connection returns to `connected` or becomes `failed`.
 - Each peer uses two DataChannels:
   - `sensor`: `ordered: false`, `maxRetransmits: 0`. Fresh data is more important than delayed retransmission.
   - `control`: reliable and ordered. Used for hello metadata, RTT measurement, and four-timestamp clock synchronization.
-- v0.11 targets devices on the same Wi-Fi / LAN.
+- v0.12 targets devices on the same Wi-Fi / LAN.
 - Client-isolating networks, many guest Wi-Fi networks, separate NATs, VPN boundaries, and networks that block peer-to-peer traffic may fail. This is an intentional consequence of the no-server requirement.
 
 ## 5. Signaling code format
@@ -67,7 +67,7 @@
 
 ## 6. Sensor data
 
-Use `devicemotion` and `deviceorientation` as the v0.11 baseline.
+Use `devicemotion` and `deviceorientation` as the v0.12 baseline.
 
 Each sensor packet contains:
 
@@ -97,6 +97,9 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Selecting a sensor drives the live numeric values, CSS 3D phone preview, RTT/sample-rate chips, and pose-zero action.
 - Live numeric values cover acceleration, derived acceleration magnitude, rotation rate, and orientation.
 - Measurement modes: Motion / Vibration / Tilt / Rotation / Free view.
+- Display modes: preserve selected-sensor detail/overlay views and add a stacked comparison view that renders the same signal in a separate vertically arranged chart for each connected phone.
+- Impact analysis: configurable automatic threshold detection on gravity-free acceleration, synchronized grouping across phones, per-phone arrival-time deltas, and chart markers.
+- FFT analysis: local recent-window frequency analysis using timestamp resampling, Hann windowing, radix-2 FFT, and automatic strongest-axis selection.
 - Free view keeps the acceleration / rotation / orientation chart tabs; task-focused modes select an appropriate chart automatically.
 - Vibration mode calculates rolling 2-second RMS, peak, and range from gravity-free acceleration magnitude when available.
 - Tilt mode focuses on pitch/roll and combined tilt; Rotation mode adds combined rotation magnitude statistics.
@@ -113,9 +116,9 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Each receiver peer maintains a bounded linear clock model `receiverTime = slope * sensorTime + intercept`, plus offset, drift (ppm), minimum RTT, uncertainty, and quality.
 - Once a clock model is ready, shared timestamps and charts use the corrected sensor-side `performance.now()` value. Packet receive time remains available as a diagnostic/fallback.
 - Each sensor also records its own `sensor_elapsed_ms` relative to the first packet from that sensor during the session.
-- Samples stay in browser memory; v0.11 does not persist measurement history to localStorage or IndexedDB.
+- Samples stay in browser memory; v0.12 does not persist measurement history to localStorage or IndexedDB.
 - CSV fields include sensor ID/name/device label, measurement mode, synchronized elapsed time, receive elapsed time, per-sensor elapsed time, sensor timestamp, synchronized/receive epoch time, sync uncertainty, clock offset/drift, sequence, acceleration, vibration value, gravity-included acceleration, rotation rate/magnitude, orientation, absolute flag, and browser-reported interval.
-- JSON format `browser-kitty-wireless-sensor-v3` contains sensor metadata (including per-sensor zero offsets and final clock model), connection/privacy metadata, synchronization method metadata, and raw/corrected samples.
+- JSON format `browser-kitty-wireless-sensor-v4` contains sensor metadata (including per-sensor zero offsets and final clock model), connection/privacy metadata, synchronization method metadata, and raw/corrected samples.
 - The output filename is editable before export.
 - Invalid filename characters are sanitized and empty names fall back to `wireless-sensor`.
 - CSV uses UTF-8 with BOM for spreadsheet compatibility.
@@ -149,7 +152,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Measurements are not uploaded to Browser Kitty.
 - Saved CSV/JSON files are created only after an explicit user action.
 
-## 12. Non-goals for v0.11.0
+## 12. Non-goals for v0.12.0
 
 - Cross-internet/NAT traversal.
 - TURN fallback.
@@ -182,7 +185,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 15. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `0.11.0`.
+- `app.config.json` version is `0.12.0`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
@@ -201,8 +204,11 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Live values update for the selected sensor without rebuilding the full DOM per sample, and the chart can overlay all connected sensors.
 - One recording session can capture interleaved samples from multiple sensors on the corrected shared timeline and export user-named CSV and JSON. Receive-time fields remain available as diagnostics/fallback.
 - Measurement modes include Motion, Vibration, Tilt, Rotation, and Free view, with mode-specific summary metrics and chart focus.
+- Impact detection groups synchronized events from different phones and reports relative arrival time without requiring a server.
+- FFT identifies a known synthetic dominant frequency within one FFT bin/resolution under regular mock sampling.
+- Stacked comparison keeps one vertically arranged chart per connected phone and does not remove the existing per-sensor selection UI.
 - Japanese and English fit at 360px width.
 
-## 16. Known v0.11 limitations
+## 16. Known v0.12 limitations
 
 The most important limitation is deliberate: **a fully serverless WebRTC connection cannot rely on signaling, STUN, or TURN infrastructure.** Wireless Sensor therefore prioritizes same-LAN use and transparent failure over universal connectivity.

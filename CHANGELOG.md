@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.0 - 2026-08-28
+
+- Added automatic impact-event detection from gravity-free acceleration with a configurable threshold and hysteresis to avoid repeated triggers.
+- Added synchronized cross-device impact grouping so the latest event shows per-phone arrival-time differences and sync uncertainty.
+- Added impact markers to live time-series charts and preserved detected events in the v4 JSON recording format.
+- Added local FFT vibration analysis over the selected sensor's recent samples. The analyzer resamples irregular timestamps, applies a Hann window, and automatically chooses the acceleration axis with the strongest variation to avoid magnitude-only frequency doubling.
+- Added dominant frequency, secondary peak, and frequency-resolution readouts without introducing a new dependency.
+- Added a stacked comparison view that keeps the existing per-sensor selection UI while placing the same signal in one chart per connected phone vertically.
+- Kept the existing selected-sensor detail view and all-sensor overlay chart as alternatives.
+
 ## 0.11.0 - 2026-08-27
 
 - Added NTP-like clock synchronization over the existing reliable WebRTC control DataChannel. Each phone is sampled in a burst at connection time, re-synchronized periodically, and re-synchronized when the receiver tab becomes visible again.
