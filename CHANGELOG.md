@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.19.0 - 2026-08-28
+
+- Polished pairing UX: receiver selection now creates the offer QR automatically, phone-sensor selection opens the QR scanner automatically, and adding another sensor starts pairing immediately while existing peers stay connected.
+- Added stage-specific pairing guidance for offer scan, reply scan, connection checking, slow connection checks, failures, and transient reconnects; QR handoff remains free of a user-transfer timeout.
+- Added segmented QR scan progress bars and slowed automatic QR page changes, especially for phone-to-PC reply scanning on lower-resolution desktop cameras.
+- Added recoverable connection-health UI so transient WebRTC `disconnected` states show as reconnecting before a terminal `failed` state removes the peer.
+- Added phone-side battery/load controls with Power saving / Standard / High precision profiles, optional Screen Wake Lock, actual send/UI refresh statistics, and DataChannel backpressure protection.
+- Reduced phone DOM updates to profile-dependent low rates while preserving transmitted sensor samples.
+- Reduced receiver UI work by throttling selected-sensor DOM refreshes, coalescing roster updates, avoiding repeated layout/legend rebuilds, and capping chart rendering to about 30 fps normally and 15 fps in stacked comparison mode.
+- Pause receiver chart rendering while the page is hidden and resynchronize/restart drawing when it becomes visible again.
+- Kept session format v8 unchanged because the optimization metadata is runtime-only and does not change recorded measurement semantics.
+
 ## 0.18.0 - 2026-08-28
 
 - Promoted JSON export to a reloadable Wireless Sensor measurement-session format: `browser-kitty-wireless-sensor-v8`.

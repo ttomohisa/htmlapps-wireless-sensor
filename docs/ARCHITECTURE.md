@@ -253,3 +253,13 @@ When two sensors participating in the same grouped impact both have positions, t
 `browser-kitty-wireless-sensor-v8` is the current session schema. The loader also accepts v4, v5, v6, and v7 so recordings from recent pre-v1 releases remain useful. Imported session data stays local, is normalized into the same `recordSamples`, `recordEvents`, `recordMarkers`, and sensor metadata structures used by live recordings, and then feeds the ordinary post-recording analysis/report code paths.
 
 Session loading does not recreate WebRTC peers and does not contact a server. Starting a new live recording replaces the imported in-memory session.
+## Pairing state and load control (v0.19)
+
+Pairing remains a manual QR handoff protocol, but the UI starts the obvious next action automatically: receiver selection creates an offer and sensor selection starts camera scanning. The protocol itself is unchanged and stays fully serverless. QR pages expose scan progress and use longer display intervals to favor low-resolution desktop cameras. A connection-check hint is informational only and never aborts pairing because of user transfer time.
+
+On the phone, motion events may arrive faster than the chosen application send rate. The sender therefore gates transmission before serialization, refreshes numeric preview independently at a much lower frequency, and checks `RTCDataChannel.bufferedAmount` before sending. When more than 64 KiB is buffered, the newest sample is dropped instead of increasing latency. This is appropriate for real-time sensor streaming where stale samples are less useful than current samples.
+
+Screen Wake Lock is optional. It improves continuity on mobile browsers that suspend sensor events after the display sleeps, but costs battery. The choice is stored only in localStorage and is not part of measurement-session semantics.
+
+The receiver keeps raw sample processing, impact detection, recording, and synchronization at incoming sample rate while throttling presentation work. Selected-value DOM changes are capped around 10 fps, roster metrics are coalesced around 1 Hz, repeated sensor-layout/legend rebuilds are signature-guarded, and chart rendering is capped around 30 fps (normal) or 15 fps (stacked). Chart animation stops while the document is hidden and resumes when visible.
+

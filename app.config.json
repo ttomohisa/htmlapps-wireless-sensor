@@ -3,9 +3,9 @@
   "name": "Wireless Sensor",
   "nameJa": "Wireless Sensor",
   "slug": "wireless-sensor",
-  "version": "0.18.0",
-  "description": "Turn up to four phones into fully serverless wireless motion sensors with experiment presets, synchronized recording, impact/FFT analysis, markers, sensor positioning, standalone HTML reports, and reloadable measurement sessions.",
-  "descriptionJa": "最大4台のスマホを完全サーバーレスのワイヤレス動きセンサーにして、実験プリセット、同期記録、衝撃/FFT解析、マーカー、センサー配置、単一HTMLレポート、計測セッションの再読み込みまで利用できます。",
+  "version": "0.19.0",
+  "description": "Turn up to four phones into fully serverless wireless motion sensors with polished QR pairing, low-load live rendering, power-aware phone streaming, synchronized recording, impact/FFT analysis, reports, markers, positioning, and reloadable sessions.",
+  "descriptionJa": "最大4台のスマホを完全サーバーレスのワイヤレス動きセンサーにして、迷いにくいQR接続、低負荷描画、バッテリーを意識した送信、同期記録、衝撃/FFT解析、レポート、マーカー、配置、セッション再読み込みまで利用できます。",
   "defaultLanguage": "auto",
   "repository": {
     "owner": "ttomohisa",

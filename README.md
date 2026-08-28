@@ -6,7 +6,7 @@
 
 [日本語版 README](README.ja.md)
 
-A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, synchronizes them over WebRTC, supports guided experiments and multi-point analysis, and keeps complete measurement sessions local. Recordings can include markers, sensor positions, cross-device impact timing, FFT analysis, reloadable session files, and standalone HTML reports.
+A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, synchronizes them over WebRTC, and keeps complete measurement sessions local. It includes guided experiments, cross-device impact timing, FFT analysis, polished camera-first QR pairing, power/load controls for long sessions, markers, sensor positions, reloadable session files, and standalone HTML reports.
 
 ## 🚀 Live demo
 
@@ -34,6 +34,8 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 - **Sensor positioning** — Rename sensors and enter XYZ positions in centimeters. Impact details can then show straight-line distance and an apparent propagation speed between devices.
 - **Reloadable measurement sessions** — Save JSON as a Wireless Sensor session and open v4–v8 session files later without reconnecting phones; analysis and reports are rebuilt locally.
 - **Standalone HTML reports** — Export a single self-contained report with measurement summary, sensor layout, vibration metrics, FFT results, impacts, timing differences, markers, and compact vibration plots.
+- **Polished camera-first pairing** — Choosing the receiver automatically creates an offer QR; choosing the phone-sensor role automatically opens the QR camera. Pairing guidance explains reply transfer, connection checking, transient reconnects, and failures without imposing a user-transfer timeout.
+- **Power/load controls for long sessions** — Power saving / Standard / High precision adjust transmission and phone preview refresh. Screen Wake Lock can be disabled, DataChannel backpressure drops stale samples instead of building a queue, and receiver rendering is throttled while raw recording remains unchanged.
 - **Single HTML, bilingual UI** — Required QR libraries are embedded at build time; Japanese and English are included in the same app.
 
 ## Quick start
@@ -42,8 +44,8 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 
 1. Open [Wireless Sensor](https://ttomohisa.github.io/htmlapps-wireless-sensor/) on both devices.
 2. Keep both devices on the same Wi-Fi / LAN.
-3. On the PC or tablet, choose **View measurements on this device** and press **Create connection info**.
-4. On the phone, choose **Use this phone as the sensor**, press **Scan PC QR with camera**, and scan the QR pages shown on the PC.
+3. On the PC or tablet, choose **View measurements on this device**. The connection QR is created automatically.
+4. On the phone, choose **Use this phone as the sensor**. Its QR camera opens automatically; scan the QR pages shown on the PC.
 5. When the phone shows reply QR pages, press **Scan phone reply QR with camera** on the PC and point the phone screen at the PC camera.
 6. After the WebRTC connection opens, press **Start sensor** on the phone and grant motion-sensor permission when requested.
 7. To add another phone, press **Add sensor** on the receiver and repeat the same QR pairing flow. Up to four phones can remain connected at once.
@@ -63,8 +65,8 @@ Python, Node.js, and a local web server are not required. The builder uses Windo
 
 ### Receiver: PC / tablet
 
-1. Choose **View measurements on this device**.
-2. Pair one to four phones with the segmented QR flow. Existing sensors remain connected while another is added.
+1. Choose **View measurements on this device**. The first segmented QR offer is created automatically.
+2. Pair one to four phones. **Add sensor** immediately starts a new QR pairing flow while existing sensors stay connected.
 3. Open **Sensor positions & layout** to rename devices and optionally enter XYZ positions in centimeters. These positions are stored by sensor slot on the receiver.
 4. Choose an **Experiment preset** or configure the **Measurement mode** and comparison layout manually.
 5. Use **Impact events**, synchronized stacked charts, and **Frequency analysis (FFT)** while measuring.
@@ -76,13 +78,14 @@ Python, Node.js, and a local web server are not required. The builder uses Windo
 
 ### Sensor: phone
 
-1. Choose **Use this phone as the sensor**.
-2. Press **Scan PC QR with camera**. The rear camera is preferred when available.
+1. Choose **Use this phone as the sensor**. The QR camera opens automatically.
+2. Press **Scan PC QR with camera** only when you want to restart scanning. The rear camera is preferred when available.
 3. Fill the guide with the QR code. Multiple pages are collected automatically in any order.
 4. When all pages are captured, the offer is restored and reply QR pages are generated locally.
 5. Show those reply QR pages to the PC camera.
 6. After connecting, press **Start sensor** and allow sensor access.
-7. Choose **Power saving**, **Standard**, or **High frequency** send rate. These are throttling targets, not guaranteed hardware sampling rates.
+7. Choose **Power saving**, **Standard**, or **High precision**. These are transmission throttling targets, not guaranteed hardware sampling rates; Power saving also reduces phone preview refresh.
+8. Toggle **Keep screen awake while measuring** as needed. Turning it off saves battery, but some browsers stop sensor events after the display sleeps.
 
 Copy/paste connection codes remain available as a fallback if either camera cannot scan QR codes.
 
@@ -176,10 +179,10 @@ The GitHub Pages version still needs the initial HTML request. For a completely 
 - Company, school, guest Wi-Fi, VPNs, firewalls, or access points with client isolation can block device-to-device traffic even when both devices appear to be on the same Wi-Fi.
 - Browser sensor values are not a substitute for calibrated scientific instruments. Accuracy, available fields, and sample rates vary by device, OS, and browser.
 - iPhone/iPad and some browsers require an explicit permission gesture for motion sensors.
-- Backgrounding or locking the phone can suspend browser sensor events and stop streaming.
+- Backgrounding or locking the phone can suspend browser sensor events and stop streaming. This is especially important when screen Wake Lock is disabled for power saving.
 - Long recordings remain in receiver memory until saved. Multi-phone sessions accumulate samples faster, so save in segments when needed. Reloading a large saved session also uses receiver memory.
 - Clock synchronization is an NTP-like estimate over the WebRTC DataChannel. It favors low-RTT samples and corrects offset and long-run drift, but cannot guarantee asymmetric network delay or OS/browser timer behavior. It is not a replacement for PTP/GNSS-grade scientific synchronization.
-- v0.18.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
+- v0.19.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
 - Impact timing is a browser-level threshold detector. Sampling frequency, threshold, device mounting, and sensor quality affect the detected arrival time.
 - FFT bandwidth is limited by the measured sensor sample rate. Around 30 Hz sampling, useful analysis is limited to roughly 15 Hz and below.
 

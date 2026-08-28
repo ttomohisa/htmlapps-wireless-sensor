@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 0.18.0
+- **Version:** 0.19.0
 
 ## 2. Product principles
 
@@ -24,7 +24,7 @@
 ### Receiver (PC / tablet)
 
 1. Open Wireless Sensor and choose **View measurements on this device**.
-2. Press **Create connection info**.
+2. The receiver creates connection info automatically when this role is selected. **Recreate connection QR** remains available for retry.
 3. The app creates a WebRTC offer using `RTCPeerConnection({ iceServers: [] })`, waits for local ICE gathering, then serializes it into a compact connection code.
 4. Split the offer code into low-density QR pages and cycle them on the PC display. Fullscreen and manual page navigation are available.
 5. On the phone, open Wireless Sensor, choose the sensor role, and scan the PC QR pages with the in-app camera scanner. Prefer the rear camera, accept pages in any order, and automatically reconstruct the offer when all pages have been captured. Copy/paste remains a fallback.
@@ -38,7 +38,7 @@
 ### Sensor (phone)
 
 1. Open Wireless Sensor, choose **Use this phone as the sensor**, and press **Scan PC QR with camera**.
-2. Scan the receiver's segmented offer QR pages. When all pages are collected, the offer is reconstructed automatically. Manual connection-code paste remains available as a fallback.
+2. Selecting the phone-sensor role automatically starts camera scanning. Scan the receiver's segmented offer QR pages. When all pages are collected, the offer is reconstructed automatically. Manual connection-code paste remains available as a fallback.
 3. Generate a WebRTC answer locally and show both a segmented QR and copyable reply code.
 4. Return the answer to the receiver.
 5. Once the DataChannels are connected, press **Start sensor**. Permission requests must happen from this explicit user gesture.
@@ -87,7 +87,7 @@ Null is valid when a browser/device does not provide a field.
 
 - Power saving: target about 10 samples/s.
 - Standard: target about 30 samples/s (default).
-- High frequency: send each received motion event.
+- High precision: send each received motion event with higher battery and CPU load.
 
 These are throttling targets, not promises of exact sensor sampling rates. The receiver shows the measured rate.
 
@@ -174,7 +174,20 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - When both sensor positions are known, impact analysis may show straight-line distance and apparent propagation speed. This is a derived estimate, not a calibrated material-wave-speed measurement.
 - Session loading is local file input only. v4-v8 session files can restore samples/events/markers/sensor metadata and rebuild post-analysis without WebRTC reconnection.
 
-## 14. Non-goals for v0.18.0
+## 13.1 Connection UX and runtime load
+
+- Receiver role selection automatically starts offer generation; **Add sensor** starts a fresh pairing flow without stopping existing peers.
+- Sensor role selection automatically opens the QR camera when media capture is available.
+- Pairing UI exposes distinct offer, answer, connection-checking, slow-check, failure, and reconnecting states. User QR transfer itself has no timeout.
+- QR scans show per-page progress. Offer pages advance every ~1.8 s and reply pages every ~2.2 s to improve readability on lower-resolution desktop cameras.
+- A transient `disconnected` peer remains allocated and is shown as reconnecting. Only terminal `failed` releases the sensor slot.
+- Phone transmission profiles are application-level throttles: Power saving ≈10 Hz, Standard ≈30 Hz, High precision = device event rate. They do not control the physical sensor sampling hardware.
+- Phone numeric preview is intentionally refreshed much less often than sensor transmission (roughly 1 fps / 4 fps / 6–7 fps by profile). Hidden pages skip preview work.
+- If the unreliable sensor DataChannel exceeds 64 KiB buffered data, new sensor samples are dropped rather than queued, protecting latency and memory.
+- Screen Wake Lock is user-controllable and persisted locally. Turning it off may allow the OS/browser to suspend sensor events after screen sleep.
+- Receiver selected-value DOM refresh is capped around 10 fps; roster refresh is coalesced around 1 Hz; chart rendering targets ~30 fps in normal view and ~15 fps in stacked view. Hidden receiver pages stop chart animation and restart it on visibility return.
+
+## 14. Non-goals for v0.19.0
 
 - Cross-internet/NAT traversal.
 - TURN fallback.
@@ -207,7 +220,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `0.18.0`.
+- `app.config.json` version is `0.19.0`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
