@@ -27,18 +27,21 @@ Use two devices on the same Wi-Fi / LAN.
 3. On the phone, choose sensor mode and scan the PC QR pages with the camera that opens automatically.
 4. Confirm the phone reconstructs the offer and creates an answer locally.
 5. Return the answer by PC-camera scanning of the phone QR pages or by copy/paste fallback.
-6. Confirm the peer reaches `connected` without configured STUN/TURN.
-7. Start phone sensor permission from the explicit button.
-8. Move/rotate the phone and confirm values, 3D preview, and chart update.
-9. Confirm measured sample rate and RTT update.
-10. Set current pose to zero and confirm orientation display changes without clearing the stream.
-11. Connect a second phone when available and confirm independent sensor selection plus stacked/overlay comparison.
-12. Record samples, add a marker, stop, and confirm post-recording analysis opens.
-13. Save CSV, session JSON, and a standalone HTML report; open each export and verify data is present.
-14. Reload the saved session JSON and confirm analysis, sensor metadata/positions, markers, impacts, and report generation are restored without reconnecting phones.
-15. Exercise at least one experiment preset, impact timing, and FFT on real motion data.
-16. Switch phone load profiles, toggle Screen Wake Lock, and confirm send-rate/UI-rate indicators remain sensible during a longer run.
-17. Stop sending and disconnect one sensor; confirm other connected sensors continue running.
+6. Confirm both sides show ICE gathering as complete before their QR/code is presented, and that diagnostics list at least one local candidate on each device.
+7. Intentionally retry pairing after a failed attempt and confirm the new attempt gets fresh QR data, the previous slot is released, and no stale failure/reconnect message overwrites the new attempt.
+8. On a blocked/client-isolated network, confirm the diagnostic panel reports local/remote candidate classes and a failed/unestablished candidate pair instead of silently timing out during QR transfer.
+9. Confirm the peer reaches `connected` without configured STUN/TURN.
+10. Start phone sensor permission from the explicit button.
+11. Move/rotate the phone and confirm values, 3D preview, and chart update.
+12. Confirm measured sample rate and RTT update.
+13. Set current pose to zero and confirm orientation display changes without clearing the stream.
+14. Connect a second phone when available and confirm independent sensor selection plus stacked/overlay comparison.
+15. Record samples, add a marker, stop, and confirm post-recording analysis opens.
+16. Save CSV, session JSON, and a standalone HTML report; open each export and verify data is present.
+17. Reload the saved session JSON and confirm analysis, sensor metadata/positions, markers, impacts, and report generation are restored without reconnecting phones.
+18. Exercise at least one experiment preset, impact timing, and FFT on real motion data.
+19. Switch phone load profiles, toggle Screen Wake Lock, and confirm send-rate/UI-rate indicators remain sensible during a longer run.
+20. Stop sending and disconnect one sensor; confirm other connected sensors continue running.
 
 ## Negative network test
 

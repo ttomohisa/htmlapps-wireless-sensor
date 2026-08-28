@@ -57,7 +57,7 @@ Every peer connection is constructed with:
 new RTCPeerConnection({ iceServers: [] })
 ```
 
-No signaling server, STUN, TURN, WebSocket, or external API is configured. ICE gathering is completed locally before the full SDP description is encoded into the handoff code.
+No signaling server, STUN, TURN, WebSocket, or external API is configured. ICE gathering must reach `complete` locally before the full SDP description is encoded into the handoff code. A 15-second safety guard aborts the attempt rather than serializing incomplete SDP; retries allocate a fresh peer connection.
 
 This makes same-LAN connectivity the intended environment and deliberately gives up universal NAT traversal. A failed peer must not stop the other connected phones.
 Terminal `failed` peers are closed and removed so their sensor number/slot can be reused. A transient `disconnected` state is kept in place because WebRTC may recover it without renegotiation.
@@ -255,7 +255,7 @@ When two sensors participating in the same grouped impact both have positions, t
 Session loading does not recreate WebRTC peers and does not contact a server. Starting a new live recording replaces the imported in-memory session.
 ## Pairing state and load control (v1.0)
 
-Pairing remains a manual QR handoff protocol, but the UI starts the obvious next action automatically: receiver selection creates an offer and sensor selection starts camera scanning. The protocol itself is unchanged and stays fully serverless. QR pages expose scan progress and use longer display intervals to favor low-resolution desktop cameras. A connection-check hint is informational only and never aborts pairing because of user transfer time.
+Pairing remains a manual QR handoff protocol, but the UI starts the obvious next action automatically: receiver selection creates an offer and sensor selection starts camera scanning. The protocol itself stays fully serverless. QR pages expose scan progress and use longer display intervals to favor low-resolution desktop cameras. User QR transfer has no timeout; the only bounded timer is the pre-QR ICE-gathering guard, which discards an incomplete attempt. Diagnostics expose candidate classes and state transitions, while retry cleanup and connection-identity guards prevent late events from superseded peers from affecting a newer attempt.
 
 On the phone, motion events may arrive faster than the chosen application send rate. The sender therefore gates transmission before serialization, refreshes numeric preview independently at a much lower frequency, and checks `RTCDataChannel.bufferedAmount` before sending. When more than 64 KiB is buffered, the newest sample is dropped instead of increasing latency. This is appropriate for real-time sensor streaming where stale samples are less useful than current samples.
 

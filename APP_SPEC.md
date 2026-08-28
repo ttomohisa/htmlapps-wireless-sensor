@@ -47,7 +47,9 @@
 ## 4. WebRTC design
 
 - Create `RTCPeerConnection` with `iceServers: []`.
-- No trickle signaling. Wait for ICE gathering to complete (with a bounded timeout), then serialize the complete local description.
+- No trickle signaling. Wait for ICE gathering to reach `complete` before serialization. A 15-second guard rejects and discards the attempt instead of emitting incomplete SDP; retry always starts with a fresh `RTCPeerConnection`.
+- Pairing diagnostics show ICE gathering state, sanitized local/remote candidate classes (protocol/type/mDNS-vs-IP-family), ICE/peer connection states, and the selected candidate pair when available. Candidate addresses are not shown.
+- Superseded/closed sensor attempts are identity-guarded so late connection/data-channel events from an older peer cannot modify the current attempt.
 - The receiver creates one independent `RTCPeerConnection` per phone, with a maximum of four simultaneous sensor peers. A failed/disconnected phone must not stop the other peers.
 - A terminal `failed` peer is removed and its 1–4 sensor slot becomes reusable. A transient WebRTC `disconnected` state is treated as recoverable until the connection returns to `connected` or becomes `failed`.
 - Each peer uses two DataChannels:

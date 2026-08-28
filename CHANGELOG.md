@@ -11,6 +11,9 @@
 - Clarified localStorage usage and mixed-browser DeviceMotion axis limitations in the UI/spec/docs.
 - Updated GitHub Actions checkout to v7 for the stable release workflow.
 - Aligned the final pairing guidance and Windows verification command with the camera-first flow and built-in Windows PowerShell.
+- Require ICE gathering to reach `complete` before generating offer/answer QR data; a 15-second guard now aborts and discards the attempt instead of serializing incomplete SDP.
+- Added detailed connection diagnostics for local/remote candidate types, ICE/peer states, and the selected candidate pair without exposing candidate addresses.
+- Hardened pairing retries so failed or superseded `RTCPeerConnection` / DataChannel events cannot mutate a newer attempt, and terminal failures fully release the pending sensor slot.
 
 ## 0.19.0 - 2026-08-28
 

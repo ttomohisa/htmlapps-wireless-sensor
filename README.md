@@ -34,7 +34,7 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 - **Sensor positioning** — Rename sensors and enter XYZ positions in centimeters. Impact details can then show straight-line distance and an apparent propagation speed between devices.
 - **Reloadable measurement sessions** — Save JSON as a Wireless Sensor session and open v4–v8 session files later without reconnecting phones; analysis and reports are rebuilt locally.
 - **Standalone HTML reports** — Export a single self-contained report with measurement summary, sensor layout, vibration metrics, FFT results, impacts, timing differences, markers, and compact vibration plots.
-- **Polished camera-first pairing** — Choosing the receiver automatically creates an offer QR; choosing the phone-sensor role automatically opens the QR camera. Pairing guidance explains reply transfer, connection checking, transient reconnects, and failures without imposing a user-transfer timeout.
+- **Polished camera-first pairing** — Choosing the receiver automatically creates an offer QR; choosing the phone-sensor role automatically opens the QR camera. Pairing guidance explains reply transfer, connection checking, transient reconnects, and failures, while detailed diagnostics show ICE gathering, local/remote candidate classes, and candidate-pair status without exposing candidate addresses.
 - **Power/load controls for long sessions** — Power saving / Standard / High precision adjust transmission and phone preview refresh. Screen Wake Lock can be disabled, DataChannel backpressure drops stale samples instead of building a queue, and receiver rendering is throttled while raw recording remains unchanged.
 - **Single HTML, bilingual UI** — Required QR libraries are embedded at build time; Japanese and English are included in the same app.
 
@@ -177,6 +177,7 @@ The GitHub Pages version still needs the initial HTML request. For a completely 
 
 - **Same-LAN use is the primary target.** Without STUN/TURN, connections across different networks or NATs are intentionally out of scope.
 - Company, school, guest Wi-Fi, VPNs, firewalls, or access points with client isolation can block device-to-device traffic even when both devices appear to be on the same Wi-Fi.
+- Offer/reply QR data is generated only after ICE gathering completes. If gathering does not complete within 15 seconds, that attempt is discarded and retrying creates a fresh peer connection. On connection failure, use the on-screen ICE diagnostics (candidate counts/classes, ICE state, and candidate-pair status) for troubleshooting.
 - Browser sensor values are not a substitute for calibrated scientific instruments. Accuracy, available fields, and sample rates vary by device, OS, and browser.
 - `DeviceMotionEvent` axis handling can differ between browser engines. When mixing browser families, verify axis direction first or prefer magnitude-based comparisons such as vibration RMS/peak.
 - iPhone/iPad and some browsers require an explicit permission gesture for motion sensors.
