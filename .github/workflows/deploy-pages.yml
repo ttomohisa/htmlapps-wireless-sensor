@@ -23,7 +23,7 @@ jobs:
       pages-ready: ${{ steps.pages-status.outputs.ready }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Build and verify standalone HTML
         shell: pwsh

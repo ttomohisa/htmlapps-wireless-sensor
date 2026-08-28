@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 0.19.0
+- **Version:** 1.0.0
 
 ## 2. Product principles
 
@@ -33,11 +33,11 @@
 8. Repeat the same independent QR handoff for additional phones, up to four simultaneous sensors. Existing peer connections stay active while another phone is paired.
 9. Select any connected sensor to inspect its live values, 3D phone indicator, measured sample rate, RTT, and per-device zero offset.
 10. Switch the chart between the selected sensor and an all-sensor overlay.
-11. Start/stop one receiver-side recording session and save all received samples as CSV or JSON.
+11. Start/stop one receiver-side recording session and save the result as CSV, a reloadable session JSON file, or a self-contained HTML report.
 
 ### Sensor (phone)
 
-1. Open Wireless Sensor, choose **Use this phone as the sensor**, and press **Scan PC QR with camera**.
+1. Open Wireless Sensor and choose **Use this phone as the sensor**.
 2. Selecting the phone-sensor role automatically starts camera scanning. Scan the receiver's segmented offer QR pages. When all pages are collected, the offer is reconstructed automatically. Manual connection-code paste remains available as a fallback.
 3. Generate a WebRTC answer locally and show both a segmented QR and copyable reply code.
 4. Return the answer to the receiver.
@@ -48,12 +48,12 @@
 
 - Create `RTCPeerConnection` with `iceServers: []`.
 - No trickle signaling. Wait for ICE gathering to complete (with a bounded timeout), then serialize the complete local description.
-- The receiver creates one independent `RTCPeerConnection` per phone, with a maximum of four simultaneous sensor peers in v0.12. A failed/disconnected phone must not stop the other peers.
+- The receiver creates one independent `RTCPeerConnection` per phone, with a maximum of four simultaneous sensor peers. A failed/disconnected phone must not stop the other peers.
 - A terminal `failed` peer is removed and its 1–4 sensor slot becomes reusable. A transient WebRTC `disconnected` state is treated as recoverable until the connection returns to `connected` or becomes `failed`.
 - Each peer uses two DataChannels:
   - `sensor`: `ordered: false`, `maxRetransmits: 0`. Fresh data is more important than delayed retransmission.
   - `control`: reliable and ordered. Used for hello metadata, RTT measurement, and four-timestamp clock synchronization.
-- v0.12 targets devices on the same Wi-Fi / LAN.
+- The primary target is devices on the same Wi-Fi / LAN.
 - Client-isolating networks, many guest Wi-Fi networks, separate NATs, VPN boundaries, and networks that block peer-to-peer traffic may fail. This is an intentional consequence of the no-server requirement.
 
 ## 5. Signaling code format
@@ -67,7 +67,7 @@
 
 ## 6. Sensor data
 
-Use `devicemotion` and `deviceorientation` as the v0.12 baseline.
+Use `devicemotion` and `deviceorientation` as the v1.0 baseline.
 
 Each sensor packet contains:
 
@@ -165,6 +165,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - WebRTC peer traffic is the only runtime inter-device transport.
 - Measurements are not uploaded to Browser Kitty.
 - Saved CSV/session JSON/HTML report files are created only after an explicit user action.
+- UI preferences and sensor names/XYZ positions may be stored in localStorage on the current browser; raw samples, markers, and connection codes are not silently persisted.
 
 ## 13. Reports, markers, sensor layout, and saved sessions
 
@@ -187,7 +188,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Screen Wake Lock is user-controllable and persisted locally. Turning it off may allow the OS/browser to suspend sensor events after screen sleep.
 - Receiver selected-value DOM refresh is capped around 10 fps; roster refresh is coalesced around 1 Hz; chart rendering targets ~30 fps in normal view and ~15 fps in stacked view. Hidden receiver pages stop chart animation and restart it on visibility return.
 
-## 14. Non-goals for v0.19.0
+## 14. Non-goals for v1.0.0
 
 - Cross-internet/NAT traversal.
 - TURN fallback.
@@ -195,6 +196,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Cloud history or synchronization.
 - Scientific calibration certification.
 - Background operation while the browser/OS suspends the page.
+- Browser-specific axis normalization between engines. Mixed-browser comparisons should prefer magnitude-based metrics unless axis direction has been verified.
 
 ## 15. UX and accessibility
 
@@ -220,7 +222,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `0.19.0`.
+- `app.config.json` version is `1.0.0`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
@@ -249,6 +251,6 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Session JSON format v8 can be reloaded; formats v4-v8 remain accepted for backwards compatibility.
 - Japanese and English fit at 360px width.
 
-## 18. Known v0.18 limitations
+## 18. Known v1.0 limitations
 
 The most important limitation is deliberate: **a fully serverless WebRTC connection cannot rely on signaling, STUN, or TURN infrastructure.** Wireless Sensor therefore prioritizes same-LAN use and transparent failure over universal connectivity.

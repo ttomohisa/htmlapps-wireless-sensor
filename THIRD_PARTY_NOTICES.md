@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-Wireless Sensor embeds the following dependencies into the generated standalone HTML at build time. It is not loaded from a CDN at runtime.
+Wireless Sensor embeds the following dependencies into the generated standalone HTML at build time. They are not loaded from a CDN at runtime.
 
 ## qrcode-generator 1.4.4
 

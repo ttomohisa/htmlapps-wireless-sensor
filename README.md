@@ -146,7 +146,7 @@ Each push to `main` rebuilds the app from pinned dependencies, verifies the gene
 
 ```powershell
 .\build-standalone.bat
-pwsh -File .\scripts\check-repository.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\check-repository.ps1
 ```
 
 The build process automatically:
@@ -167,7 +167,7 @@ Wireless Sensor deliberately uses no signaling, STUN, or TURN infrastructure.
 - WebRTC peers are created with `RTCPeerConnection({ iceServers: [] })`.
 - Offer/answer metadata is transferred directly by QR code or copy/paste.
 - Sensor measurements travel directly to the connected peer over WebRTC DataChannel.
-- Measurements stay in receiver memory until the user explicitly saves CSV, a session JSON, or an HTML report.
+- Raw measurement samples and markers stay in receiver memory until the user explicitly saves CSV, a session JSON, or an HTML report. UI preferences and sensor names/XYZ positions are stored only in this browser’s localStorage.
 - The generated HTML keeps a Content Security Policy with `connect-src 'none'` for normal runtime network APIs.
 - The QR generator and decoder are embedded; there is no runtime CDN.
 
@@ -178,11 +178,12 @@ The GitHub Pages version still needs the initial HTML request. For a completely 
 - **Same-LAN use is the primary target.** Without STUN/TURN, connections across different networks or NATs are intentionally out of scope.
 - Company, school, guest Wi-Fi, VPNs, firewalls, or access points with client isolation can block device-to-device traffic even when both devices appear to be on the same Wi-Fi.
 - Browser sensor values are not a substitute for calibrated scientific instruments. Accuracy, available fields, and sample rates vary by device, OS, and browser.
+- `DeviceMotionEvent` axis handling can differ between browser engines. When mixing browser families, verify axis direction first or prefer magnitude-based comparisons such as vibration RMS/peak.
 - iPhone/iPad and some browsers require an explicit permission gesture for motion sensors.
 - Backgrounding or locking the phone can suspend browser sensor events and stop streaming. This is especially important when screen Wake Lock is disabled for power saving.
 - Long recordings remain in receiver memory until saved. Multi-phone sessions accumulate samples faster, so save in segments when needed. Reloading a large saved session also uses receiver memory.
 - Clock synchronization is an NTP-like estimate over the WebRTC DataChannel. It favors low-RTT samples and corrects offset and long-run drift, but cannot guarantee asymmetric network delay or OS/browser timer behavior. It is not a replacement for PTP/GNSS-grade scientific synchronization.
-- v0.19.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
+- v1.0.0 supports up to four simultaneous phones. GPS, magnetometer, microphone sensing, and camera sensing beyond QR setup remain out of scope.
 - Impact timing is a browser-level threshold detector. Sampling frequency, threshold, device mounting, and sensor quality affect the detected arrival time.
 - FFT bandwidth is limited by the measured sensor sample rate. Around 30 Hz sampling, useful analysis is limited to roughly 15 Hz and below.
 

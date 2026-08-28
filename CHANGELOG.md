@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0 - 2026-08-28
+
+- Promoted Wireless Sensor to the first stable release after the v0.9-v0.19 public test cycle.
+- Completed a release-wide consistency review across pairing, synchronized multi-sensor recording, experiment presets, impact/FFT analysis, reports, markers, sensor layout, session restore, and power/load controls.
+- Fixed the English phone-reply QR guidance so it matches the camera-first pairing flow.
+- Localized all generated HTML report table headers in Japanese and English.
+- Hardened imported session metadata by validating sensor count/IDs and sanitizing sensor colors before rendering or report generation.
+- Added a restrictive CSP to generated standalone HTML reports and protected user-controlled CSV text fields from spreadsheet formula interpretation.
+- Clarified localStorage usage and mixed-browser DeviceMotion axis limitations in the UI/spec/docs.
+- Updated GitHub Actions checkout to v7 for the stable release workflow.
+- Aligned the final pairing guidance and Windows verification command with the camera-first flow and built-in Windows PowerShell.
+
 ## 0.19.0 - 2026-08-28
 
 - Polished pairing UX: receiver selection now creates the offer QR automatically, phone-sensor selection opens the QR scanner automatically, and adding another sensor starts pairing immediately while existing peers stay connected.

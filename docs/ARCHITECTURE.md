@@ -253,7 +253,7 @@ When two sensors participating in the same grouped impact both have positions, t
 `browser-kitty-wireless-sensor-v8` is the current session schema. The loader also accepts v4, v5, v6, and v7 so recordings from recent pre-v1 releases remain useful. Imported session data stays local, is normalized into the same `recordSamples`, `recordEvents`, `recordMarkers`, and sensor metadata structures used by live recordings, and then feeds the ordinary post-recording analysis/report code paths.
 
 Session loading does not recreate WebRTC peers and does not contact a server. Starting a new live recording replaces the imported in-memory session.
-## Pairing state and load control (v0.19)
+## Pairing state and load control (v1.0)
 
 Pairing remains a manual QR handoff protocol, but the UI starts the obvious next action automatically: receiver selection creates an offer and sensor selection starts camera scanning. The protocol itself is unchanged and stays fully serverless. QR pages expose scan progress and use longer display intervals to favor low-resolution desktop cameras. A connection-check hint is informational only and never aborts pairing because of user transfer time.
 
