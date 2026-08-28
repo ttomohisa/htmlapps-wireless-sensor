@@ -34,11 +34,15 @@ Create offer
   |                                          ^
   +-- segmented QR / copy code --------------+
                                              |
-                                      Set remote offer
-                                      Create answer
+                                      Store remote offer
+                                             |
+                       Receiver opens reply scanner first
+                                             |
+                                      Create fresh answer
+                                      after user confirms
                                              |
   +-- segmented reply QR / copy code <-------+
-  |
+  |          (auto-regenerate before connection if ICE fails)
 Set remote answer
   |
   +========= WebRTC DataChannels ===========+
@@ -47,7 +51,7 @@ Set remote answer
                 (sync + preset send-rate control)
 ```
 
-Pairing another phone creates another `RTCPeerConnection`; it does not replace existing connected peers.
+Pairing another phone creates another `RTCPeerConnection`; it does not replace existing connected peers. On the phone, reading an offer does not immediately create a peer connection. The offer is held locally until the receiver reply scanner is ready. If the phone reaches pre-connection ICE `failed`, the phone discards that peer and regenerates a fresh answer from the stored offer up to three times.
 
 ## Network model
 

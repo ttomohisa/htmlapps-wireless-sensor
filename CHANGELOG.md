@@ -14,6 +14,8 @@
 - Require ICE gathering to reach `complete` before generating offer/answer QR data; a 15-second guard now aborts and discards the attempt instead of serializing incomplete SDP.
 - Added detailed connection diagnostics for local/remote candidate types, ICE/peer states, and the selected candidate pair without exposing candidate addresses.
 - Hardened pairing retries so failed or superseded `RTCPeerConnection` / DataChannel events cannot mutate a newer attempt, and terminal failures fully release the pending sensor slot.
+- Delayed phone-side answer/ICE startup until the receiver reply camera is already open, reducing the manual QR handoff race window.
+- Added automatic pre-connection answer regeneration (up to three fresh phone PeerConnections/QR sessions) while the receiver camera remains scanning.
 
 ## 0.19.0 - 2026-08-28
 

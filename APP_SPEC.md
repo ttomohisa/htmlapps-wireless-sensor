@@ -28,27 +28,32 @@
 3. The app creates a WebRTC offer using `RTCPeerConnection({ iceServers: [] })`, waits for local ICE gathering, then serializes it into a compact connection code.
 4. Split the offer code into low-density QR pages and cycle them on the PC display. Fullscreen and manual page navigation are available.
 5. On the phone, open Wireless Sensor, choose the sensor role, and scan the PC QR pages with the in-app camera scanner. Prefer the rear camera, accept pages in any order, and automatically reconstruct the offer when all pages have been captured. Copy/paste remains a fallback.
-6. Receive the answer by scanning segmented reply QR pages shown on the phone with the PC camera. Prefer native `BarcodeDetector` when QR is supported; otherwise use embedded `jsQR`. Copy/paste remains a fallback.
-7. Load the answer. Once connected, add the phone to the receiver's sensor roster.
-8. Repeat the same independent QR handoff for additional phones, up to four simultaneous sensors. Existing peer connections stay active while another phone is paired.
-9. Select any connected sensor to inspect its live values, 3D phone indicator, measured sample rate, RTT, and per-device zero offset.
-10. Switch the chart between the selected sensor and an all-sensor overlay.
-11. Start/stop one receiver-side recording session and save the result as CSV, a reloadable session JSON file, or a self-contained HTML report.
+6. After the phone reconstructs the offer, do not create the answer yet. The receiver starts the reply-QR camera first; once its preview is ready, the phone user explicitly creates the answer.
+7. Generate the answer only after this confirmation, wait for complete local ICE gathering, then show segmented reply QR pages. If the phone reaches pre-connection ICE `failed` before the receiver finishes reading the reply, create a fresh PeerConnection/answer automatically (up to three times) while the PC scanner remains open. Prefer native `BarcodeDetector` when QR is supported; otherwise use embedded `jsQR`. Copy/paste remains a fallback.
+8. Load the answer. Once connected, add the phone to the receiver's sensor roster.
+9. Repeat the same independent QR handoff for additional phones, up to four simultaneous sensors. Existing peer connections stay active while another phone is paired.
+10. Select any connected sensor to inspect its live values, 3D phone indicator, measured sample rate, RTT, and per-device zero offset.
+11. Switch the chart between the selected sensor and an all-sensor overlay.
+12. Start/stop one receiver-side recording session and save the result as CSV, a reloadable session JSON file, or a self-contained HTML report.
 
 ### Sensor (phone)
 
 1. Open Wireless Sensor and choose **Use this phone as the sensor**.
 2. Selecting the phone-sensor role automatically starts camera scanning. Scan the receiver's segmented offer QR pages. When all pages are collected, the offer is reconstructed automatically. Manual connection-code paste remains available as a fallback.
-3. Generate a WebRTC answer locally and show both a segmented QR and copyable reply code.
-4. Return the answer to the receiver.
-5. Once the DataChannels are connected, press **Start sensor**. Permission requests must happen from this explicit user gesture.
-6. Stream motion samples until **Stop sending** is pressed or the connection closes.
+3. After reconstructing the offer, hold it locally without creating a PeerConnection/answer yet. Ask the user to start the receiver's reply-QR scanner first.
+4. When the receiver camera preview is ready, create a fresh PeerConnection, apply the stored offer, generate the answer, and wait for complete ICE gathering before displaying segmented reply QR and copyable reply code.
+5. If ICE reaches `failed` before the connection is established, automatically discard that phone PeerConnection and regenerate a fresh answer from the stored offer up to three times. Each regenerated QR set uses a new transfer-session id so the still-running PC scanner discards old partial pages and follows the fresh set.
+6. Return the answer to the receiver.
+7. Once the DataChannels are connected, press **Start sensor**. Permission requests must happen from this explicit user gesture.
+8. Stream motion samples until **Stop sending** is pressed or the connection closes.
 
 ## 4. WebRTC design
 
 - Create `RTCPeerConnection` with `iceServers: []`.
 - No trickle signaling. Wait for ICE gathering to reach `complete` before serialization. A 15-second guard rejects and discards the attempt instead of emitting incomplete SDP; retry always starts with a fresh `RTCPeerConnection`.
 - Pairing diagnostics show ICE gathering state, sanitized local/remote candidate classes (protocol/type/mDNS-vs-IP-family), ICE/peer connection states, and the selected candidate pair when available. Candidate addresses are not shown.
+- The phone stores a decoded offer without creating its answer-side `RTCPeerConnection` until the receiver reply scanner is ready. This minimizes the manual QR handoff interval after ICE checks begin.
+- Before the sensor has ever connected, terminal ICE failure triggers automatic answer regeneration from the stored offer (maximum three attempts). Every regenerated transfer uses a fresh QR session id so a still-running receiver scanner abandons old partial chunks automatically.
 - Superseded/closed sensor attempts are identity-guarded so late connection/data-channel events from an older peer cannot modify the current attempt.
 - The receiver creates one independent `RTCPeerConnection` per phone, with a maximum of four simultaneous sensor peers. A failed/disconnected phone must not stop the other peers.
 - A terminal `failed` peer is removed and its 1–4 sensor slot becomes reusable. A transient WebRTC `disconnected` state is treated as recoverable until the connection returns to `connected` or becomes `failed`.

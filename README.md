@@ -22,7 +22,7 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 - **Measure up to four phones at once** — The receiver keeps an independent WebRTC peer connection per phone, so one disconnected sensor does not stop the others.
 - **Use a phone as a wireless motion sensor** — Read acceleration, acceleration including gravity, rotation rate, and device orientation from the browser.
 - **Connect without a signaling server** — WebRTC peers are created with `iceServers: []`; offer/answer metadata is handed directly between devices.
-- **Camera-first QR handoff in both directions** — The PC shows segmented offer QR pages, the phone scans them, then the PC scans the phone's segmented reply QR pages.
+- **Camera-first QR handoff in both directions** — The PC shows segmented offer QR pages and the phone scans them. The phone then waits while the PC reply scanner is opened; only after the PC camera preview is ready does the phone generate its answer. If pre-connection ICE fails, the phone automatically regenerates fresh reply QR pages while the PC camera keeps scanning.
 - **Designed for ordinary cameras** — QR payloads are split into lower-density pages, the phone prefers its rear camera, and desktop scanning falls back to embedded `jsQR` when native QR decoding is unavailable.
 - **Per-device, overlay, and stacked comparison views** — Keep the original selected-sensor detail view, overlay all connected sensors, or stack the same acceleration/vibration/tilt/rotation signal vertically for each phone.
 - **Clock-corrected synchronized recording** — Connection-time and periodic ping/pong bursts estimate each phone’s offset and drift relative to the PC, favoring low-RTT samples. Per-sensor sync uncertainty is shown in the UI.
@@ -46,9 +46,10 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 2. Keep both devices on the same Wi-Fi / LAN.
 3. On the PC or tablet, choose **View measurements on this device**. The connection QR is created automatically.
 4. On the phone, choose **Use this phone as the sensor**. Its QR camera opens automatically; scan the QR pages shown on the PC.
-5. When the phone shows reply QR pages, press **Scan phone reply QR with camera** on the PC and point the phone screen at the PC camera.
-6. After the WebRTC connection opens, press **Start sensor** on the phone and grant motion-sensor permission when requested.
-7. To add another phone, press **Add sensor** on the receiver and repeat the same QR pairing flow. Up to four phones can remain connected at once.
+5. After the phone finishes reading the offer, press **Scan phone reply QR with camera** on the PC first and wait until the PC camera preview is visible.
+6. On the phone, press **PC scanner is ready — create reply QR**, then point the generated reply QR pages at the PC camera. If pre-connection ICE fails, the phone refreshes the reply QR automatically; keep the PC camera open.
+7. After the WebRTC connection opens, press **Start sensor** on the phone and grant motion-sensor permission when requested.
+8. To add another phone, press **Add sensor** on the receiver and repeat the same QR pairing flow. Up to four phones can remain connected at once.
 
 No installation or account is required. HTTPS hosting is recommended for phone camera and motion-sensor permissions.
 
@@ -81,11 +82,12 @@ Python, Node.js, and a local web server are not required. The builder uses Windo
 1. Choose **Use this phone as the sensor**. The QR camera opens automatically.
 2. Press **Scan PC QR with camera** only when you want to restart scanning. The rear camera is preferred when available.
 3. Fill the guide with the QR code. Multiple pages are collected automatically in any order.
-4. When all pages are captured, the offer is restored and reply QR pages are generated locally.
-5. Show those reply QR pages to the PC camera.
-6. After connecting, press **Start sensor** and allow sensor access.
-7. Choose **Power saving**, **Standard**, or **High precision**. These are transmission throttling targets, not guaranteed hardware sampling rates; Power saving also reduces phone preview refresh.
-8. Toggle **Keep screen awake while measuring** as needed. Turning it off saves battery, but some browsers stop sensor events after the display sleeps.
+4. When all pages are captured, the offer is restored, but the phone does not create an answer or start ICE connectivity checks yet.
+5. On the PC, press **Scan phone reply QR with camera** and wait for the camera preview. Then press **PC scanner is ready — create reply QR** on the phone.
+6. Show the generated reply QR pages to the PC camera. If pre-connection ICE fails, the phone automatically regenerates the reply up to three times while the PC camera remains open.
+7. After connecting, press **Start sensor** and allow sensor access.
+8. Choose **Power saving**, **Standard**, or **High precision**. These are transmission throttling targets, not guaranteed hardware sampling rates; Power saving also reduces phone preview refresh.
+9. Toggle **Keep screen awake while measuring** as needed. Turning it off saves battery, but some browsers stop sensor events after the display sleeps.
 
 Copy/paste connection codes remain available as a fallback if either camera cannot scan QR codes.
 
@@ -177,7 +179,7 @@ The GitHub Pages version still needs the initial HTML request. For a completely 
 
 - **Same-LAN use is the primary target.** Without STUN/TURN, connections across different networks or NATs are intentionally out of scope.
 - Company, school, guest Wi-Fi, VPNs, firewalls, or access points with client isolation can block device-to-device traffic even when both devices appear to be on the same Wi-Fi.
-- Offer/reply QR data is generated only after ICE gathering completes. If gathering does not complete within 15 seconds, that attempt is discarded and retrying creates a fresh peer connection. On connection failure, use the on-screen ICE diagnostics (candidate counts/classes, ICE state, and candidate-pair status) for troubleshooting.
+- Offer/reply QR data is generated only after ICE gathering completes. The phone waits to create its answer until the PC reply scanner is already open. If pre-connection phone-side ICE fails, a fresh answer is generated automatically up to three times; if ICE gathering itself does not complete within 15 seconds, that attempt is discarded. On connection failure, use the on-screen ICE diagnostics (candidate counts/classes, ICE state, and candidate-pair status) for troubleshooting.
 - Browser sensor values are not a substitute for calibrated scientific instruments. Accuracy, available fields, and sample rates vary by device, OS, and browser.
 - `DeviceMotionEvent` axis handling can differ between browser engines. When mixing browser families, verify axis direction first or prefer magnitude-based comparisons such as vibration RMS/peak.
 - iPhone/iPad and some browsers require an explicit permission gesture for motion sensors.
