@@ -91,6 +91,12 @@ Python, Node.js, and a local web server are not required. The builder uses Windo
 
 Copy/paste connection codes remain available as a fallback if either camera cannot scan QR codes.
 
+### Reset a sensor's placement
+
+In **Sensor positions & layout**, choose **Clear position** to empty that sensor's XYZ for the next experiment. Its name and completed recordings stay unchanged. **Undo** is available in the notification for eight seconds, until another notification replaces it; an edit, disconnection or new recording ends Undo. Clear is disabled during recording, reconnection and when XYZ is already empty. Clear/Undo returns keyboard focus to X.
+
+Blank axes stay unknown in browser storage, recordings, saved sessions and CSV. Distance and apparent speed are shown only when both positions are complete. An explicitly entered zero is still a valid coordinate; older files already saved as zero cannot be distinguished from intentional zeros.
+
 ## Sensor data
 
 Wireless Sensor uses the browser `devicemotion` and `deviceorientation` events. Recorded data includes:
@@ -145,6 +151,15 @@ Each push to `main` rebuilds the app from pinned dependencies, verifies the gene
 ```
 
 ### Build and verify
+
+Run the synthetic coordinate/Undo regressions with Node.js 24 (also run by PR validation):
+
+```sh
+node --test tests/sensor-position.test.cjs
+```
+
+These tests exercise production functions and a minimal DOM adapter; they do not claim browser layout, keyboard accessibility, real sensor or WebRTC verification.
+
 
 ```powershell
 .\build-standalone.bat

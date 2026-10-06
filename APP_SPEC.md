@@ -179,6 +179,9 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - HTML reports are fully self-contained and generated from current/inported recording data. They include overview metrics, sensor layout, vibration/FFT summaries, impacts, timing differences, markers, and compact inline SVG plots.
 - Manual markers are timestamped on the receiver shared timeline and are preserved in session JSON; CSV associates a marker with the nearest sample row for spreadsheet use.
 - Each receiver sensor slot can store a custom name and XYZ position in centimeters. These values are copied into recording/session metadata.
+- Blank, missing, null, invalid or non-finite XYZ axes remain unknown (`null`) through edits, local slot persistence, recording, CSV export and v4-v8 session loading. Explicit zero and signed/fractional coordinates remain valid. CSV leaves unknown coordinate cells empty.
+- **Clear position** removes only one connected sensor’s XYZ and persists the cleared placement. It preserves the name, samples and completed/imported recording metadata, and is disabled while recording, reconnecting or already empty.
+- The notification offers **Undo** for eight seconds unless replaced by another notification. Undo is bound to the original peer and clear; editing that sensor, disconnecting/closing it, clearing again or starting a recording invalidates the old action, even after reconnecting or stopping. Clear and Undo focus the same sensor’s X field. Other value updates retain existing input nodes and focused edits.
 - When both sensor positions are known, impact analysis may show straight-line distance and apparent propagation speed. This is a derived estimate, not a calibrated material-wave-speed measurement.
 - Session loading is local file input only. v4-v8 session files can restore samples/events/markers/sensor metadata and rebuild post-analysis without WebRTC reconnection.
 
@@ -254,7 +257,9 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Stacked comparison keeps one vertically arranged chart per connected phone and does not remove the existing per-sensor selection UI.
 - Standalone HTML reports can be generated after recording or from a reloaded session without a network request.
 - Manual markers are recorded on the common receiver timeline and survive session save/reload.
-- Sensor names/XYZ positions survive a recording and are included in analysis/session/report output.
+- Sensor names/XYZ positions survive a recording and are included in analysis/session/report output. Unknown axes never become an invented origin or distance/speed, while an explicitly entered origin remains valid.
+- Clear position and guarded Undo affect one live sensor only; repeated clicks, later edits, recording start/stop, disconnect/reconnect and reused slots cannot restore stale placement.
+- `node --test tests/sensor-position.test.cjs` passes using only synthetic state; it does not replace browser or physical-device verification.
 - Session JSON format v8 can be reloaded; formats v4-v8 remain accepted for backwards compatibility.
 - Japanese and English fit at 360px width.
 
