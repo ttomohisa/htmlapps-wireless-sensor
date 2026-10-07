@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 
 ## 2. Product principles
 
@@ -219,6 +219,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Motion respects `prefers-reduced-motion`.
 - Status changes are exposed through an `aria-live` region.
 - The help dialog is bilingual and synchronized with behavior.
+- The header language button names the target language with `EN` / `JA`, with its accessible name and tooltip localized to the current UI language. Help and Close also retain localized names/tooltips; the no-signaling/STUN/TURN badge and direct peer-transfer disclosure remain explicit.
 - Do not add a dark-mode switch.
 
 ## 16. Browser target
@@ -232,7 +233,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `1.0.0`.
+- `app.config.json` version is `1.0.1`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
@@ -259,7 +260,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Manual markers are recorded on the common receiver timeline and survive session save/reload.
 - Sensor names/XYZ positions survive a recording and are included in analysis/session/report output. Unknown axes never become an invented origin or distance/speed, while an explicitly entered origin remains valid.
 - Clear position and guarded Undo affect one live sensor only; repeated clicks, later edits, recording start/stop, disconnect/reconnect and reused slots cannot restore stale placement.
-- `node --test tests/sensor-position.test.cjs` passes using only synthetic state; it does not replace browser or physical-device verification.
+- `node --test tests/*.test.cjs` passes using only synthetic state; it does not replace browser or physical-device verification.
 - Session JSON format v8 can be reloaded; formats v4-v8 remain accepted for backwards compatibility.
 - Japanese and English fit at 360px width.
 

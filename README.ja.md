@@ -151,10 +151,10 @@ Wireless Sensorはブラウザーの `devicemotion` / `deviceorientation` を利
 
 ### ビルドと確認
 
-Node.js 24で座標と取り消しの合成回帰テストを実行できます。PRの検証でも実行します。
+Node.js 24でヘッダー、座標と取り消しの合成回帰テストを実行できます。PRの検証でも実行します。
 
 ```sh
-node --test tests/sensor-position.test.cjs
+node --test tests/*.test.cjs
 ```
 
 本体の関数と最小限のDOM代替を使うテストです。ブラウザー表示、キーボード操作のアクセシビリティ、実機センサー、WebRTCの検証を代替するものではありません。

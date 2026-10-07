@@ -33,8 +33,8 @@ jobs:
         with:
           node-version: 24
 
-      - name: Test sensor coordinates and Undo
-        run: node --test tests/sensor-position.test.cjs
+      - name: Test headers, sensor coordinates and Undo
+        run: node --test tests/*.test.cjs
 
       - name: Build and verify standalone HTML
         shell: pwsh
