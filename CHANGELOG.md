@@ -6,6 +6,11 @@
 - Preserved unknown XYZ coordinates through local persistence, recording, CSV and v4-v8 session import/export instead of coercing them to zero and displaying unsupported distance/propagation-speed estimates.
 - Kept explicit zero, signed/fractional coordinates, names, samples and completed session metadata intact; reused layout inputs during value updates and added synthetic Node regressions.
 
+## 1.0.1 - 2026-10-07
+
+- Normalize the header language target to EN / JA and localize its accessible name and tooltip, plus the Help close tooltip.
+- Preserve the no-signaling/STUN/TURN badge and direct sensor-data peer-transfer disclosure. Add network-free header regression coverage.
+
 ## 1.0.0 - 2026-08-28
 
 - Promoted Wireless Sensor to the first stable release after the v0.9-v0.19 public test cycle.

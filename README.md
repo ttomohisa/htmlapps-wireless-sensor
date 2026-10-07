@@ -152,10 +152,10 @@ Each push to `main` rebuilds the app from pinned dependencies, verifies the gene
 
 ### Build and verify
 
-Run the synthetic coordinate/Undo regressions with Node.js 24 (also run by PR validation):
+Run the synthetic header and coordinate/Undo regressions with Node.js 24 (also run by PR validation):
 
 ```sh
-node --test tests/sensor-position.test.cjs
+node --test tests/*.test.cjs
 ```
 
 These tests exercise production functions and a minimal DOM adapter; they do not claim browser layout, keyboard accessibility, real sensor or WebRTC verification.
