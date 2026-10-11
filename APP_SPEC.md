@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 1.0.1
+- **Version:** 1.0.2
 
 ## 2. Product principles
 
@@ -184,6 +184,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - The notification offers **Undo** for eight seconds unless replaced by another notification. Undo is bound to the original peer and clear; editing that sensor, disconnecting/closing it, clearing again or starting a recording invalidates the old action, even after reconnecting or stopping. Clear and Undo focus the same sensor’s X field. Other value updates retain existing input nodes and focused edits.
 - When both sensor positions are known, impact analysis may show straight-line distance and apparent propagation speed. This is a derived estimate, not a calibrated material-wave-speed measurement.
 - Session loading is local file input only. v4-v8 session files can restore samples/events/markers/sensor metadata and rebuild post-analysis without WebRTC reconnection.
+- A loaded session's recording sensor count remains based on its imported sensor metadata during language and roster refreshes. Starting a new recording clears the imported session and restores live recording behavior.
 
 ## 13.1 Connection UX and runtime load
 
@@ -219,6 +220,8 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Motion respects `prefers-reduced-motion`.
 - Status changes are exposed through an `aria-live` region.
 - The help dialog is bilingual and synchronized with behavior.
+- Native modal Help locks scrolling on both page roots and keeps its content independently scrollable. The existing sizing, close button, Esc, and backdrop behavior remain; closed or non-modal dialogs leave page scrolling unlocked.
+- The existing no-signaling/STUN/TURN badge uses a decorative inline SVG shield without broadening the privacy claim.
 - The header language button names the target language with `EN` / `JA`, with its accessible name and tooltip localized to the current UI language. Help and Close also retain localized names/tooltips; the no-signaling/STUN/TURN badge and direct peer-transfer disclosure remain explicit.
 - Do not add a dark-mode switch.
 
@@ -233,7 +236,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `1.0.1`.
+- `app.config.json` version is `1.0.2`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
@@ -262,6 +265,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Clear position and guarded Undo affect one live sensor only; repeated clicks, later edits, recording start/stop, disconnect/reconnect and reused slots cannot restore stale placement.
 - `node --test tests/*.test.cjs` passes using only synthetic state; it does not replace browser or physical-device verification.
 - Session JSON format v8 can be reloaded; formats v4-v8 remain accepted for backwards compatibility.
+- Imported recording and analysis counts remain consistent across repeated JA/EN changes, replacement imports, and malformed-file rejection; idle, active, and stopped live recording counts retain their existing behavior.
 - Japanese and English fit at 360px width.
 
 ## 18. Known v1.0 limitations

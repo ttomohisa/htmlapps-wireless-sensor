@@ -138,8 +138,30 @@ if ([string]::IsNullOrWhiteSpace([string]$app.name)) { throw "app.config.json: n
 if ([string]::IsNullOrWhiteSpace([string]$app.slug)) { throw "app.config.json: slug is required" }
 if ([string]::IsNullOrWhiteSpace([string]$app.version)) { throw "app.config.json: version is required" }
 
-$buildArguments = @{}
-if ($ForceDownload) { $buildArguments.ForceDownload = $true }
-& (Join-Path $Root "build-standalone.ps1") @buildArguments
+$previousHtml = $env:WIRELESS_SENSOR_HTML
+$previousHeaderHtml = $env:HEADER_HTML
+try {
+  $env:WIRELESS_SENSOR_HTML = $null
+  $env:HEADER_HTML = $null
+  $testFiles = @(Get-ChildItem -Path (Join-Path $Root 'tests/*.test.cjs') | ForEach-Object { $_.FullName })
+  & node --test @testFiles
+  if ($LASTEXITCODE -ne 0) { throw 'Application regression tests failed' }
+
+  $buildArguments = @{}
+  if ($ForceDownload) { $buildArguments.ForceDownload = $true }
+  & (Join-Path $Root "build-standalone.ps1") @buildArguments
+
+  $artifacts = @($app.build.output)
+  if ($app.build.selfExtract.enabled) { $artifacts += $app.build.selfExtract.output }
+  foreach ($artifact in $artifacts) {
+    $env:WIRELESS_SENSOR_HTML = Join-Path $Root $artifact
+    Write-Host "Testing application contracts: $artifact"
+    & node --test (Join-Path $Root 'tests/modal-scroll.test.cjs') (Join-Path $Root 'tests/imported-sensor-count.test.cjs')
+    if ($LASTEXITCODE -ne 0) { throw "Application regression tests failed: $artifact" }
+  }
+} finally {
+  $env:WIRELESS_SENSOR_HTML = $previousHtml
+  $env:HEADER_HTML = $previousHeaderHtml
+}
 
 Write-Host "[OK] Repository check passed." -ForegroundColor Green
