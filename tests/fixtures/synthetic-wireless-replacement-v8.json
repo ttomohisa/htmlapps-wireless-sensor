@@ -1,0 +1,171 @@
+{
+  "format": "browser-kitty-wireless-sensor-v8",
+  "createdAt": "2026-10-10T00:00:03.000Z",
+  "appVersion": "1.0.1",
+  "experimentPreset": "free",
+  "measurementMode": "vibration",
+  "clockSynchronization": {
+    "method": "Synthetic offline fixture; no measured synchronization",
+    "recordingStartedEpochMs": 1791590400000,
+    "recordingStartedPerformanceMs": 1000
+  },
+  "coordinateSystem": {
+    "description": "Invented positions for arithmetic checks only",
+    "positionUnit": "cm"
+  },
+  "connection": {
+    "serverless": true,
+    "iceServers": [],
+    "maxSensors": 4
+  },
+  "sensors": [
+    {
+      "id": "synthetic-replacement",
+      "name": "Synthetic replacement",
+      "deviceLabel": "Synthetic fixture only",
+      "color": "#9b6435",
+      "position": {
+        "x": null,
+        "y": -12.5,
+        "z": 0
+      },
+      "experimentPreset": "free",
+      "measurementMode": "vibration",
+      "zeroOffset": {
+        "alpha": 0,
+        "beta": 0,
+        "gamma": 0,
+        "active": false
+      },
+      "clockModel": {
+        "ready": false,
+        "uncertaintyMs": null,
+        "offsetMs": null,
+        "driftPpm": null
+      }
+    }
+  ],
+  "samples": [
+    {
+      "v": 1,
+      "sensorId": "synthetic-replacement",
+      "sensorName": "Synthetic replacement",
+      "deviceLabel": "Synthetic fixture only",
+      "seq": 1,
+      "t": 1000,
+      "interval": 500,
+      "a": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      },
+      "g": {
+        "x": 1,
+        "y": 0,
+        "z": 9.80665
+      },
+      "r": {
+        "a": 0,
+        "b": 0,
+        "g": 0
+      },
+      "o": {
+        "alpha": 0,
+        "beta": 0,
+        "gamma": 0,
+        "absolute": false
+      },
+      "synchronizedElapsedMs": 0,
+      "synchronizedEpochMs": 1791590400000,
+      "receiveElapsedMs": 5,
+      "receivedEpochMs": 1791590400005,
+      "sensorElapsedMs": 0,
+      "experimentPreset": "free",
+      "measurementMode": "vibration"
+    },
+    {
+      "v": 1,
+      "sensorId": "synthetic-replacement",
+      "sensorName": "Synthetic replacement",
+      "deviceLabel": "Synthetic fixture only",
+      "seq": 2,
+      "t": 1500,
+      "interval": 500,
+      "a": {
+        "x": 2,
+        "y": 0,
+        "z": 0
+      },
+      "g": {
+        "x": 2,
+        "y": 0,
+        "z": 9.80665
+      },
+      "r": {
+        "a": 0,
+        "b": 0,
+        "g": 0
+      },
+      "o": {
+        "alpha": 0,
+        "beta": 0,
+        "gamma": 0,
+        "absolute": false
+      },
+      "synchronizedElapsedMs": 500,
+      "synchronizedEpochMs": 1791590400500,
+      "receiveElapsedMs": 505,
+      "receivedEpochMs": 1791590400505,
+      "sensorElapsedMs": 500,
+      "experimentPreset": "free",
+      "measurementMode": "vibration"
+    },
+    {
+      "v": 1,
+      "sensorId": "synthetic-replacement",
+      "sensorName": "Synthetic replacement",
+      "deviceLabel": "Synthetic fixture only",
+      "seq": 3,
+      "t": 2000,
+      "interval": 500,
+      "a": {
+        "x": 2,
+        "y": 0,
+        "z": 0
+      },
+      "g": {
+        "x": 2,
+        "y": 0,
+        "z": 9.80665
+      },
+      "r": {
+        "a": 0,
+        "b": 0,
+        "g": 0
+      },
+      "o": {
+        "alpha": 0,
+        "beta": 0,
+        "gamma": 0,
+        "absolute": false
+      },
+      "synchronizedElapsedMs": 1000,
+      "synchronizedEpochMs": 1791590401000,
+      "receiveElapsedMs": 1005,
+      "receivedEpochMs": 1791590401005,
+      "sensorElapsedMs": 1000,
+      "experimentPreset": "free",
+      "measurementMode": "vibration"
+    }
+  ],
+  "events": [],
+  "markers": [
+    {
+      "id": "marker-2",
+      "elapsedMs": 500,
+      "synchronizedEpochMs": 1791590400500,
+      "createdEpochMs": 1791590400500,
+      "note": "Replacement only"
+    }
+  ]
+}

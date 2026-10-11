@@ -155,9 +155,9 @@ try {
   if ($app.build.selfExtract.enabled) { $artifacts += $app.build.selfExtract.output }
   foreach ($artifact in $artifacts) {
     $env:WIRELESS_SENSOR_HTML = Join-Path $Root $artifact
-    Write-Host "Testing modal contract: $artifact"
-    & node --test (Join-Path $Root 'tests/modal-scroll.test.cjs')
-    if ($LASTEXITCODE -ne 0) { throw "Modal regression tests failed: $artifact" }
+    Write-Host "Testing application contracts: $artifact"
+    & node --test (Join-Path $Root 'tests/modal-scroll.test.cjs') (Join-Path $Root 'tests/imported-sensor-count.test.cjs')
+    if ($LASTEXITCODE -ne 0) { throw "Application regression tests failed: $artifact" }
   }
 } finally {
   $env:WIRELESS_SENSOR_HTML = $previousHtml

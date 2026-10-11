@@ -184,6 +184,7 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - The notification offers **Undo** for eight seconds unless replaced by another notification. Undo is bound to the original peer and clear; editing that sensor, disconnecting/closing it, clearing again or starting a recording invalidates the old action, even after reconnecting or stopping. Clear and Undo focus the same sensor’s X field. Other value updates retain existing input nodes and focused edits.
 - When both sensor positions are known, impact analysis may show straight-line distance and apparent propagation speed. This is a derived estimate, not a calibrated material-wave-speed measurement.
 - Session loading is local file input only. v4-v8 session files can restore samples/events/markers/sensor metadata and rebuild post-analysis without WebRTC reconnection.
+- A loaded session's recording sensor count remains based on its imported sensor metadata during language and roster refreshes. Starting a new recording clears the imported session and restores live recording behavior.
 
 ## 13.1 Connection UX and runtime load
 
@@ -264,6 +265,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 - Clear position and guarded Undo affect one live sensor only; repeated clicks, later edits, recording start/stop, disconnect/reconnect and reused slots cannot restore stale placement.
 - `node --test tests/*.test.cjs` passes using only synthetic state; it does not replace browser or physical-device verification.
 - Session JSON format v8 can be reloaded; formats v4-v8 remain accepted for backwards compatibility.
+- Imported recording and analysis counts remain consistent across repeated JA/EN changes, replacement imports, and malformed-file rejection; idle, active, and stopped live recording counts retain their existing behavior.
 - Japanese and English fit at 360px width.
 
 ## 18. Known v1.0 limitations
