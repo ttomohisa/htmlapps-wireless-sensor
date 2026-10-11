@@ -51,15 +51,15 @@ test('existing privacy badge uses a decorative shield without changing its wordi
   assert.doesNotMatch(badge, /<rect\b/, 'The old padlock body is absent');
   assert.match(badge, /data-i18n="localBadge">シグナリング \/ STUN \/ TURN 不使用<\/span>/);
 });
-test('Japanese and English Help explain modal-only scrolling and all close routes', () => {
+test('Help omits implementation commentary and retains user instructions', () => {
   const help = html.match(/APP:HELP:BEGIN([\s\S]*?)APP:HELP:END/)?.[1];
   assert.match(help || '', /data-i18n="helpDialogScroll"/);
   const translationsText = html.match(/const translations=(\{[\s\S]*?\n      \});/)?.[1];
   assert.ok(translationsText, 'Real translation object remains available');
   const translations = vm.runInNewContext(`(${translationsText})`);
-  assert.match(translations.ja.helpDialogScroll, /背景.*スクロール/);
+  assert.doesNotMatch(translations.ja.helpDialogScroll, /背景.*スクロール/);
   assert.match(translations.ja.helpDialogScroll, /閉じる.*Esc.*外側/);
-  assert.match(translations.en.helpDialogScroll, /background.*scroll/i);
+  assert.doesNotMatch(translations.en.helpDialogScroll, /background.*scroll/i);
   assert.match(translations.en.helpDialogScroll, /Close.*Esc.*outside/);
 });
 
