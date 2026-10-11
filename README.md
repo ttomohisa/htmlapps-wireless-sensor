@@ -36,6 +36,7 @@ Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers t
 - **Standalone HTML reports** — Export a single self-contained report with measurement summary, sensor layout, vibration metrics, FFT results, impacts, timing differences, markers, and compact vibration plots.
 - **Polished camera-first pairing** — Choosing the receiver automatically creates an offer QR; choosing the phone-sensor role automatically opens the QR camera. Pairing guidance explains reply transfer, connection checking, transient reconnects, and failures, while detailed diagnostics show ICE gathering, local/remote candidate classes, and candidate-pair status without exposing candidate addresses.
 - **Power/load controls for long sessions** — Power saving / Standard / High precision adjust transmission and phone preview refresh. Screen Wake Lock can be disabled, DataChannel backpressure drops stale samples instead of building a queue, and receiver rendering is throttled while raw recording remains unchanged.
+- **Scrollable Help** keeps the background page still; close it with the close button, Esc, or the backdrop.
 - **Single HTML, bilingual UI** — Required QR libraries are embedded at build time; Japanese and English are included in the same app.
 
 ## Quick start

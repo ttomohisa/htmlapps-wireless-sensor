@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 1.0.1
+- **Version:** 1.0.2
 
 ## 2. Product principles
 
@@ -219,6 +219,8 @@ These are throttling targets, not promises of exact sensor sampling rates. The r
 - Motion respects `prefers-reduced-motion`.
 - Status changes are exposed through an `aria-live` region.
 - The help dialog is bilingual and synchronized with behavior.
+- Native modal Help locks scrolling on both page roots and keeps its content independently scrollable. The existing sizing, close button, Esc, and backdrop behavior remain; closed or non-modal dialogs leave page scrolling unlocked.
+- The existing no-signaling/STUN/TURN badge uses a decorative inline SVG shield without broadening the privacy claim.
 - The header language button names the target language with `EN` / `JA`, with its accessible name and tooltip localized to the current UI language. Help and Close also retain localized names/tooltips; the no-signaling/STUN/TURN badge and direct peer-transfer disclosure remain explicit.
 - Do not add a dark-mode switch.
 
@@ -233,7 +235,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `1.0.1`.
+- `app.config.json` version is `1.0.2`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.

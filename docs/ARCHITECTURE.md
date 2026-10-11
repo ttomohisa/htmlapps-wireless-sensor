@@ -267,3 +267,7 @@ Screen Wake Lock is optional. It improves continuity on mobile browsers that sus
 
 The receiver keeps raw sample processing, impact detection, recording, and synchronization at incoming sample rate while throttling presentation work. Selected-value DOM changes are capped around 10 fps, roster metrics are coalesced around 1 Hz, repeated sensor-layout/legend rebuilds are signature-guarded, and chart rendering is capped around 30 fps (normal) or 15 fps (stacked). Chart animation stops while the document is hidden and resumes when visible.
 
+
+## Modal scrolling and regression checks
+
+CSS `html:has(dialog:modal), body:has(dialog:modal)` locks only page-root overflow while native Help is modal. The last modal closing releases the lock without new JavaScript state. Existing dialog geometry and handlers are unchanged. The repository check runs the Node source suites before building and the modal contract against readable/self-extract outputs afterward, restoring test-selection environment variables even on failure. These are source/artifact contracts, not native browser scrolling or physical-sensor verification.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 2026-10-11
+
+- Stop background page scrolling while a native modal dialog is open, preserving the existing dialog sizing, internal scrolling, and close behavior.
+- Use a shield for the existing privacy badge without changing its wording.
+- Add bilingual Help guidance and source/artifact scroll-lock regression contracts to the repository check.
+
 ## Unreleased
 
 - Added per-sensor Clear position with an eight-second Undo notification, recording/reconnection guards and stale-action protection after edits, disconnects, slot reuse or recording start.
