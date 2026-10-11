@@ -208,7 +208,7 @@ test('canonical source and generated checks include this count regression and re
 test('bilingual Help explains imported counts and replacement by a new recording', () => {
   const h = harness();
   assert.match(source, /APP:HELP:BEGIN[\s\S]*data-i18n="helpLoadedSession"[\s\S]*APP:HELP:END/);
-  assert.match(h.ctx.t('helpLoadedSession'), /sensor count.*language.*new recording/i);
+  assert.match(h.ctx.t('helpLoadedSession'), /new recording.*replaces.*loaded session/i);
   h.ctx.language = 'ja';
-  assert.match(h.ctx.t('helpLoadedSession'), /センサー数.*言語.*新しい記録/);
+  assert.match(h.ctx.t('helpLoadedSession'), /新しい記録.*セッション.*置き換わり/);
 });
