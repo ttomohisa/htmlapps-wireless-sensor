@@ -383,6 +383,9 @@
     .dialog-close { display:grid; place-items:center; width:38px; height:38px; padding:0; border:1px solid var(--line); border-radius:10px; background:var(--surface); cursor:pointer; }
     .dialog-close svg { width:18px; height:18px; }
     .dialog-body { padding:20px 20px 28px; overflow:auto; max-height:calc(100dvh - 102px); }
+    #helpDialog[open] { display: flex; flex-direction: column; }
+    #helpDialog .dialog-header { flex: none; }
+    #helpDialog .dialog-body { min-height: 0; flex: 1 1 auto; }
     .dialog-body h3 { margin:25px 0 8px; padding-top:19px; border-top:1px solid color-mix(in srgb,var(--line) 78%,transparent); font-size:14px; }
     .dialog-body h3:first-child { margin-top:0; padding-top:0; border-top:0; }
     .dialog-body p,.dialog-body li { color:var(--muted); font-size:13px; line-height:1.7; }

@@ -25,3 +25,10 @@ test('main connection disclosure and distinct P2P privacy remain intact',()=>{
  const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.match(main,/data-i18n="privacyDetailsBody"/);
  assert.match(html,/localBadge:'No signaling \/ STUN \/ TURN servers'/);assert.match(html,/sensor data travels directly over the established DataChannel/);
 });
+
+test('Help allocates remaining height to its scroll body without shrinking the header',()=>{
+ const css=html.match(/<style>([\s\S]*?)<\/style>/)[1];
+ assert.match(css,/#helpDialog\[open\]\s*\{\s*display:\s*flex;\s*flex-direction:\s*column;?\s*\}/);
+ assert.match(css,/#helpDialog \.dialog-header\s*\{\s*flex:\s*none;?\s*\}/);
+ assert.match(css,/#helpDialog \.dialog-body\s*\{\s*min-height:\s*0;\s*flex:\s*1 1 auto;?\s*\}/);
+});

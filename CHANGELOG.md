@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+- Keep the Help header visible and its final metadata reachable by allocating the bounded dialog height to the scrollable body.
+
 - Hide the informational mobile footer and move the existing build metadata to the end of Help, preserving functional actions and privacy wording.
 
 

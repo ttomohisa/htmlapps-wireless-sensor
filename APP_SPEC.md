@@ -277,3 +277,4 @@ The most important limitation is deliberate: **a fully serverless WebRTC connect
 - Hide only the informational page footer at the existing 640px mobile-workflow breakpoint; preserve functional actions and navigation.
 - Keep the existing metadata block, IDs and population intact as the final Help scroll-body item, available on desktop and mobile.
 - Refresh the tracked `wireless-sensor.html` download alias by copying the verified official `dist/index.html` output byte-for-byte; the builder itself remains unchanged.
+- Within Help only, retain the header height and let the body shrink into the remaining bounded dialog height, so final metadata stays reachable. Other dialogs keep their existing layout.
