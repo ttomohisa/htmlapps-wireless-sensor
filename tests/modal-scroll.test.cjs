@@ -39,9 +39,9 @@ test('ordinary pages and non-modal open dialogs do not receive a root lock', () 
     }
   }
 });
-test('existing bounded dialog and independently scrolling body geometry is unchanged', () => {
+test('existing bounded dialog geometry is retained with Help-only flex allocation', () => {
   assert.deepEqual([...css.matchAll(/(?<![\w.-])dialog\s*\{([^}]+)\}/g)].map(match => compact(match[1])), ["width:min(680px,calc(100%-28px));max-height:min(760px,calc(100dvh-28px));padding:0;overflow:hidden;border:1pxsolidvar(--line);border-radius:16px;background:var(--surface);color:var(--text);box-shadow:var(--shadow-md);"]);
-  assert.deepEqual([...css.matchAll(/\.dialog\-body\s*\{([^}]+)\}/g)].map(match => compact(match[1])), ["padding:20px20px28px;overflow:auto;max-height:calc(100dvh-102px);"]);
+  assert.deepEqual([...css.matchAll(/\.dialog\-body\s*\{([^}]+)\}/g)].map(match => compact(match[1])), ["padding:20px20px28px;overflow:auto;max-height:calc(100dvh-102px);", "min-height:0;flex:11auto;"]);
 });
 test('existing privacy badge uses a decorative shield without changing its wording', () => {
   const badge = html.match(/<div class="local-badge">([\s\S]*?)<\/div>/)?.[1];

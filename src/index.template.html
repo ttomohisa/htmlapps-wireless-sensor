@@ -383,6 +383,9 @@
     .dialog-close { display:grid; place-items:center; width:38px; height:38px; padding:0; border:1px solid var(--line); border-radius:10px; background:var(--surface); cursor:pointer; }
     .dialog-close svg { width:18px; height:18px; }
     .dialog-body { padding:20px 20px 28px; overflow:auto; max-height:calc(100dvh - 102px); }
+    #helpDialog[open] { display: flex; flex-direction: column; }
+    #helpDialog .dialog-header { flex: none; }
+    #helpDialog .dialog-body { min-height: 0; flex: 1 1 auto; }
     .dialog-body h3 { margin:25px 0 8px; padding-top:19px; border-top:1px solid color-mix(in srgb,var(--line) 78%,transparent); font-size:14px; }
     .dialog-body h3:first-child { margin-top:0; padding-top:0; border-top:0; }
     .dialog-body p,.dialog-body li { color:var(--muted); font-size:13px; line-height:1.7; }
@@ -398,6 +401,7 @@
       .phone-stage { min-height:230px; }
     }
     @media (max-width:640px) {
+      footer { display: none; }
       .brand-meta { display:none; }
       .main { padding-top:16px; padding-bottom:42px; }
       .page-intro { flex-direction:column; gap:10px; padding-bottom:14px; }
@@ -860,10 +864,6 @@
           <p data-i18n="privacyDetailsBody">このアプリはシグナリングサーバー、STUN、TURN、WebSocket、APIを使いません。WebRTCの接続情報はQRまたはコピーで端末間を手渡しし、センサーデータは確立したDataChannelで直接送ります。測定データは受信側ブラウザーのメモリにだけ保持され、保存操作をしたときだけファイルになります。</p>
         </div>
       </details>
-      <details style="margin-top:10px">
-        <summary data-i18n="buildInfo">Build information</summary>
-        <div class="details-body"><div class="build-grid"><div class="build-item"><span data-i18n="appVersion">App version</span><strong id="buildVersion">—</strong></div><div class="build-item"><span data-i18n="builtAt">Built at</span><strong id="builtAt">—</strong></div><div class="build-item"><span data-i18n="dependencies">Embedded dependencies</span><strong id="dependencyCount">0</strong></div></div></div>
-      </details>
     </section>
     <!-- APP:END -->
   </main>
@@ -904,6 +904,10 @@
       <ul><li data-i18n="helpNoteNetwork">サーバーを使わない代わりに、同じWi-Fi/LANでも端末間通信を禁止しているネットワークでは接続できません。異なるネットワーク越しの接続は対象外です。</li><li data-i18n="helpNotePermission">iPhone/iPadなどでは、モーションセンサー利用時に明示的な許可操作が必要です。HTTPSで公開したページの利用を推奨します。</li><li data-i18n="helpNoteAccuracy">ブラウザーのセンサー値は専用計測器ではありません。端末やブラウザーごとに取得頻度・精度・利用できる項目が異なります。</li><li data-i18n="helpNoteMemory">記録中のデータは受信側のメモリに保持します。長時間記録ではメモリ使用量が増えるため、区切って保存してください。</li></ul>
       <p class="dialog-note" data-i18n="helpOffline">配布用HTMLにはQR生成コードとQR読み取り用jsQRも内包されます。実行中の外部API通信はCSPでも禁止しています。</p>
       <!-- APP:HELP:END -->
+    <details style="margin-top:10px">
+        <summary data-i18n="buildInfo">Build information</summary>
+        <div class="details-body"><div class="build-grid"><div class="build-item"><span data-i18n="appVersion">App version</span><strong id="buildVersion">—</strong></div><div class="build-item"><span data-i18n="builtAt">Built at</span><strong id="builtAt">—</strong></div><div class="build-item"><span data-i18n="dependencies">Embedded dependencies</span><strong id="dependencyCount">0</strong></div></div></div>
+      </details>
     </div>
   </dialog>
 
@@ -2269,7 +2273,7 @@
       function escapeHtml(value){ return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
       $('#languageButton').addEventListener('click',()=>{language=language==='ja'?'en':'ja';writeStorage(storageKeys.language,language);applyLanguage();});
-      const helpDialog=$('#helpDialog'); $('#helpButton').addEventListener('click',()=>helpDialog.showModal()); $('#closeHelpButton').addEventListener('click',()=>helpDialog.close()); helpDialog.addEventListener('click',event=>{const rect=helpDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)helpDialog.close();});
+      const helpDialog=$('#helpDialog'); $('#helpButton').addEventListener('click',()=>helpDialog.showModal()); $('#closeHelpButton').addEventListener('click',()=>helpDialog.close()); helpDialog.addEventListener('click',event=>{if(event.target!==helpDialog)return;const rect=helpDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)helpDialog.close();});
       $('#chooseReceiver').addEventListener('click',beginReceiverPairing); $('#chooseSensor').addEventListener('click',()=>{setRole('sensor');updatePairingCoach('sensor','scan');startScanner('offer');});
       $('#backFromReceiver').addEventListener('click',()=>{if(connectedReceiverPeers().length){cancelPendingReceiverPeer();$('#receiverConnectPanel').hidden=true;$('#backFromReceiver').textContent=t('changeRole');$('#receiverLivePanel').scrollIntoView({behavior:'smooth',block:'start'});}else{resetAllConnections();setRole('');}}); $('#backFromSensor').addEventListener('click',()=>{resetSensorConnection();setRole('');history.replaceState(null,'',location.href.split('#')[0]);});
       $('#createOfferButton').addEventListener('click',createReceiverOffer); $('#copyOfferButton').addEventListener('click',()=>copyText(offerCode)); $('#scanAnswerButton').addEventListener('click',()=>startScanner('answer'));

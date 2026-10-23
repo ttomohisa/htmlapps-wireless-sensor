@@ -271,3 +271,10 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 18. Known v1.0 limitations
 
 The most important limitation is deliberate: **a fully serverless WebRTC connection cannot rely on signaling, STUN, or TURN infrastructure.** Wireless Sensor therefore prioritizes same-LAN use and transparent failure over universal connectivity.
+
+## Shared mobile footer and Help metadata
+
+- Hide only the informational page footer at the existing 640px mobile-workflow breakpoint; preserve functional actions and navigation.
+- Keep the existing metadata block, IDs and population intact as the final Help scroll-body item, available on desktop and mobile.
+- Refresh the tracked `wireless-sensor.html` download alias by copying the verified official `dist/index.html` output byte-for-byte; the builder itself remains unchanged.
+- Within Help only, retain the header height and let the body shrink into the remaining bounded dialog height, so final metadata stays reachable. Other dialogs keep their existing layout.
