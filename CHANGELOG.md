@@ -9,6 +9,12 @@
 
 ## Unreleased
 
+- Simplify computer/phone QR pairing instructions in Japanese and English while preserving four independent sensor connections and direct WebRTC operation.
+- Add contextual connection checks (including Android 17 Chrome Nearby devices permission), collapse technical ICE diagnostics and keep manual copy/paste available.
+- Keep the scanner overlay square and centered at different camera/viewport sizes.
+- Match the header version pill, privacy shield and unified favicon/header icon style used by Presentation Remote.
+- Replace jargon-heavy header and opening text; distinguish no server upload of sensor measurements from the network used to load the app and connect peers.
+
 - Keep the Help header visible and its final metadata reachable by allocating the bounded dialog height to the scrollable body.
 
 - Hide the informational mobile footer and move the existing build metadata to the end of Help, preserving functional actions and privacy wording.
