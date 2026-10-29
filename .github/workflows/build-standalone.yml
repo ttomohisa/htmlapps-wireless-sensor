@@ -40,6 +40,30 @@ jobs:
         shell: pwsh
         run: ./scripts/check-repository.ps1
 
+      - name: Check release eligibility (read-only)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ./scripts/verify-release-state-v103.ps1 -DryRun
+
+      - name: Build and inspect v1.0.3 release candidates
+        shell: pwsh
+        run: |
+          ./scripts/package-release-v103.ps1
+
+      - name: Upload v1.0.3 release candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: v103-release-candidate-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            release-out/htmlapps-wireless-sensor-v1.0.3.html
+            release-out/htmlapps-wireless-sensor-v1.0.3.self-extract.html
+            release-out/htmlapps-wireless-sensor-v1.0.3.zip
+            release-out/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Upload standalone artifact
         uses: actions/upload-artifact@v7
         with:
