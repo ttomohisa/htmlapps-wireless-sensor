@@ -14,6 +14,10 @@ A privacy-focused, single-HTML Browser Kitty tool that connects up to four smart
 
 Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers the app HTML; the WebRTC connection metadata is exchanged directly by QR code or copy/paste, and sensor measurements are sent peer-to-peer. No signaling, STUN, or TURN server is used.
 
+In the connection screen, choose **Measure on computer** or **Use phone as sensor**. Scan the computer's QR on the phone, open the computer's reply-QR camera, and only then show the reply QR on the phone. The scan guide stays square, while advanced diagnostics remain collapsed until needed.
+
+**Sensor data is not uploaded to a server.** Opening the website requires downloading its HTML, and the phone and computer communicate directly over WebRTC during measurement. This is not a promise of zero network communication. If Chrome on Android 17 cannot connect, check **Settings → Apps → Chrome → Permissions → Nearby devices** and allow access if required. Labels and requirements vary by device and browser version.
+
 [![Wireless Sensor screenshot](assets/screenshot-en.png)](https://ttomohisa.github.io/htmlapps-wireless-sensor/)
 
 ## Features
