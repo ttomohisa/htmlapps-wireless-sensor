@@ -536,11 +536,11 @@
 
       <section class="panel" id="receiverConnectPanel" aria-labelledby="receiverConnectTitle">
         <div class="panel-head">
-          <div><h2 id="receiverConnectTitle" data-i18n="receiverConnectTitle">スマホと接続</h2><p data-i18n="receiverConnectBody">接続情報もBrowser Kittyのサーバーを経由しません。端末間で直接受け渡します。</p></div>
+          <div><h2 id="receiverConnectTitle" data-i18n="receiverConnectTitle">スマホと接続</h2><p data-i18n="receiverConnectBody">スマホでパソコンのQRを読み取り、続けてパソコンでスマホの返答QRを読み取ります。</p></div>
           <button class="button small" id="backFromReceiver" type="button" data-i18n="changeRole">役割を変更</button>
         </div>
         <p class="pairing-lead" data-i18n="networkLead">パソコンとスマホを同じWi-Fiにつないでください。</p><details class="connection-details"><summary data-i18n="networkDetailsTitle">接続についての注意</summary><p data-i18n="sameNetworkNote">接続用サーバーを使わないため、端末同士が直接通信できる必要があります。ゲストWi-Fi・VPN・端末分離などの環境では接続できないことがあります。</p></details>
-        <div class="pairing-coach" id="receiverPairingCoach" aria-live="polite"><strong id="receiverPairingCoachTitle" data-i18n="receiverCoachOfferTitle">1. スマホでPCのQRを読む</strong><span id="receiverPairingCoachBody" data-i18n="receiverCoachOfferBody">この画面を開くと接続QRを自動で作ります。スマホ側は「このスマホをセンサーにする」を選ぶだけでカメラが開きます。</span></div>
+        <div class="pairing-coach" id="receiverPairingCoach" aria-live="polite"><strong id="receiverPairingCoachTitle" data-i18n="receiverCoachOfferTitle">1. スマホでPCのQRを読む</strong><span id="receiverPairingCoachBody" data-i18n="receiverCoachOfferBody">スマホで「スマホをセンサーにする」を選び、カメラをパソコンのQRに向けます。</span></div>
         <div class="connection-checks" id="receiverConnectionTips" hidden><strong data-i18n="checkConnectionTitle">接続できない場合の確認</strong><p data-i18n="checkNetwork">同じWi-Fi、VPN、ゲストWi-Fi、端末間通信の制限を確認してください。</p><p data-i18n="checkNearby">Android 17のChromeでは、スマホの「設定 → アプリ → Chrome → 権限 → 付近のデバイス」を確認し、必要に応じて許可してください。機種によって表示は異なります。</p></div>
         <div class="connection-grid" style="margin-top:14px">
           <div class="qr-wrap">
@@ -560,7 +560,7 @@
             <div class="button-row">
               <button class="button primary" id="scanAnswerButton" type="button" disabled data-i18n="scanAnswer">スマホの返答QRをカメラで読む</button>
             </div>
-            <div class="helper" data-i18n="scanAnswerHint">このカメラを先に起動し、映像が表示されたらスマホ側で返答QRを作ります。低解像度カメラ向けに複数QRへ自動分割されます。</div>
+            <div class="helper" data-i18n="scanAnswerHint">パソコンのカメラが映ったら、スマホで返答QRを表示してください。</div>
             <div class="scan-panel" id="scanPanel" hidden>
               <div class="scan-stage"><video class="scan-video" id="scanVideo" playsinline muted></video><div class="scan-guide" aria-hidden="true"></div></div>
               <div class="scan-meta"><span id="scanResolution">—</span><span class="scan-progress" id="scanProgress" data-i18n="scanProgressStart">QRを枠いっぱいに映してください</span></div>
@@ -813,7 +813,7 @@
           <div><h2 data-i18n="sensorConnectTitle">パソコンと接続する</h2><p data-i18n="sensorConnectBody">パソコンに表示されたQRを、このスマホで読み取ります。</p></div>
           <button class="button small" id="backFromSensor" type="button" data-i18n="changeRole">役割を変更</button>
         </div>
-        <div class="pairing-coach" id="sensorPairingCoach" aria-live="polite"><strong id="sensorPairingCoachTitle" data-i18n="sensorCoachScanTitle">1. PCのQRを読み取る</strong><span id="sensorPairingCoachBody" data-i18n="sensorCoachScanBody">この役割を選ぶとカメラを自動で開きます。PC画面のQRを枠へ入れてください。</span></div>
+        <div class="pairing-coach" id="sensorPairingCoach" aria-live="polite"><strong id="sensorPairingCoachTitle" data-i18n="sensorCoachScanTitle">1. PCのQRを読み取る</strong><span id="sensorPairingCoachBody" data-i18n="sensorCoachScanBody">カメラをパソコンのQRに向けます。複数枚のQRも自動で読み取ります。</span></div>
         <div class="connection-checks" id="sensorConnectionTips" hidden><strong data-i18n="checkConnectionTitle">接続できない場合の確認</strong><p data-i18n="checkNetwork">同じWi-Fi、VPN、ゲストWi-Fi、端末間通信の制限を確認してください。</p><p data-i18n="checkNearby">Android 17のChromeでは、スマホの「設定 → アプリ → Chrome → 権限 → 付近のデバイス」を確認し、必要に応じて許可してください。機種によって表示は異なります。</p></div>
         <div class="button-row" style="margin-top:10px"><button class="button primary" id="scanOfferButton" type="button" data-i18n="scanOffer">PCのQRをカメラで読む</button></div>
         <div class="helper" style="margin-top:8px" data-i18n="scanOfferHint">PC画面のQRを枠いっぱいに映してください。複数QRの場合は自動で集めて接続情報を復元します。</div>
@@ -830,13 +830,13 @@
           <div class="button-row" style="margin-top:8px"><button class="button" id="useOfferButton" type="button" data-i18n="useOffer">この接続コードを使う</button></div>
         </div></details>
         <div id="answerPrepareArea" hidden style="margin-top:16px">
-          <div class="success-note"><strong data-i18n="answerPrepareTitle">PC側の返答QRスキャナーを先に準備してください</strong><div style="margin-top:6px" data-i18n="answerPrepareBody">PCで「スマホの返答QRをカメラで読む」を押し、カメラ映像が表示されたら下のボタンを押します。ここまではスマホ側のICE接続確認を開始しません。</div></div>
-          <div class="button-row" style="margin-top:10px"><button class="button primary" id="createAnswerButton" type="button" data-i18n="createAnswerNow">PC側の準備ができた — 返答QRを作る</button></div>
+          <div class="success-note"><strong data-i18n="answerPrepareTitle">パソコンのカメラを準備してください</strong><div style="margin-top:6px" data-i18n="answerPrepareBody">パソコンで「スマホの返答QRをカメラで読む」を押し、映像が出たら下のボタンを押します。</div></div>
+          <div class="button-row" style="margin-top:10px"><button class="button primary" id="createAnswerButton" type="button" data-i18n="createAnswerNow">返答QRを表示する</button></div>
         </div>
         <div id="answerArea" hidden style="margin-top:16px">
           <div class="success-note" data-i18n="answerReadyNote">返答を作成しました。PC側へ戻してください。サーバーへの送信はありません。</div>
           <div class="connection-grid" style="margin-top:12px">
-            <div class="qr-wrap" id="answerQrWrap"><div class="qr-box" id="answerQr"><div class="qr-placeholder" data-i18n="answerQrPlaceholder">返答QRを作成中…</div></div><div class="qr-transfer-meta"><strong id="answerQrProgress">1 / 1</strong><span data-i18n="answerQrAuto">QRは自動で切り替わります</span></div><div class="qr-page-nav"><button class="button small" id="prevAnswerQr" type="button" data-i18n="previousQr">前へ</button><button class="button small" id="nextAnswerQr" type="button" data-i18n="nextQr">次へ</button><button class="button small" id="fullscreenAnswerQr" type="button" data-i18n="fullscreenQr">全画面表示</button></div><div class="helper" data-i18n="answerQrHint">PC側で「返答QRをカメラで読む」を押し、スマホ画面をカメラへ向けてください。</div></div>
+            <div class="qr-wrap" id="answerQrWrap"><div class="qr-box" id="answerQr"><div class="qr-placeholder" data-i18n="answerQrPlaceholder">返答QRを作成中…</div></div><div class="qr-transfer-meta"><strong id="answerQrProgress">1 / 1</strong><span data-i18n="answerQrAuto">QRは自動で切り替わります</span></div><div class="qr-page-nav"><button class="button small" id="prevAnswerQr" type="button" data-i18n="previousQr">前へ</button><button class="button small" id="nextAnswerQr" type="button" data-i18n="nextQr">次へ</button><button class="button small" id="fullscreenAnswerQr" type="button" data-i18n="fullscreenQr">全画面表示</button></div><div class="helper" data-i18n="answerQrHint">スマホに表示された返答QRを、パソコンのカメラへ向けてください。</div></div>
             <div class="stack">
               <div class="field"><label for="answerCode" data-i18n="answerCodeLabel">返答コード</label><textarea id="answerCode" readonly spellcheck="false"></textarea></div>
               <div class="button-row"><button class="button primary" id="copyAnswerButton" type="button" data-i18n="copyAnswer">返答コードをコピー</button><button class="button" id="shareAnswerButton" type="button" hidden data-i18n="shareAnswer">共有</button></div>
