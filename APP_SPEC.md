@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 1.0.2
+- **Version:** 1.0.3
 
 ## 2. Product principles
 
@@ -236,7 +236,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `1.0.2`.
+- `app.config.json` version is `1.0.3`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
@@ -278,3 +278,15 @@ The most important limitation is deliberate: **a fully serverless WebRTC connect
 - Keep the existing metadata block, IDs and population intact as the final Help scroll-body item, available on desktop and mobile.
 - Refresh the tracked `wireless-sensor.html` download alias by copying the verified official `dist/index.html` output byte-for-byte; the builder itself remains unchanged.
 - Within Help only, retain the header height and let the body shrink into the remaining bounded dialog height, so final metadata stays reachable. Other dialogs keep their existing layout.
+
+
+## Connection UX and accurate communication claims (unreleased)
+
+- Match Presentation Remote's role-selection hierarchy and short, step-by-step guidance, while preserving Wireless Sensor's separate receiver peers (up to four phones).
+- The QR scanner overlay must remain a square centered within the visible preview at desktop, portrait-phone and landscape-phone sizes; the video decoder still uses uncropped source video frames.
+- Keep manual QR/copy fallback, ICE collection guards, delayed Answer generation, and the pre-connection Answer renewal mechanism unchanged.
+- Show practical connection troubleshooting for failed/slow states, including conditional Android 17 Chrome Nearby devices permission guidance. Do not imply this permission is universally required.
+- Show raw ICE diagnostics only inside optional details, rather than overwhelming the initial pairing flow.
+- Use the same canonical SVG geometry for the repository favicon, embedded favicon and header brand icon; render a chip-style header version and a shield-with-check privacy badge.
+- The short privacy badge must say sensor samples are not uploaded to a server. Do not claim "no Internet communication": website delivery uses the network, and WebRTC transmits samples directly between the paired devices. The connection uses no signaling/STUN/TURN servers and can fail on isolated Wi-Fi networks.
+- Recheck Japanese/English labels, the existing manual fallback, QR scanner geometry, and the connected/disconnected/sensor-start states before publishing.

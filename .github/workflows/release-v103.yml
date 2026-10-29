@@ -1,0 +1,95 @@
+name: Publish Wireless Sensor v1.0.3
+
+# This workflow is added in the same PR as the version bump.
+# Merging that PR into main triggers a verified release from that main commit.
+'on':
+  push:
+    branches:
+      - main
+    paths:
+      - app.config.json
+      - .github/workflows/release-v103.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wireless-sensor-release-v103
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout the exact main commit
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Check existing release and tag without expected 404 errors
+        id: guard
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ./scripts/verify-release-state-v103.ps1
+
+      - name: Build and validate both standalone variants
+        if: steps.guard.outputs.publish == 'true'
+        shell: pwsh
+        run: |
+          ./scripts/check-repository.ps1
+
+      - name: Generate and verify release assets
+        if: steps.guard.outputs.publish == 'true'
+        shell: pwsh
+        run: |
+          ./scripts/package-release-v103.ps1
+
+      - name: Publish tag v1.0.3 and GitHub Release
+        if: steps.guard.outputs.publish == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $assets = @(
+            'release-out/htmlapps-wireless-sensor-v1.0.3.html',
+            'release-out/htmlapps-wireless-sensor-v1.0.3.self-extract.html',
+            'release-out/htmlapps-wireless-sensor-v1.0.3.zip',
+            'release-out/SHA256SUMS.txt'
+          )
+          # Tag is created only once all builds/tests/packages are successful.
+          # --target locks the new tag to this exact tested main commit.
+          gh release create v1.0.3 @assets --target "$env:GITHUB_SHA" --repo "$env:GITHUB_REPOSITORY" --title 'Wireless Sensor v1.0.3' --notes-file '.github/releases/v1.0.3.md'
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub Release creation failed.' }
+
+      - name: Verify published tag and four release assets
+        if: steps.guard.outputs.publish == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tagSha = gh api "repos/$env:GITHUB_REPOSITORY/git/ref/tags/v1.0.3" --jq '.object.sha'
+          if ($LASTEXITCODE -ne 0) { throw 'Could not verify tag v1.0.3.' }
+          if ([string]$tagSha -ne [string]$env:GITHUB_SHA) { throw 'Tag v1.0.3 does not reference the tested main commit.' }
+          $released = @(gh release view v1.0.3 --repo "$env:GITHUB_REPOSITORY" --json assets --jq '.assets[].name')
+          if ($LASTEXITCODE -ne 0) { throw 'Could not verify Release assets.' }
+          foreach ($name in @(
+            'htmlapps-wireless-sensor-v1.0.3.html',
+            'htmlapps-wireless-sensor-v1.0.3.self-extract.html',
+            'htmlapps-wireless-sensor-v1.0.3.zip',
+            'SHA256SUMS.txt'
+          )) {
+            if ($released -notcontains $name) { throw "GitHub Release missing asset: $name" }
+          }
+          Write-Host '[OK] Verified v1.0.3 tag and four GitHub Release assets.'

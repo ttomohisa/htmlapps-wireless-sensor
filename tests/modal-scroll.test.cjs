@@ -43,13 +43,14 @@ test('existing bounded dialog geometry is retained with Help-only flex allocatio
   assert.deepEqual([...css.matchAll(/(?<![\w.-])dialog\s*\{([^}]+)\}/g)].map(match => compact(match[1])), ["width:min(680px,calc(100%-28px));max-height:min(760px,calc(100dvh-28px));padding:0;overflow:hidden;border:1pxsolidvar(--line);border-radius:16px;background:var(--surface);color:var(--text);box-shadow:var(--shadow-md);"]);
   assert.deepEqual([...css.matchAll(/\.dialog\-body\s*\{([^}]+)\}/g)].map(match => compact(match[1])), ["padding:20px20px28px;overflow:auto;max-height:calc(100dvh-102px);", "min-height:0;flex:11auto;"]);
 });
-test('existing privacy badge uses a decorative shield without changing its wording', () => {
+test('privacy badge matches the checked shield and accurate server-upload wording', () => {
   const badge = html.match(/<div class="local-badge">([\s\S]*?)<\/div>/)?.[1];
   assert.ok(badge, 'Existing privacy badge remains');
   assert.match(badge, /<svg[^>]*aria-hidden="true"/);
-  assert.match(badge, /d="M12 3 4 6v5c0 5 3\.4 8\.7 8 10 4\.6-1\.3 8-5 8-10V6l-8-3Z"/);
+  assert.match(badge, /d="M12 3 5 6v5c0 4\.6 2\.8 8 7 10 4\.2-2 7-5\.4 7-10V6z"/);
+  assert.match(badge, /d="m9 12 2 2 4-5"/);
   assert.doesNotMatch(badge, /<rect\b/, 'The old padlock body is absent');
-  assert.match(badge, /data-i18n="localBadge">シグナリング \/ STUN \/ TURN 不使用<\/span>/);
+  assert.match(badge, /data-i18n="localBadge">計測データのサーバー送信なし<\/span>/);
 });
 test('Help omits implementation commentary and retains user instructions', () => {
   const help = html.match(/APP:HELP:BEGIN([\s\S]*?)APP:HELP:END/)?.[1];

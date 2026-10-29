@@ -6,6 +6,8 @@
 
 [日本語版 README](README.ja.md)
 
+Release **v1.0.3**: updated phone pairing and QR scanner guidance. See [CHANGELOG.md](CHANGELOG.md) and the [release notes](.github/releases/v1.0.3.md).
+
 A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, synchronizes them over WebRTC, and keeps complete measurement sessions local. It includes guided experiments, cross-device impact timing, FFT analysis, polished camera-first QR pairing, power/load controls for long sessions, markers, sensor positions, reloadable session files, and standalone HTML reports.
 
 ## 🚀 Live demo
@@ -13,6 +15,10 @@ A privacy-focused, single-HTML Browser Kitty tool that connects up to four smart
 ### [Open Wireless Sensor on GitHub Pages](https://ttomohisa.github.io/htmlapps-wireless-sensor/)
 
 Open the same page on a PC/tablet and a smartphone. GitHub Pages only delivers the app HTML; the WebRTC connection metadata is exchanged directly by QR code or copy/paste, and sensor measurements are sent peer-to-peer. No signaling, STUN, or TURN server is used.
+
+In the connection screen, choose **Measure on computer** or **Use phone as sensor**. Scan the computer's QR on the phone, open the computer's reply-QR camera, and only then show the reply QR on the phone. The scan guide stays square, while advanced diagnostics remain collapsed until needed.
+
+**Sensor data is not uploaded to a server.** Opening the website requires downloading its HTML, and the phone and computer communicate directly over WebRTC during measurement. This is not a promise of zero network communication. If Chrome on Android 17 cannot connect, check **Settings → Apps → Chrome → Permissions → Nearby devices** and allow access if required. Labels and requirements vary by device and browser version.
 
 [![Wireless Sensor screenshot](assets/screenshot-en.png)](https://ttomohisa.github.io/htmlapps-wireless-sensor/)
 

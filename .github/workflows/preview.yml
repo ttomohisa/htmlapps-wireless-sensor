@@ -53,6 +53,12 @@ jobs:
         New-Item -ItemType Directory -Force -Path test-results/mobile-help | Out-Null
         node scripts/mobile-help.browser.cjs 2>&1 | Tee-Object -FilePath test-results/mobile-help/results.log
         if ($LASTEXITCODE -ne 0) { throw "Mobile Help browser regression failed." }
+    - name: Verify real WebRTC PC-to-phone pairing in Chromium
+      shell: pwsh
+      run: |
+        $env:NODE_PATH = Join-Path $env:RUNNER_TEMP "mobile-help-tests/node_modules"
+        node scripts/pairing-smoke.browser.cjs 2>&1 | Tee-Object -FilePath test-results/mobile-help/pairing.log
+        if ($LASTEXITCODE -ne 0) { throw "WebRTC peer-pairing smoke failed." }
     - name: Upload mobile Help browser evidence
       if: always()
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
