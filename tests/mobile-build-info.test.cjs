@@ -23,7 +23,7 @@ test('keyboard disclosure clicks stay in Help; genuine backdrop still closes',()
 });
 test('main connection disclosure and distinct P2P privacy remain intact',()=>{
  const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];assert.match(main,/data-i18n="privacyDetailsBody"/);
- assert.match(html,/localBadge:'No signaling \/ STUN \/ TURN servers'/);assert.match(html,/sensor data travels directly over the established DataChannel/);
+ assert.match(html,/localBadge:'No server upload of sensor data'/);assert.match(html,/sensor data travels directly over the established DataChannel/);
 });
 
 test('Help allocates remaining height to its scroll body without shrinking the header',()=>{
