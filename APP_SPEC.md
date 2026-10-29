@@ -6,7 +6,7 @@
 - **One-sentence purpose:** Turn up to four smartphones into wireless motion sensors and stream synchronized acceleration, rotation, and orientation directly to a receiver browser using WebRTC.
 - **Primary users:** People doing quick motion experiments, prototyping, education, hobby measurement, or browser API exploration without installing an app.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
-- **Version:** 1.0.2
+- **Version:** 1.0.3
 
 ## 2. Product principles
 
@@ -236,7 +236,7 @@ Current stable Chromium, Firefox, and Safari are the intended baseline, but sens
 ## 17. Acceptance criteria
 
 - Repository follows the Browser Kitty single-HTML template structure.
-- `app.config.json` version is `1.0.2`.
+- `app.config.json` version is `1.0.3`.
 - `dependencies.json` pins QR generation to an exact version and records license/homepage.
 - `scripts/check-repository.ps1` passes on the supported Windows build environment.
 - `build-standalone.ps1` produces readable and self-extracting HTML.
