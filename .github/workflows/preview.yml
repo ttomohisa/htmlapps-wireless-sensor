@@ -56,6 +56,7 @@ jobs:
     - name: Verify real WebRTC PC-to-phone pairing in Chromium
       shell: pwsh
       run: |
+        $env:NODE_PATH = Join-Path $env:RUNNER_TEMP "mobile-help-tests/node_modules"
         node scripts/pairing-smoke.browser.cjs 2>&1 | Tee-Object -FilePath test-results/mobile-help/pairing.log
         if ($LASTEXITCODE -ne 0) { throw "WebRTC peer-pairing smoke failed." }
     - name: Upload mobile Help browser evidence
