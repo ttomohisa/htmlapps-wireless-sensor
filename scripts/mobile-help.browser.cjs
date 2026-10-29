@@ -42,7 +42,11 @@ async function main() {
             await page.locator('#languageButton').click();await page.locator('#languageButton').click();
             assert.equal(await page.locator('html').getAttribute('lang'),language,label+': repeated language toggles');
             for(const id of ['buildVersion','builtAt','dependencyCount']){assert.equal(await page.locator('#'+id).count(),1,label+': unique metadata after toggles');assert.ok(!['','—','-'].includes((await page.locator('#'+id).textContent()).trim()),label+': populated metadata after toggles');}
-            assert.equal(await page.locator('[data-i18n="localBadge"]').textContent(), language === 'en' ? 'No signaling / STUN / TURN servers' : 'シグナリング / STUN / TURN 不使用', label);
+            const isLegacy = file === 'wireless-sensor.html';
+            const expectedBadge = language === 'en'
+              ? (isLegacy ? 'No signaling / STUN / TURN servers' : 'No server upload of sensor data')
+              : (isLegacy ? 'シグナリング / STUN / TURN 不使用' : '計測データのサーバー送信なし');
+            assert.equal(await page.locator('[data-i18n="localBadge"]').textContent(), expectedBadge, label);
             assert.ok(await page.locator('.local-badge').evaluate(el => {
               const box = el.getBoundingClientRect();
               const range = document.createRange();
@@ -53,6 +57,31 @@ async function main() {
             assert.equal(await page.locator('main #buildVersion').count(), 0, label);
             assert.equal(await page.locator('footer').isVisible(), width > 640, label);
             await prepareApp(page, width, label);
+            if (!isLegacy) {
+              // Test the actual CSS box geometry in both portrait and landscape-like scan panels.
+              const guides = await page.evaluate(() => {
+                const sizes = [[300, 280], [220, 300], [380, 240]];
+                return sizes.map(([width, height]) => {
+                  const stage = document.createElement('div');
+                  stage.className = 'scan-stage';
+                  stage.style.cssText = `position:relative;width:${width}px;height:${height}px;min-height:0;max-width:100%;margin:0;`;
+                  const guide = document.createElement('div');
+                  guide.className = 'scan-guide';
+                  stage.append(guide);document.body.append(stage);
+                  const box = guide.getBoundingClientRect(), parent = stage.getBoundingClientRect();
+                  stage.remove();
+                  return { width:box.width, height:box.height, centeredX:Math.abs((box.left+box.right)/2-(parent.left+parent.right)/2)<1,
+                    centeredY:Math.abs((box.top+box.bottom)/2-(parent.top+parent.bottom)/2)<1,
+                    contained:box.top>=parent.top-1&&box.bottom<=parent.bottom+1&&box.left>=parent.left-1&&box.right<=parent.right+1 };
+                });
+              });
+              for (const result of guides) {
+                assert.ok(Math.abs(result.width-result.height) < 1, label + ': QR guide is square');
+                assert.ok(result.centeredX && result.centeredY && result.contained, label + ': QR guide centered and contained');
+              }
+              const actualFavicon = await page.locator('link[rel="icon"]').getAttribute('href');
+              assert.ok(actualFavicon.startsWith('data:image/svg+xml,'), label + ': inline favicon');
+            }
 
             assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), label + ': page width');
 
