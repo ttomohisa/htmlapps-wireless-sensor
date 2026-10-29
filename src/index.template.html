@@ -137,15 +137,6 @@
     .connection-checks[hidden] { display:none!important; }
     .connection-checks strong { display:block; margin-bottom:5px; color:#765000; }
     .connection-checks p { margin:5px 0; }
-    @media(max-width:640px) {
-      .role-card { display:grid; grid-template-columns:44px minmax(0,1fr); align-items:center; gap:2px 12px; }
-      .role-card .role-icon { grid-row:1/span 2; width:42px; height:42px; }
-      .role-card h3 { margin:0; font-size:15px; }
-      .role-card p { grid-column:2; }
-      .scan-video { max-height:43dvh; }
-      .connection-details summary { min-height:44px; }
-      .steps { justify-content:space-between; }
-    }
     .qr-box svg { width:100%; height:100%; display:block; }
     .qr-placeholder { max-width:220px; color:var(--muted); text-align:center; font-size:12px; }
     .stack { display:grid; gap:12px; }
@@ -420,6 +411,13 @@
       .phone-stage { min-height:230px; }
     }
     @media (max-width:640px) {
+      .role-card { display:grid; grid-template-columns:44px minmax(0,1fr); align-items:center; gap:2px 12px; }
+      .role-card .role-icon { grid-row:1/span 2; width:42px; height:42px; }
+      .role-card h3 { margin:0; font-size:15px; }
+      .role-card p { grid-column:2; }
+      .scan-video { max-height:43dvh; }
+      .connection-details summary { min-height:44px; }
+      .steps { justify-content:space-between; }
       footer { display: none; }
       .brand-meta { display:none; }
       .main { padding-top:16px; padding-bottom:42px; }
