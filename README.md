@@ -6,6 +6,8 @@
 
 [日本語版 README](README.ja.md)
 
+Release **v1.0.3**: updated phone pairing and QR scanner guidance. See [CHANGELOG.md](CHANGELOG.md) and the [release notes](.github/releases/v1.0.3.md).
+
 A privacy-focused, single-HTML Browser Kitty tool that connects up to four smartphones as wireless motion sensors, synchronizes them over WebRTC, and keeps complete measurement sessions local. It includes guided experiments, cross-device impact timing, FFT analysis, polished camera-first QR pairing, power/load controls for long sessions, markers, sensor positions, reloadable session files, and standalone HTML reports.
 
 ## 🚀 Live demo
