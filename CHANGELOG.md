@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.3 - Unreleased
+## 1.0.3 - 2026-10-29
 
 - Simplify computer/phone QR pairing instructions in Japanese and English while preserving four independent sensor connections and direct WebRTC operation.
 - Add contextual connection checks (including Android 17 Chrome Nearby devices permission), collapse technical ICE diagnostics and keep manual copy/paste available.
