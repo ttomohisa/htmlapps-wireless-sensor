@@ -17,6 +17,7 @@ async function main(){
     await pc.waitForFunction(()=>document.querySelector('#offerCode')?.value.startsWith('ws1.'),{timeout:30000});
     const offer=await pc.locator('#offerCode').inputValue();
     await phone.locator('#chooseSensor').click();
+    await phone.locator('#sensorOfferManualDetails summary').click();
     await phone.locator('#sensorOfferInput').fill(offer);
     await phone.locator('#useOfferButton').click();
     await phone.locator('#answerPrepareArea').waitFor({state:'visible',timeout:15000});
@@ -25,6 +26,7 @@ async function main(){
     await phone.locator('#createAnswerButton').click();
     await phone.waitForFunction(()=>document.querySelector('#answerCode')?.value.startsWith('ws1.'),{timeout:30000});
     const answer=await phone.locator('#answerCode').inputValue();
+    await pc.locator('#answerManualDetails summary').click();
     await pc.locator('#answerInput').fill(answer);
     await pc.locator('#applyAnswerButton').click();
     await Promise.all([
