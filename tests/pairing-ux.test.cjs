@@ -12,9 +12,8 @@ test('browser tab favicon is byte-for-byte the repository SVG',()=>{
   assert.equal(decodeURIComponent(href.slice('data:image/svg+xml,'.length)),icon);
 });
 test('header uses the canonical favicon geometry and a Presentation Remote-style version pill and shield',()=>{
-  const canonical=icon.replace(/^<svg[^>]+>\s*/,'').replace(/\s*<\/svg>\s*$/,'')
-    .replace(/^\s*<rect width="64" height="64" rx="16" fill="#16624F"\/>\s*/,'').trim();
-  assert.ok(source.includes('<svg viewBox="0 0 64 64" fill="none" aria-hidden="true">'+canonical+'</svg>'));
+  const squash=text=>text.replace(/\s+/g,' ').trim();
+  assert.ok(squash(source).includes(squash(icon)),'header brand is the full favicon artwork');
   assert.match(source,/\.version-badge\s*\{[^}]*border-radius:999px/);
   assert.match(source,/data-i18n="localBadge">計測データのサーバー送信なし/);
   assert.match(source,/m9 12 2 2 4-5/);
